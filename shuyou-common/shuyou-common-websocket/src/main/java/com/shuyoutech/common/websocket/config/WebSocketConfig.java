@@ -1,7 +1,7 @@
 package com.shuyoutech.common.websocket.config;
 
 import com.shuyoutech.common.websocket.handler.PlusWebSocketHandler;
-import interceptor.PlusWebSocketInterceptor;
+import com.shuyoutech.common.websocket.interceptor.PlusWebSocketInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.WebSocketHandler;

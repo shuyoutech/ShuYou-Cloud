@@ -1,4 +1,4 @@
-package interceptor;
+package com.shuyoutech.common.websocket.interceptor;
 
 import com.shuyoutech.common.core.constant.CommonConstants;
 import com.shuyoutech.common.satoken.util.AuthUtils;

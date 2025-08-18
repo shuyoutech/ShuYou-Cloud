@@ -45,10 +45,8 @@ public class SysRoleServiceImpl extends SuperServiceImpl<SysRoleEntity, SysRoleV
         Set<String> userIds = CollectionUtils.newHashSet();
         CollectionUtils.addAll(userIds, StreamUtils.toSet(list, SysRoleEntity::getCreateUserId));
         CollectionUtils.addAll(userIds, StreamUtils.toSet(list, SysRoleEntity::getUpdateUserId));
-        Map<String, String> userMap = sysUserService.getByIds(userIds, SysUserEntity::getId, SysUserEntity::getRealName);
-
+        Map<String, String> userMap = StreamUtils.toMap(MongoUtils.getByIds(userIds, SysUserEntity.class), SysUserEntity::getId, SysUserEntity::getRealName);
         Map<String, String> statusMap = cachePlusService.translateByDictCode(DictTypeEnum.STATUS_TYPE.getValue());
-
         list.forEach(e -> {
             SysRoleVo vo = MapstructUtils.convert(e, this.voClass);
             if (null != vo) {
@@ -129,7 +127,5 @@ public class SysRoleServiceImpl extends SuperServiceImpl<SysRoleEntity, SysRoleV
     }
 
     private final CachePlusService cachePlusService;
-    private final SysUserService sysUserService;
-    private final SysOrgService sysOrgService;
 
 }
