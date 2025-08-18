@@ -22,6 +22,7 @@
         <module>shuyou-module-auth</module>
         <module>shuyou-module-member</module>
         <module>shuyou-module-notice</module>
+        <module>shuyou-module-pay</module>
     </modules>
 
 </project>
