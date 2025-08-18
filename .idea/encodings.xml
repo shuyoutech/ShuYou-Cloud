@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
+    <file url="file://$PROJECT_DIR$/shuyou-api/shuyou-api-model/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-api/shuyou-api-model/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-api/shuyou-api-model/src/main/webapp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-api/shuyou-api-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-api/shuyou-api-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-api/shuyou-api-service/src/main/webapp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-api/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-api/src/main/webapp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-common/shuyou-common-web/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-common/shuyou-common-web/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-common/shuyou-common-web/src/main/webapp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-common/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-common/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-common/src/main/webapp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-module/shuyou-module-aigc/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-module/shuyou-module-aigc/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-module/shuyou-module-aigc/src/main/webapp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-module/shuyou-module-system/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-module/shuyou-module-system/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-module/shuyou-module-system/src/main/webapp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-module/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-module/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-module/src/main/webapp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp" charset="UTF-8" />
+  </component>
+</project>
