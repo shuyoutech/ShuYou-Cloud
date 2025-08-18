@@ -1,6 +1,7 @@
 package com.shuyoutech.api.service;
 
 import com.shuyoutech.api.model.RemoteSysFile;
+import com.shuyoutech.common.satoken.model.LoginUser;
 
 import java.util.Map;
 import java.util.Set;
@@ -10,6 +11,8 @@ import java.util.Set;
  * @date 2025-07-07 15:49
  **/
 public interface RemoteSystemService {
+
+    LoginUser getUserByUsername(String username);
 
     Boolean passwordMatch(String rawPassword, String encodedPassword);
 

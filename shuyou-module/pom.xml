@@ -19,6 +19,9 @@
     <modules>
         <module>shuyou-module-system</module>
         <module>shuyou-module-aigc</module>
+        <module>shuyou-module-auth</module>
+        <module>shuyou-module-member</module>
+        <module>shuyou-module-notice</module>
     </modules>
 
 </project>

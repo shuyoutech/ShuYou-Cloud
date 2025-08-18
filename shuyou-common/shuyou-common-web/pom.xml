@@ -30,6 +30,10 @@
             <artifactId>shuyou-satoken-starter</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.shuyoutech</groupId>
+            <artifactId>shuyou-disruptor-starter</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>

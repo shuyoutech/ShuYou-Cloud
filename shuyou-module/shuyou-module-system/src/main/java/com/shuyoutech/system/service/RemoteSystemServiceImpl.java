@@ -6,12 +6,15 @@ import com.shuyoutech.api.service.RemoteSystemService;
 import com.shuyoutech.common.core.util.MapUtils;
 import com.shuyoutech.common.core.util.MapstructUtils;
 import com.shuyoutech.common.core.util.StreamUtils;
+import com.shuyoutech.common.satoken.model.LoginUser;
 import com.shuyoutech.system.domain.entity.SysFileEntity;
 import com.shuyoutech.system.domain.entity.SysUserEntity;
 import com.shuyoutech.system.domain.vo.SysDictDataVo;
 import com.shuyoutech.system.domain.vo.SysFileVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +29,23 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class RemoteSystemServiceImpl implements RemoteSystemService {
+
+    @Override
+    public LoginUser getUserByUsername(String username) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("username").is(username));
+        SysUserEntity user = sysUserService.selectOne(query);
+        if (null == user) {
+            return null;
+        }
+        LoginUser loginUser = MapstructUtils.convert(user, LoginUser.class);
+        String userId = loginUser.getId();
+        loginUser.setMenuPermission(cachePlusService.getMenuPermission(userId));
+        loginUser.setRolePermission(cachePlusService.getRolePermission(userId));
+        loginUser.setRoles(cachePlusService.selectRolesByUserId(userId));
+        loginUser.setPosts(cachePlusService.selectPostsByUserId(userId));
+        return loginUser;
+    }
 
     @Override
     public Boolean passwordMatch(String rawPassword, String encodedPassword) {

@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>com.shuyoutech</groupId>
-            <artifactId>shuyou-core</artifactId>
+            <artifactId>shuyou-satoken-starter</artifactId>
         </dependency>
     </dependencies>
 

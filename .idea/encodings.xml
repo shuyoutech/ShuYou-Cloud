@@ -19,6 +19,15 @@
     <file url="file://$PROJECT_DIR$/shuyou-module/shuyou-module-aigc/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/shuyou-module/shuyou-module-aigc/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/shuyou-module/shuyou-module-aigc/src/main/webapp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-module/shuyou-module-auth/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-module/shuyou-module-auth/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-module/shuyou-module-auth/src/main/webapp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-module/shuyou-module-member/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-module/shuyou-module-member/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-module/shuyou-module-member/src/main/webapp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-module/shuyou-module-notice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-module/shuyou-module-notice/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/shuyou-module/shuyou-module-notice/src/main/webapp" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/shuyou-module/shuyou-module-system/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/shuyou-module/shuyou-module-system/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/shuyou-module/shuyou-module-system/src/main/webapp" charset="UTF-8" />

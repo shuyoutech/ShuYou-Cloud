@@ -8,9 +8,12 @@
         <outputRelativeToContentRoot value="true" />
         <module name="shuyou-api-model" />
         <module name="shuyou-api-service" />
-        <module name="shuyou-common-web" />
+        <module name="shuyou-module-member" />
         <module name="shuyou-module-system" />
         <module name="shuyou-module-aigc" />
+        <module name="shuyou-common-web" />
+        <module name="shuyou-module-notice" />
+        <module name="shuyou-module-auth" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="17" />
@@ -25,6 +28,9 @@
       <module name="shuyou-common-web" options="-parameters" />
       <module name="shuyou-module" options="-parameters" />
       <module name="shuyou-module-aigc" options="-parameters" />
+      <module name="shuyou-module-auth" options="-parameters" />
+      <module name="shuyou-module-member" options="-parameters" />
+      <module name="shuyou-module-notice" options="-parameters" />
       <module name="shuyou-module-system" options="-parameters" />
     </option>
   </component>

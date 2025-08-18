@@ -11,8 +11,8 @@
     </parent>
 
     <artifactId>shuyou-module-system</artifactId>
-    <name>shuyou-module-system</name>
-    <description>shuyou-module-system</description>
+    <name>ShuYou Module System</name>
+    <description>ShuYou Module System</description>
     <packaging>jar</packaging>
     <url>https://github.com/shuyoutech/ShuYou-Cloud</url>
 
