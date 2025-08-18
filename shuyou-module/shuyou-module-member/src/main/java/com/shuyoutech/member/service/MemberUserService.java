@@ -11,6 +11,7 @@ import com.shuyoutech.member.domain.bo.SmsLoginBo;
 import com.shuyoutech.member.domain.entity.MemberUserEntity;
 import com.shuyoutech.member.domain.vo.MemberUserVo;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -38,19 +39,14 @@ public interface MemberUserService extends SuperService<MemberUserEntity, Member
 
     MemberUserEntity register(SocialUserInfo socialUser);
 
-    /**
-     * 获取用户信息
-     */
     MemberUserEntity getMemberProfile();
 
-    /**
-     * 社交绑定
-     */
+    void updateProfile(MemberUserBo bo);
+
     void socialUserBind(AuthAccessToken bo);
 
-    /**
-     * 手机号绑定
-     */
     void mobileBind(SmsLoginBo bo);
+
+    String avatar(MultipartFile file);
 
 }

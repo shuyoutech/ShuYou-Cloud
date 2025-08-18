@@ -3,8 +3,10 @@ package com.shuyoutech.member.service;
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.shuyoutech.api.model.AuthAccessToken;
+import com.shuyoutech.api.model.RemoteSysFile;
 import com.shuyoutech.api.model.SocialClientToken;
 import com.shuyoutech.api.model.SocialUserInfo;
+import com.shuyoutech.api.service.RemoteSystemService;
 import com.shuyoutech.common.core.enums.StatusEnum;
 import com.shuyoutech.common.core.exception.BusinessException;
 import com.shuyoutech.common.core.util.CollectionUtils;
@@ -34,6 +36,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -189,10 +192,24 @@ public class MemberUserServiceImpl extends SuperServiceImpl<MemberUserEntity, Me
         String userId = AuthUtils.getLoginUserId();
         MemberUserEntity user = this.getById(userId);
         if (null == user) {
-            log.error("getMemberProfile ========== userId:{} is not exist", userId);
-            throw new BusinessException("获取用户信息失败");
+            throw new BusinessException("获取用户信息失败!");
+        }
+        if (StringUtils.isNotBlank(user.getAvatar())) {
+            user.setAvatar(remoteSystemService.generatedUrl(user.getAvatar()));
         }
         return user;
+    }
+
+    @Override
+    public void updateProfile(MemberUserBo bo) {
+        String userId = AuthUtils.getLoginUserId();
+        Update update = new Update();
+        update.set("nickname", bo.getNickname());
+        update.set("mobile", bo.getMobile());
+        update.set("email", bo.getEmail());
+        update.set("sex", bo.getSex());
+        update.set("address", bo.getAddress());
+        MongoUtils.patch(userId, update, MemberUserEntity.class);
     }
 
     @Override
@@ -253,5 +270,24 @@ public class MemberUserServiceImpl extends SuperServiceImpl<MemberUserEntity, Me
         RedisUtils.delete(CAPTCHA_SMS_KEY + bo.getMobile());
     }
 
+    @Override
+    public String avatar(MultipartFile file) {
+        try {
+            RemoteSysFile remoteFile = remoteSystemService.upload(file.getOriginalFilename(), file.getBytes());
+            if (null == remoteFile) {
+                throw new BusinessException("上传头像失败");
+            }
+            String userId = AuthUtils.getLoginUserId();
+            Update update = new Update();
+            update.set("avatar", remoteFile.getId());
+            MongoUtils.patch(userId, update, MemberUserEntity.class);
+            return remoteFile.getPreviewUrl();
+        } catch (Exception e) {
+            log.error("avatar =============== exception:{}", e.getMessage());
+        }
+        return null;
+    }
+
     private final SocialClientRequestFactory socialClientRequestFactory;
+    private final RemoteSystemService remoteSystemService;
 }

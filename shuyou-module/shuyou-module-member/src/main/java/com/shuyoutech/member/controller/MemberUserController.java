@@ -1,9 +1,13 @@
 package com.shuyoutech.member.controller;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.ArrayUtil;
 import com.shuyoutech.api.model.AuthAccessToken;
+import com.shuyoutech.common.core.constant.MimeTypeConstants;
 import com.shuyoutech.common.core.model.R;
 import com.shuyoutech.common.core.model.group.SaveGroup;
 import com.shuyoutech.common.core.model.group.UpdateGroup;
+import com.shuyoutech.common.core.util.StringUtils;
 import com.shuyoutech.common.web.model.PageQuery;
 import com.shuyoutech.common.web.model.PageResult;
 import com.shuyoutech.member.domain.bo.MemberUserBo;
@@ -17,12 +21,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
+
+import static com.shuyoutech.common.core.model.R.error;
+import static com.shuyoutech.common.core.model.R.success;
 
 /**
  * @author YangChao
@@ -72,6 +78,13 @@ public class MemberUserController {
         return R.success(memberUserService.getMemberProfile());
     }
 
+    @PostMapping(path = "updateProfile")
+    @Operation(description = "修改个人信息")
+    public R<Void> updateProfile(@RequestBody MemberUserBo bo) {
+        memberUserService.updateProfile(bo);
+        return R.success();
+    }
+
     @PostMapping(path = "socialUserBind")
     @Operation(description = "绑定社交用户")
     public R<Boolean> socialUserBind(@Validated @RequestBody AuthAccessToken bo) {
@@ -84,6 +97,21 @@ public class MemberUserController {
     public R<Boolean> mobileBind(@Validated @RequestBody SmsLoginBo bo) {
         memberUserService.mobileBind(bo);
         return R.success(true);
+    }
+
+    @PostMapping("avatar")
+    @Operation(description = "上传用户头像")
+    public R<String> avatar(@RequestParam("file") MultipartFile file) {
+        try {
+            String fileType = FileUtil.extName(file.getOriginalFilename());
+            if (!ArrayUtil.contains(MimeTypeConstants.IMAGE_EXTENSION, fileType)) {
+                return error(StringUtils.format("文件格式不正确，请上传{}格式", Arrays.toString(MimeTypeConstants.IMAGE_EXTENSION)));
+            }
+            return success(memberUserService.avatar(file));
+        } catch (Exception e) {
+            log.error("上传用户头像异常 ============ exception:{}", e.getMessage());
+        }
+        return error("上传用户头像失败");
     }
 
     private final MemberUserService memberUserService;

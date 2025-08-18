@@ -22,8 +22,8 @@ public class ProfileUpdateVo implements Serializable {
     @Schema(description = "电子邮箱")
     private String email;
 
-    @Schema(description = "性别:0-男,1-女,2-未知")
-    private String gender;
+    @Schema(description = "性别")
+    private String sex;
 
     @Schema(description = "地址")
     private String address;

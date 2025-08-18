@@ -14,12 +14,18 @@ import com.shuyoutech.common.core.enums.StatusEnum;
 import com.shuyoutech.common.core.exception.BusinessException;
 import com.shuyoutech.common.core.util.*;
 import com.shuyoutech.common.mongodb.MongoUtils;
+import com.shuyoutech.common.satoken.util.AuthUtils;
 import com.shuyoutech.common.web.model.PageQuery;
 import com.shuyoutech.common.web.model.PageResult;
 import com.shuyoutech.common.web.model.ParamUnique;
 import com.shuyoutech.common.web.service.SuperServiceImpl;
 import com.shuyoutech.system.domain.bo.SysUserBo;
+import com.shuyoutech.system.domain.entity.SysMenuEntity;
+import com.shuyoutech.system.domain.entity.SysRoleEntity;
 import com.shuyoutech.system.domain.entity.SysUserEntity;
+import com.shuyoutech.system.domain.vo.ProfileUpdateVo;
+import com.shuyoutech.system.domain.vo.ProfileVo;
+import com.shuyoutech.system.domain.vo.SysFileVo;
 import com.shuyoutech.system.domain.vo.SysUserVo;
 import com.shuyoutech.api.enums.DictTypeEnum;
 import com.shuyoutech.system.enums.FileContentTypeEnum;
@@ -379,7 +385,91 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserEntity, SysUserV
         MongoUtils.patch(userId, update, SysUserEntity.class);
     }
 
+    @Override
+    public ProfileVo getProfile() {
+        String userId = AuthUtils.getLoginUserId();
+        SysUserEntity user = this.getById(userId);
+        if (null == user) {
+            log.error("getProfile ========== userId:{} is not exist", userId);
+            throw new BusinessException("获取用户信息失败");
+        }
+        ProfileVo profile = MapstructUtils.convert(user, ProfileVo.class);
+        Set<String> roleIds = user.getRoleIds();
+        if (null != profile) {
+            List<SysRoleEntity> roles = sysRoleService.getByIds(roleIds);
+            profile.setRoleNames(CollectionUtils.join(StreamUtils.toList(roles, SysRoleEntity::getRoleName), ","));
+            if (StringUtils.isNotBlank(user.getAvatar())) {
+                profile.setAvatar(sysFileService.generatedUrl(user.getAvatar(), 86400000L));
+            }
+        }
+        return profile;
+    }
+
+    @Override
+    public void updateProfile(ProfileUpdateVo profile) {
+        String userId = AuthUtils.getLoginUserId();
+        Update update = new Update();
+        update.set("nickname", profile.getNickname());
+        update.set("mobile", profile.getMobile());
+        update.set("email", profile.getEmail());
+        update.set("sex", profile.getSex());
+        update.set("address", profile.getAddress());
+        MongoUtils.patch(userId, update, SysUserEntity.class);
+    }
+
+    @Override
+    public void updatePassword(String userId, String oldPassword, String newPassword) {
+        SysUserEntity user = this.getById(userId);
+        if (null == user) {
+            throw new BusinessException(StringUtils.format("用户id:{}不存在", userId));
+        }
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new BusinessException("用户密码不正确!");
+        }
+        Update update = new Update();
+        update.set("password", passwordEncoder.encode(newPassword));
+        MongoUtils.patch(userId, update, SysUserEntity.class);
+    }
+
+    @Override
+    public String avatar(MultipartFile file) {
+        SysFileVo sysFile = sysFileService.upload(file);
+        if (null == sysFile) {
+            throw new BusinessException("上传头像失败");
+        }
+        String userId = AuthUtils.getLoginUserId();
+        Update update = new Update();
+        update.set("avatar", sysFile.getId());
+        MongoUtils.patch(userId, update, SysUserEntity.class);
+        return sysFile.getPreviewUrl();
+    }
+
+    @Override
+    public Set<String> permission(String userId) {
+        Set<String> result = CollectionUtils.newHashSet();
+        SysUserEntity user = this.getById(userId);
+        if (null == user || CollectionUtils.isEmpty(user.getRoleIds())) {
+            return result;
+        }
+        List<SysRoleEntity> roles = sysRoleService.getByIds(user.getRoleIds());
+        if (CollectionUtils.isEmpty(roles)) {
+            return result;
+        }
+        Set<String> menuIds = CollectionUtils.newHashSet();
+        roles.forEach(role -> {
+            if (CollectionUtils.isNotEmpty(role.getMenuIds())) {
+                menuIds.addAll(role.getMenuIds());
+            }
+        });
+        List<SysMenuEntity> menus = sysMenuService.getByIds(menuIds);
+        menus.forEach(menu -> result.add(menu.getPerms()));
+        return result;
+    }
+
     private final PasswordEncoder passwordEncoder;
     private final CachePlusService cachePlusService;
+    private final SysRoleService sysRoleService;
+    private final SysMenuService sysMenuService;
+    private final SysFileService sysFileService;
 
 }

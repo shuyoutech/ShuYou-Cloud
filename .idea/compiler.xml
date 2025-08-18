@@ -27,6 +27,7 @@
         <module name="shuyou-api-service" />
         <module name="shuyou-module-pay" />
         <module name="shuyou-module-member" />
+        <module name="shuyou-common-websocket" />
         <module name="shuyou-module-aigc" />
         <module name="shuyou-module-system" />
         <module name="shuyou-common-web" />
@@ -44,6 +45,7 @@
       <module name="shuyou-cloud" options="-parameters" />
       <module name="shuyou-common" options="-parameters" />
       <module name="shuyou-common-web" options="-parameters" />
+      <module name="shuyou-common-websocket" options="-parameters" />
       <module name="shuyou-module" options="-parameters" />
       <module name="shuyou-module-aigc" options="-parameters" />
       <module name="shuyou-module-auth" options="-parameters" />

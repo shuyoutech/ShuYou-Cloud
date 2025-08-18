@@ -28,7 +28,7 @@ public interface RemoteSystemService {
 
     String getFilePath(String fileId);
 
-    String generatedUrl(String ossId, Long expiration);
+    String generatedUrl(String ossId);
 
     RemoteSysFile upload(String originalFilename, byte[] data);
 }

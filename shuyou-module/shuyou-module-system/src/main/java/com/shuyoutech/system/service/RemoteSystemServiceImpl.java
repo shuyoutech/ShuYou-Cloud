@@ -104,8 +104,8 @@ public class RemoteSystemServiceImpl implements RemoteSystemService {
     }
 
     @Override
-    public String generatedUrl(String ossId, Long expiration) {
-        return sysFileService.generatedUrl(ossId, expiration);
+    public String generatedUrl(String ossId) {
+        return sysFileService.generatedUrl(ossId);
     }
 
     @Override

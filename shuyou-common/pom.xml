@@ -18,6 +18,7 @@
 
     <modules>
         <module>shuyou-common-web</module>
+        <module>shuyou-common-websocket</module>
     </modules>
 
 </project>

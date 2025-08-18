@@ -1,10 +1,15 @@
 package com.shuyoutech.system.controller;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.ArrayUtil;
 import com.alibaba.fastjson2.JSONObject;
+import com.shuyoutech.common.core.constant.MimeTypeConstants;
 import com.shuyoutech.common.core.model.R;
 import com.shuyoutech.common.core.model.group.SaveGroup;
 import com.shuyoutech.common.core.model.group.StatusGroup;
 import com.shuyoutech.common.core.model.group.UpdateGroup;
+import com.shuyoutech.common.core.util.StringUtils;
+import com.shuyoutech.common.satoken.util.AuthUtils;
 import com.shuyoutech.common.web.model.PageQuery;
 import com.shuyoutech.common.web.model.PageResult;
 import com.shuyoutech.common.web.model.ParamUnique;
@@ -12,6 +17,9 @@ import com.shuyoutech.system.domain.bo.SysUserBo;
 import com.shuyoutech.system.domain.bo.UserPostsBo;
 import com.shuyoutech.system.domain.bo.UserResetPasswordBo;
 import com.shuyoutech.system.domain.bo.UserRolesBo;
+import com.shuyoutech.system.domain.vo.ProfileUpdatePasswordVo;
+import com.shuyoutech.system.domain.vo.ProfileUpdateVo;
+import com.shuyoutech.system.domain.vo.ProfileVo;
 import com.shuyoutech.system.domain.vo.SysUserVo;
 import com.shuyoutech.system.service.SysUserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,7 +32,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+
+import static com.shuyoutech.common.core.model.R.error;
+import static com.shuyoutech.common.core.model.R.success;
 
 /**
  * @author YangChao
@@ -111,6 +124,54 @@ public class SysUserController {
     public R<Void> grantPost(@Validated @RequestBody UserPostsBo bo) {
         sysUserService.grantPost(bo.getUserId(), bo.getPostIds());
         return R.success();
+    }
+
+    @PostMapping("getProfile")
+    @Operation(summary = "获取个人信息")
+    public R<ProfileVo> getProfile() {
+        return R.success(sysUserService.getProfile());
+    }
+
+    @PostMapping(path = "updateProfile")
+    @Operation(description = "修改个人信息")
+    public R<Void> updateProfile(@RequestBody ProfileUpdateVo profile) {
+        sysUserService.updateProfile(profile);
+        return R.success();
+    }
+
+    @PostMapping(path = "updatePassword")
+    @Operation(description = "修改密码")
+    public R<Void> updatePassword(@RequestBody ProfileUpdatePasswordVo updatePwd) {
+        String userId = AuthUtils.getLoginUserId();
+        String newPassword = updatePwd.getNewPassword();
+        String oldPassword = updatePwd.getOldPassword();
+        sysUserService.updatePassword(userId, oldPassword, newPassword);
+        return R.success();
+    }
+
+    @PostMapping("avatar")
+    @Operation(description = "上传用户头像")
+    public R<String> avatar(@RequestParam("file") MultipartFile file) {
+        try {
+            if (null == file) {
+                return error("上传文件不能为空");
+            }
+            String fileType = FileUtil.extName(file.getOriginalFilename());
+            if (!ArrayUtil.contains(MimeTypeConstants.IMAGE_EXTENSION, fileType)) {
+                return error(StringUtils.format("文件格式不正确，请上传{}格式", Arrays.toString(MimeTypeConstants.IMAGE_EXTENSION)));
+            }
+            return success(sysUserService.avatar(file));
+        } catch (Exception e) {
+            log.error("上传用户头像异常 ============ exception:{}", e.getMessage());
+        }
+        return error("上传用户头像失败");
+    }
+
+    @PostMapping("permission")
+    @Operation(description = "获取路由权限")
+    public R<Set<String>> permission() {
+        String userId = AuthUtils.getLoginUserId();
+        return R.success(sysUserService.permission(userId));
     }
 
     private final SysUserService sysUserService;

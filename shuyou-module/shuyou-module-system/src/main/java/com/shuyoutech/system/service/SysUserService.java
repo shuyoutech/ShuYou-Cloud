@@ -7,6 +7,8 @@ import com.shuyoutech.common.web.model.ParamUnique;
 import com.shuyoutech.common.web.service.SuperService;
 import com.shuyoutech.system.domain.bo.SysUserBo;
 import com.shuyoutech.system.domain.entity.SysUserEntity;
+import com.shuyoutech.system.domain.vo.ProfileUpdateVo;
+import com.shuyoutech.system.domain.vo.ProfileVo;
 import com.shuyoutech.system.domain.vo.SysUserVo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -49,5 +51,15 @@ public interface SysUserService extends SuperService<SysUserEntity, SysUserVo> {
     void grantRole(String userId, Set<String> roleIds);
 
     void grantPost(String userId, Set<String> postIds);
+
+    ProfileVo getProfile();
+
+    void updateProfile(ProfileUpdateVo profile);
+
+    void updatePassword(String userId, String oldPassword, String newPassword);
+
+    String avatar(MultipartFile file);
+
+    Set<String> permission(String userId);
 
 }
