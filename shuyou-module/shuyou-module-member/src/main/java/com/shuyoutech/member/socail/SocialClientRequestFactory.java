@@ -1,10 +1,10 @@
 package com.shuyoutech.member.socail;
 
 import com.shuyoutech.api.enums.SocialTypeEnum;
-import com.shuyoutech.api.model.RemoteSocialClient;
-import com.shuyoutech.api.service.RemoteMemberService;
 import com.shuyoutech.common.core.enums.ErrorCodeEnum;
 import com.shuyoutech.common.core.exception.AuthException;
+import com.shuyoutech.member.domain.entity.SocialClientEntity;
+import com.shuyoutech.member.service.SocialClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 public class SocialClientRequestFactory {
 
     public SocialClientRequest getAuthRequest(String socialType) {
-        RemoteSocialClient socialClient = remoteMemberService.socialClientBySocialType(socialType);
+        SocialClientEntity socialClient = socialClientService.socialClientBySocialType(socialType);
         if (null == socialClient) {
             throw new AuthException(ErrorCodeEnum.PARAM_ERROR);
         }
@@ -36,6 +36,6 @@ public class SocialClientRequestFactory {
         throw new AuthException(ErrorCodeEnum.PARAM_ERROR);
     }
 
-    private final RemoteMemberService remoteMemberService;
+    private final SocialClientService socialClientService;
 
 }

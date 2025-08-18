@@ -3,12 +3,10 @@ package com.shuyoutech.member.service;
 import cn.hutool.core.util.IdUtil;
 import com.shuyoutech.api.model.AuthAccessToken;
 import com.shuyoutech.api.model.RemoteMemberUser;
-import com.shuyoutech.api.model.RemoteSocialClient;
 import com.shuyoutech.api.model.SocialUserInfo;
 import com.shuyoutech.api.service.RemoteMemberService;
 import com.shuyoutech.common.core.util.MapstructUtils;
 import com.shuyoutech.member.domain.entity.MemberUserEntity;
-import com.shuyoutech.member.domain.entity.SocialClientEntity;
 import com.shuyoutech.member.socail.SocialClientRequest;
 import com.shuyoutech.member.socail.SocialClientRequestFactory;
 import lombok.RequiredArgsConstructor;
@@ -37,12 +35,6 @@ public class RemoteMemberServiceImpl implements RemoteMemberService {
     }
 
     @Override
-    public RemoteSocialClient socialClientBySocialType(String socialType) {
-        SocialClientEntity socialClientEntity = socialClientService.socialClientBySocialType(socialType);
-        return MapstructUtils.convert(socialClientEntity, RemoteSocialClient.class);
-    }
-
-    @Override
     public RemoteMemberUser register(String mobile) {
         MemberUserEntity memberUserEntity = memberUserService.register(mobile);
         return MapstructUtils.convert(memberUserEntity, RemoteMemberUser.class);
@@ -55,7 +47,6 @@ public class RemoteMemberServiceImpl implements RemoteMemberService {
     }
 
     private final SocialClientRequestFactory socialClientRequestFactory;
-    private final SocialClientService socialClientService;
     private final MemberUserService memberUserService;
 
 }
