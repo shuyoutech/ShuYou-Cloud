@@ -3,6 +3,7 @@ package com.shuyoutech.aigc.provider.service;
 import com.shuyoutech.aigc.domain.model.ChatModelBuilder;
 import com.shuyoutech.aigc.domain.model.CommonModelBuilder;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.socket.WebSocketSession;
 
 /**
  * 模型公共的API功能
@@ -21,6 +22,12 @@ public interface ModelService {
      * 对话模型
      */
     default void chat(ChatModelBuilder builder, HttpServletResponse response) {
+    }
+
+    /**
+     * 对话模型
+     */
+    default void chat(ChatModelBuilder builder, WebSocketSession webSocketSession) {
     }
 
     /**

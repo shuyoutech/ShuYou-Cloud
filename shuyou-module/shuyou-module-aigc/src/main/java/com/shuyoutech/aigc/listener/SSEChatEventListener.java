@@ -19,6 +19,8 @@ import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSourceListener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -40,6 +42,7 @@ public class SSEChatEventListener extends EventSourceListener {
     private CountDownLatch countDownLatch = new CountDownLatch(1);
     private UserModelUsage userModelUsage;
     private HttpServletResponse response;
+    private WebSocketSession webSocketSession;
     private StringBuilder contentSb = new StringBuilder();
     private StringBuilder dataSb = new StringBuilder();
     private TokenUsage tokenUsage;
@@ -48,6 +51,13 @@ public class SSEChatEventListener extends EventSourceListener {
     public SSEChatEventListener(UserModelUsage userModelUsage, HttpServletResponse response) {
         this.userModelUsage = userModelUsage;
         this.response = response;
+        this.provider = userModelUsage.getProvider();
+        this.tokenUsage = TokenUsage.builder().inputTokenCount(0).outputTokenCount(0).totalTokenCount(0).build();
+    }
+
+    public SSEChatEventListener(UserModelUsage userModelUsage, WebSocketSession webSocketSession) {
+        this.userModelUsage = userModelUsage;
+        this.webSocketSession = webSocketSession;
         this.provider = userModelUsage.getProvider();
         this.tokenUsage = TokenUsage.builder().inputTokenCount(0).outputTokenCount(0).totalTokenCount(0).build();
     }
@@ -78,13 +88,20 @@ public class SSEChatEventListener extends EventSourceListener {
             json.put("outputTokenCount", userModelUsage.getOutputTokenCount());
             json.put("durationSeconds", userModelUsage.getDurationSeconds());
             json.put("totalLength", contentSb.length());
-            response.getWriter().write("event:" + EVENT_END);
-            response.getWriter().println();
-            response.getWriter().write("data: " + json.toJSONString());
-            response.getWriter().println();
-            response.getWriter().println();
-            response.getWriter().flush();
 
+            if (null != response) {
+                response.getWriter().write("event:" + EVENT_END);
+                response.getWriter().println();
+                response.getWriter().write("data: " + json.toJSONString());
+                response.getWriter().println();
+                response.getWriter().println();
+                response.getWriter().flush();
+            } else {
+                JSONObject object = new JSONObject();
+                object.put("event", EVENT_END);
+                object.put("data", json.toJSONString());
+                webSocketSession.sendMessage(new TextMessage(object.toJSONString()));
+            }
             countDownLatch.countDown();
         } catch (Exception e) {
             log.error("onClosed ====================== exception:{}", e.getMessage());
@@ -115,12 +132,19 @@ public class SSEChatEventListener extends EventSourceListener {
                         contentSb.append(part.getString("text"));
                         JSONObject json = new JSONObject();
                         json.put("content", part.getString("text"));
-                        response.getWriter().write("event:" + EVENT_ANSWER);
-                        response.getWriter().println();
-                        response.getWriter().write("data: " + json.toJSONString());
-                        response.getWriter().println();
-                        response.getWriter().println();
-                        response.getWriter().flush();
+                        if (null != response) {
+                            response.getWriter().write("event:" + EVENT_ANSWER);
+                            response.getWriter().println();
+                            response.getWriter().write("data: " + json.toJSONString());
+                            response.getWriter().println();
+                            response.getWriter().println();
+                            response.getWriter().flush();
+                        } else {
+                            JSONObject object2 = new JSONObject();
+                            object2.put("event", EVENT_ANSWER);
+                            object2.put("data", json.toJSONString());
+                            webSocketSession.sendMessage(new TextMessage(object2.toJSONString()));
+                        }
                     }
                 }
             } else if (AiProviderTypeEnum.ANTHROPIC.getValue().equals(provider)) {
@@ -148,12 +172,19 @@ public class SSEChatEventListener extends EventSourceListener {
                         contentSb.append(content);
                         JSONObject json = new JSONObject();
                         json.put("content", content);
-                        response.getWriter().write("event:" + EVENT_ANSWER);
-                        response.getWriter().println();
-                        response.getWriter().write("data: " + json.toJSONString());
-                        response.getWriter().println();
-                        response.getWriter().println();
-                        response.getWriter().flush();
+                        if (null != response) {
+                            response.getWriter().write("event:" + EVENT_ANSWER);
+                            response.getWriter().println();
+                            response.getWriter().write("data: " + json.toJSONString());
+                            response.getWriter().println();
+                            response.getWriter().println();
+                            response.getWriter().flush();
+                        } else {
+                            JSONObject object2 = new JSONObject();
+                            object2.put("event", EVENT_ANSWER);
+                            object2.put("data", json.toJSONString());
+                            webSocketSession.sendMessage(new TextMessage(object2.toJSONString()));
+                        }
                     }
                 }
             } else {
@@ -184,12 +215,19 @@ public class SSEChatEventListener extends EventSourceListener {
                             contentSb.append(content);
                             JSONObject json = new JSONObject();
                             json.put("content", content);
-                            response.getWriter().write("event:" + EVENT_ANSWER);
-                            response.getWriter().println();
-                            response.getWriter().write("data: " + json.toJSONString());
-                            response.getWriter().println();
-                            response.getWriter().println();
-                            response.getWriter().flush();
+                            if (null != response) {
+                                response.getWriter().write("event:" + EVENT_ANSWER);
+                                response.getWriter().println();
+                                response.getWriter().write("data: " + json.toJSONString());
+                                response.getWriter().println();
+                                response.getWriter().println();
+                                response.getWriter().flush();
+                            } else {
+                                JSONObject object2 = new JSONObject();
+                                object2.put("event", EVENT_ANSWER);
+                                object2.put("data", json.toJSONString());
+                                webSocketSession.sendMessage(new TextMessage(object2.toJSONString()));
+                            }
                         }
                     }
                 }
@@ -203,15 +241,22 @@ public class SSEChatEventListener extends EventSourceListener {
     public void onFailure(@NotNull EventSource eventSource, @Nullable Throwable t, @Nullable Response res) {
         if (null != res) {
             try {
+                String body = new String(res.body().bytes(), StandardCharsets.UTF_8);
                 JSONObject object = new JSONObject();
                 object.put("code", res.code());
                 object.put("message", res.message());
-                response.setContentType(APPLICATION_JSON_VALUE);
-                response.setStatus(res.code());
-                String body = new String(res.body().bytes(), StandardCharsets.UTF_8);
-                response.getWriter().write(body);
                 object.put("body", body);
-                response.getWriter().flush();
+                if (null != response) {
+                    response.setContentType(APPLICATION_JSON_VALUE);
+                    response.setStatus(res.code());
+                    response.getWriter().write(body);
+                    response.getWriter().flush();
+                } else {
+                    JSONObject object2 = new JSONObject();
+                    object2.put("event", EVENT_ERROR);
+                    object2.put("data", body);
+                    webSocketSession.sendMessage(new TextMessage(object2.toJSONString()));
+                }
                 dataSb.append(object.toJSONString());
             } catch (Exception e) {
                 log.error("onFailure ====================== exception:{}", e.getMessage());

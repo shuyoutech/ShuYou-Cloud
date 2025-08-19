@@ -462,7 +462,13 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserEntity, SysUserV
             }
         });
         List<SysMenuEntity> menus = sysMenuService.getByIds(menuIds);
-        menus.forEach(menu -> result.add(menu.getPerms()));
+        if (CollectionUtils.isNotEmpty(menus)) {
+            menus.forEach(menu -> {
+                if (StringUtils.isNotBlank(menu.getPerms())) {
+                    result.add(menu.getPerms());
+                }
+            });
+        }
         return result;
     }
 

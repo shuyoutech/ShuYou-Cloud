@@ -21,14 +21,11 @@ import com.shuyoutech.common.core.enums.ErrorCodeEnum;
 import com.shuyoutech.common.core.enums.StatusEnum;
 import com.shuyoutech.common.core.exception.BusinessException;
 import com.shuyoutech.common.core.util.StringUtils;
-import com.shuyoutech.common.redis.util.RedisUtils;
 import com.shuyoutech.common.satoken.constant.AuthConstants;
 import com.shuyoutech.common.satoken.model.LoginUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import static com.shuyoutech.common.redis.constant.CacheConstants.CAPTCHA_SMS_KEY;
 
 /**
  * @author YangChao
@@ -76,10 +73,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthLoginVo smsLogin(SmsLoginBo bo) {
-        String captcha = RedisUtils.getString(CAPTCHA_SMS_KEY + bo.getMobile());
+/*        String captcha = RedisUtils.getString(CAPTCHA_SMS_KEY + bo.getMobile());
         if (!bo.getCode().equals(captcha)) {
             throw new BusinessException("手机验证码校验失败");
-        }
+        }*/
         RemoteMemberUser memberUser = remoteMemberService.register(bo.getMobile());
         SaLoginParameter parameter = new SaLoginParameter();
         parameter.setExtra(CommonConstants.USER_ID, memberUser.getId());
@@ -87,7 +84,7 @@ public class AuthServiceImpl implements AuthService {
         parameter.setExtra(CommonConstants.USER_TYPE, UserTypeEnum.MEMBER.getValue());
         StpUtil.login(memberUser.getId(), parameter);
         StpUtil.getTokenSession().set(AuthConstants.LOGIN_USER, memberUser);
-        RedisUtils.delete(CAPTCHA_SMS_KEY + bo.getMobile());
+   //     RedisUtils.delete(CAPTCHA_SMS_KEY + bo.getMobile());
         return AuthLoginVo.builder() //
                 .userId(memberUser.getId()) //
                 .accessToken(StpUtil.getTokenValue()) //

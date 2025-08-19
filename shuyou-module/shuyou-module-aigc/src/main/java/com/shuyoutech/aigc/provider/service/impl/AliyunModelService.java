@@ -25,6 +25,7 @@ import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSources;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
@@ -56,8 +57,7 @@ public class AliyunModelService implements ModelService {
         return AiProviderTypeEnum.ALIYUN.getValue();
     }
 
-    @Override
-    public void chat(ChatModelBuilder builder, HttpServletResponse response) {
+    private void chat(ChatModelBuilder builder, HttpServletResponse response, WebSocketSession webSocketSession) {
         try {
             UserModelUsage userToken = builder.getUserToken();
             JSONObject modelParam = builder.getModelParam();
@@ -154,9 +154,16 @@ public class AliyunModelService implements ModelService {
             userToken.setEnableMemory(modelParam.getBooleanValue("enable_memory", false));
             userToken.setEnableThinking(modelParam.getBooleanValue("enable_thinking", false));
             userToken.setEnableSearch(modelParam.getBooleanValue("enable_search", false));
-            SSEChatEventListener sseChatEventListener = new SSEChatEventListener(userToken, response);
-            EventSource.Factory factory = EventSources.createFactory(client);
-            factory.newEventSource(request, sseChatEventListener);
+            SSEChatEventListener sseChatEventListener;
+            if (null != response) {
+                sseChatEventListener = new SSEChatEventListener(userToken, response);
+                EventSource.Factory factory = EventSources.createFactory(client);
+                factory.newEventSource(request, sseChatEventListener);
+            } else {
+                sseChatEventListener = new SSEChatEventListener(userToken, webSocketSession);
+                EventSource.Factory factory = EventSources.createFactory(client);
+                factory.newEventSource(request, sseChatEventListener);
+            }
             boolean await = sseChatEventListener.getCountDownLatch().await(5, TimeUnit.MINUTES);
             if (!await) {
                 log.error("chat Aliyun ============================ getCountDownLatch timed out");
@@ -164,6 +171,16 @@ public class AliyunModelService implements ModelService {
         } catch (Exception e) {
             log.error("chat Aliyun ===================== exception:{}", e.getMessage());
         }
+    }
+
+    @Override
+    public void chat(ChatModelBuilder builder, HttpServletResponse response) {
+        chat(builder, response, null);
+    }
+
+    @Override
+    public void chat(ChatModelBuilder builder, WebSocketSession webSocketSession) {
+        chat(builder, null, webSocketSession);
     }
 
     @Override
