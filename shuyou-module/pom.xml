@@ -23,6 +23,7 @@
         <module>shuyou-module-member</module>
         <module>shuyou-module-notice</module>
         <module>shuyou-module-pay</module>
+        <module>shuyou-module-api</module>
     </modules>
 
 </project>

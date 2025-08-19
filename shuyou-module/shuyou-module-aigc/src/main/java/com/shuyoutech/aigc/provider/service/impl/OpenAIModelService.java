@@ -37,9 +37,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.shuyoutech.aigc.constant.AiConstants.*;
 import static com.shuyoutech.aigc.enums.AiModelFunctionEnum.*;
 import static com.shuyoutech.aigc.provider.AigcModelFactory.MEDIA_TYPE_JSON;
+import static com.shuyoutech.api.constant.AiConstants.*;
 import static com.shuyoutech.common.core.constant.CommonConstants.HEADER_AUTHORIZATION_PREFIX;
 import static com.shuyoutech.common.disruptor.init.DisruptorRunner.disruptorProducer;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -124,10 +124,10 @@ public class OpenAIModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_OPENAI) + OPENAI_CHAT_COMPLETIONS)//
+                    .url(builder.getBaseUrl() + OPENAI_CHAT_COMPLETIONS)//
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(builder.getApiKey(), API_KEY_OPENAI)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
                     .build();
 
             userToken.setRequestBody(requestBody);
@@ -206,10 +206,10 @@ public class OpenAIModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_OPENAI) + OPENAI_IMAGES_GENERATIONS) //
+                    .url(builder.getBaseUrl() + OPENAI_IMAGES_GENERATIONS) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(builder.getApiKey(), API_KEY_OPENAI)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
                     .build();
 
             Response res = client.newCall(request).execute();
@@ -255,10 +255,10 @@ public class OpenAIModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_OPENAI) + IMAGES_EDITS) //
+                    .url(builder.getBaseUrl() + IMAGES_EDITS) //
                     .post(body) //
                     .addHeader(HttpHeaders.ACCEPT, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(builder.getApiKey(), API_KEY_OPENAI)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
                     .build();
 
             Response res = client.newCall(request).execute();
@@ -297,10 +297,10 @@ public class OpenAIModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_OPENAI) + OPENAI_IMAGES_VARIATIONS) //
+                    .url(builder.getBaseUrl() + OPENAI_IMAGES_VARIATIONS) //
                     .post(body) //
                     .addHeader(HttpHeaders.ACCEPT, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(builder.getApiKey(), API_KEY_OPENAI)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
                     .build();
 
             Response res = client.newCall(request).execute();
@@ -398,10 +398,10 @@ public class OpenAIModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_OPENAI) + OPENAI_AUDIO_SPEECH) //
+                    .url(builder.getBaseUrl() + OPENAI_AUDIO_SPEECH) //
                     .post(body) //
                     .addHeader(org.springframework.http.HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(org.springframework.http.HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(builder.getApiKey(), API_KEY_OPENAI)) //
+                    .addHeader(org.springframework.http.HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
                     .build();
 
             Response res = client.newCall(request).execute();
@@ -464,10 +464,10 @@ public class OpenAIModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_OPENAI) + OPENAI_AUDIO_TRANSCRIPTIONS) //
+                    .url(builder.getBaseUrl() + OPENAI_AUDIO_TRANSCRIPTIONS) //
                     .post(body) //
                     .addHeader(HttpHeaders.ACCEPT, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(builder.getApiKey(), API_KEY_OPENAI)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
                     .build();
 
             Response res = client.newCall(request).execute();
@@ -534,10 +534,10 @@ public class OpenAIModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_OPENAI) + OPENAI_AUDIO_TRANSLATIONS) //
+                    .url(builder.getBaseUrl() + OPENAI_AUDIO_TRANSLATIONS) //
                     .post(body) //
                     .addHeader(HttpHeaders.ACCEPT, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(builder.getApiKey(), API_KEY_OPENAI)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
                     .build();
 
             Response res = client.newCall(request).execute();

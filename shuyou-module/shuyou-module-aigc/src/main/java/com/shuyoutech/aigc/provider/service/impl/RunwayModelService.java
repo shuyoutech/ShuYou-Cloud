@@ -31,9 +31,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.shuyoutech.aigc.constant.AiConstants.*;
 import static com.shuyoutech.aigc.enums.AiModelFunctionEnum.*;
 import static com.shuyoutech.aigc.provider.AigcModelFactory.MEDIA_TYPE_JSON;
+import static com.shuyoutech.api.constant.AiConstants.*;
 import static com.shuyoutech.common.core.constant.CommonConstants.HEADER_AUTHORIZATION_PREFIX;
 import static com.shuyoutech.common.disruptor.init.DisruptorRunner.disruptorProducer;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -96,10 +96,10 @@ public class RunwayModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_RUNWAY) + RUNWAY_TEXT_TO_IMAGE) //
+                    .url(builder.getBaseUrl() + RUNWAY_TEXT_TO_IMAGE) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(builder.getApiKey(), API_KEY_RUNWAY)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
                     .addHeader(RUNWAY_HEADER_X_RUNWAY_VERSION, RUNWAY_HEADER_X_RUNWAY_VERSION_VALUE) //
                     .build();
 
@@ -158,10 +158,10 @@ public class RunwayModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_RUNWAY) + RUNWAY_IMAGE_TO_VIDEO) //
+                    .url(builder.getBaseUrl() + RUNWAY_IMAGE_TO_VIDEO) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(builder.getApiKey(), API_KEY_RUNWAY)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
                     .addHeader(RUNWAY_HEADER_X_RUNWAY_VERSION, RUNWAY_HEADER_X_RUNWAY_VERSION_VALUE) //
                     .build();
 
@@ -195,10 +195,10 @@ public class RunwayModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_RUNWAY) + RUNWAY_VIDEO_UPSCALE) //
+                    .url(builder.getBaseUrl() + RUNWAY_VIDEO_UPSCALE) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(builder.getApiKey(), API_KEY_RUNWAY)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
                     .addHeader(RUNWAY_HEADER_X_RUNWAY_VERSION, RUNWAY_HEADER_X_RUNWAY_VERSION_VALUE) //
                     .build();
 
@@ -257,10 +257,10 @@ public class RunwayModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_RUNWAY) + RUNWAY_CHARACTER_PERFORMANCE) //
+                    .url(builder.getBaseUrl() + RUNWAY_CHARACTER_PERFORMANCE) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(builder.getApiKey(), API_KEY_RUNWAY)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
                     .addHeader(RUNWAY_HEADER_X_RUNWAY_VERSION, RUNWAY_HEADER_X_RUNWAY_VERSION_VALUE) //
                     .build();
 
@@ -276,7 +276,7 @@ public class RunwayModelService implements ModelService {
      */
     private void dealTaskResponse(String baseUrl, String apiKey, UserModelUsage userToken, Response res, HttpServletResponse response) {
         try {
-            if (res.isSuccessful() ) {
+            if (res.isSuccessful()) {
                 String bodyStr = new String(res.body().bytes(), StandardCharsets.UTF_8);
                 log.info("dealTaskResponse Runway ====================== data:{}", bodyStr);
                 JSONObject bodyObject = JSONObject.parseObject(bodyStr);
@@ -346,14 +346,14 @@ public class RunwayModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(baseUrl, API_URL_RUNWAY) + RUNWAY_TASKS + taskId) //
+                    .url(baseUrl + RUNWAY_TASKS + taskId) //
                     .get() //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(apiKey, API_KEY_RUNWAY)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + apiKey) //
                     .addHeader(RUNWAY_HEADER_X_RUNWAY_VERSION, RUNWAY_HEADER_X_RUNWAY_VERSION_VALUE) //
                     .build();
 
             Response res = client.newCall(request).execute();
-            if (res.isSuccessful() ) {
+            if (res.isSuccessful()) {
                 String bodyStr = new String(res.body().bytes(), StandardCharsets.UTF_8);
                 log.info("getTask Runway ====================== data:{}", bodyStr);
                 return JSONObject.parseObject(bodyStr);

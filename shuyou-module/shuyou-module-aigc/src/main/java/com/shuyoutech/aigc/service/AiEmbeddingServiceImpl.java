@@ -6,7 +6,7 @@ import cn.hutool.core.text.csv.CsvRow;
 import cn.hutool.core.text.csv.CsvUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.IdUtil;
-import com.shuyoutech.aigc.constant.AiConstants;
+import com.shuyoutech.api.constant.AiConstants;
 import com.shuyoutech.aigc.domain.entity.AigcKnowledgeDocEntity;
 import com.shuyoutech.aigc.domain.entity.AigcKnowledgeDocSliceEntity;
 import com.shuyoutech.aigc.domain.vo.*;

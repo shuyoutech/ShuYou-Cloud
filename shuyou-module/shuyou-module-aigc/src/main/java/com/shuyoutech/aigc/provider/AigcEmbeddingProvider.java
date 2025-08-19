@@ -1,6 +1,6 @@
 package com.shuyoutech.aigc.provider;
 
-import com.shuyoutech.aigc.constant.AiConstants;
+import com.shuyoutech.api.constant.AiConstants;
 import com.shuyoutech.aigc.domain.vo.EmbeddingDocReq;
 import com.shuyoutech.aigc.domain.vo.EmbeddingText;
 import com.shuyoutech.common.core.util.CollectionUtils;

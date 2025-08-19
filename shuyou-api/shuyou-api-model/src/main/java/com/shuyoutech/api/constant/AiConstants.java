@@ -1,4 +1,4 @@
-package com.shuyoutech.aigc.constant;
+package com.shuyoutech.api.constant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -205,10 +205,8 @@ public interface AiConstants {
         }
     };
 
-
     String IMAGES_EDITS = "/images/edits";
     String API_URL_ALIYUN = "https://dashscope.aliyuncs.com";
-    String API_KEY_ALIYUN = "sk-c8e34c0557a945819a6a05061da754f6";
     String ALIYUN_HEADER_DASH_SCOPE_ASYNC = "X-DashScope-Async";
     String ALIYUN_HEADER_DASH_SCOPE_ASYNC_VALUE = "enable";
     String ALIYUN_CHAT_COMPLETIONS = "/compatible-mode/v1/chat/completions";
@@ -233,12 +231,10 @@ public interface AiConstants {
 
 
     String API_URL_DEEPSEEK = "https://api.deepseek.com";
-    String API_KEY_DEEPSEEK = "";
     String DEEPSEEK_CHAT_COMPLETIONS = "/chat/completions";
     String DEEPSEEK_BETA_COMPLETIONS = "/beta/completions";
 
     String API_URL_OPENAI = "https://api.openai.com";
-    String API_KEY_OPENAI = "";
     String OPENAI_CHAT_COMPLETIONS = "/v1/chat/completions";
     String OPENAI_IMAGES_GENERATIONS = "/v1/images/generations";
     String OPENAI_IMAGES_VARIATIONS = "/v1/images/variations";
@@ -249,18 +245,14 @@ public interface AiConstants {
     String OPENAI_MODERATIONS = "/v1/moderations";
 
     String API_URL_GOOGLE = "https://generativelanguage.googleapis.com";
-    String API_KEY_GOOGLE = "";
     String GOOGLE_GENERATE_CONTENT = "/v1beta/models/{}:generateContent?key={}";
 
     String API_URL_ANTHROPIC = "https://api.anthropic.com";
-    String API_KEY_ANTHROPIC = "";
     String ANTHROPIC_CHAT_COMPLETIONS = "/v1/messages";
 
     String API_URL_XAI = "https://api.x.ai";
-    String API_KEY_XAI = "";
 
     String API_URL_RUNWAY = "https://api.dev.runwayml.com";
-    String API_KEY_RUNWAY = "";
     String RUNWAY_HEADER_X_RUNWAY_VERSION = "X-Runway-Version";
     String RUNWAY_HEADER_X_RUNWAY_VERSION_VALUE = "2024-11-06";
     String RUNWAY_TEXT_TO_IMAGE = "/v1/text_to_image";
@@ -270,10 +262,8 @@ public interface AiConstants {
     String RUNWAY_TASKS = "/v1/tasks/";
 
     String API_URL_STABLE_DIFFUSION = "https://api.stability.ai";
-    String API_KEY_STABLE_DIFFUSION = "";
 
     String API_URL_KLING = "https://api.klingai.com";
-    String API_KEY_KLING = "";
     String KLING_IMAGES_GENERATIONS = "/v1/images/generations";
     String KLING_IMAGES_VIRTUAL_TRY_ON = "/v1/images/kolors-virtual-try-on";
     String KLING_VIDEOS_TEXT2VIDEO = "/v1/videos/text2video";
@@ -284,7 +274,6 @@ public interface AiConstants {
     String KLING_VIDEOS_VIDEO_EFFECTS = "/v1/videos/effects";
 
     String API_URL_OPEN_ROUTER = "https://openrouter.ai/api";
-    String API_KEY_OPEN_ROUTER = "";
 
     String USER_CHAT_SERVICE = "userChatServiceImpl";
     String USER_IMAGE_SERVICE = "userImageServiceImpl";

@@ -34,9 +34,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.shuyoutech.aigc.constant.AiConstants.*;
 import static com.shuyoutech.aigc.enums.AiModelFunctionEnum.*;
 import static com.shuyoutech.aigc.provider.AigcModelFactory.MEDIA_TYPE_JSON;
+import static com.shuyoutech.api.constant.AiConstants.*;
 import static com.shuyoutech.common.core.constant.CommonConstants.HEADER_AUTHORIZATION_PREFIX;
 import static com.shuyoutech.common.disruptor.init.DisruptorRunner.disruptorProducer;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -109,12 +109,12 @@ public class KlingModelService implements ModelService {
                     .build();
 
             String apiKey = builder.getApiKey();
-            String url = StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_KLING) + KLING_IMAGES_GENERATIONS;
+            String url = builder.getBaseUrl() + KLING_IMAGES_GENERATIONS;
             Request request = new Request.Builder() //
                     .url(url) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + getToken(StringUtils.blankToDefault(apiKey, API_KEY_KLING))) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + getToken(apiKey)) //
                     .build();
 
             Response res = client.newCall(request).execute();
@@ -148,12 +148,12 @@ public class KlingModelService implements ModelService {
                     .build();
 
             String apiKey = builder.getApiKey();
-            String url = StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_KLING) + KLING_IMAGES_VIRTUAL_TRY_ON;
+            String url = builder.getBaseUrl() + KLING_IMAGES_VIRTUAL_TRY_ON;
             Request request = new Request.Builder() //
                     .url(url) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + getToken(StringUtils.blankToDefault(apiKey, API_KEY_KLING))) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + getToken(apiKey)) //
                     .build();
 
             Response res = client.newCall(request).execute();
@@ -224,12 +224,12 @@ public class KlingModelService implements ModelService {
                     .build();
 
             String apiKey = builder.getApiKey();
-            String url = StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_KLING) + KLING_VIDEOS_TEXT2VIDEO;
+            String url = builder.getBaseUrl() + KLING_VIDEOS_TEXT2VIDEO;
             Request request = new Request.Builder() //
                     .url(url) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + getToken(StringUtils.blankToDefault(apiKey, API_KEY_KLING))) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + getToken(apiKey)) //
                     .build();
 
             Response res = client.newCall(request).execute();
@@ -282,12 +282,12 @@ public class KlingModelService implements ModelService {
                     .build();
 
             String apiKey = builder.getApiKey();
-            String url = StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_KLING) + KLING_VIDEOS_IMAGE2VIDEO;
+            String url = builder.getBaseUrl() + KLING_VIDEOS_IMAGE2VIDEO;
             Request request = new Request.Builder() //
                     .url(url) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + getToken(StringUtils.blankToDefault(apiKey, API_KEY_KLING))) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + getToken(apiKey)) //
                     .build();
 
             Response res = client.newCall(request).execute();
@@ -332,12 +332,12 @@ public class KlingModelService implements ModelService {
                     .build();
 
             String apiKey = builder.getApiKey();
-            String url = StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_KLING) + KLING_VIDEOS_MULTI_IMAGE2VIDEO;
+            String url = builder.getBaseUrl() + KLING_VIDEOS_MULTI_IMAGE2VIDEO;
             Request request = new Request.Builder() //
                     .url(url) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + getToken(StringUtils.blankToDefault(apiKey, API_KEY_KLING))) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + getToken(apiKey)) //
                     .build();
 
             Response res = client.newCall(request).execute();
@@ -376,12 +376,12 @@ public class KlingModelService implements ModelService {
                     .build();
 
             String apiKey = builder.getApiKey();
-            String url = StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_KLING) + KLING_VIDEOS_VIDEO_EXTEND;
+            String url = builder.getBaseUrl() + KLING_VIDEOS_VIDEO_EXTEND;
             Request request = new Request.Builder() //
                     .url(url) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + getToken(StringUtils.blankToDefault(apiKey, API_KEY_KLING))) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + getToken(apiKey)) //
                     .build();
 
             Response res = client.newCall(request).execute();
@@ -433,12 +433,12 @@ public class KlingModelService implements ModelService {
                     .build();
 
             String apiKey = builder.getApiKey();
-            String url = StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_KLING) + KLING_VIDEOS_VIDEO_LIP_SYNC;
+            String url = builder.getBaseUrl() + KLING_VIDEOS_VIDEO_LIP_SYNC;
             Request request = new Request.Builder() //
                     .url(url) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + getToken(StringUtils.blankToDefault(apiKey, API_KEY_KLING))) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + getToken(apiKey)) //
                     .build();
 
             Response res = client.newCall(request).execute();
@@ -484,12 +484,12 @@ public class KlingModelService implements ModelService {
                     .build();
 
             String apiKey = builder.getApiKey();
-            String url = StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_KLING) + KLING_VIDEOS_VIDEO_EFFECTS;
+            String url = builder.getBaseUrl() + KLING_VIDEOS_VIDEO_EFFECTS;
             Request request = new Request.Builder() //
                     .url(url) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + getToken(StringUtils.blankToDefault(apiKey, API_KEY_KLING))) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + getToken(apiKey)) //
                     .build();
 
             Response res = client.newCall(request).execute();
@@ -640,7 +640,7 @@ public class KlingModelService implements ModelService {
             Request request = new Request.Builder() //
                     .url(url + "/" + taskId) //
                     .get() //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + getToken(StringUtils.blankToDefault(apiKey, API_KEY_KLING))) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + getToken(apiKey)) //
                     .build();
 
             Response res = client.newCall(request).execute();

@@ -1,7 +1,7 @@
 package com.shuyoutech.aigc.service;
 
 import com.alibaba.fastjson2.JSON;
-import com.shuyoutech.aigc.constant.AiConstants;
+import com.shuyoutech.api.constant.AiConstants;
 import com.shuyoutech.aigc.domain.bo.AigcKnowledgeBo;
 import com.shuyoutech.aigc.domain.entity.AigcKnowledgeEntity;
 import com.shuyoutech.aigc.domain.entity.AigcModelEntity;

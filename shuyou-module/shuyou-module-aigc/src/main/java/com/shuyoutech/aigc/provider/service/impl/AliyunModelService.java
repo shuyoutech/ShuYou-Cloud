@@ -34,9 +34,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.shuyoutech.aigc.constant.AiConstants.*;
 import static com.shuyoutech.aigc.enums.AiModelFunctionEnum.*;
 import static com.shuyoutech.aigc.provider.AigcModelFactory.MEDIA_TYPE_JSON;
+import static com.shuyoutech.api.constant.AiConstants.*;
 import static com.shuyoutech.common.core.constant.CommonConstants.HEADER_AUTHORIZATION_PREFIX;
 import static com.shuyoutech.common.disruptor.init.DisruptorRunner.disruptorProducer;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -144,10 +144,10 @@ public class AliyunModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_ALIYUN) + ALIYUN_CHAT_COMPLETIONS) //
+                    .url(builder.getBaseUrl() + ALIYUN_CHAT_COMPLETIONS) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(builder.getApiKey(), API_KEY_ALIYUN)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
                     .build();
 
             userToken.setRequestBody(requestBody);
@@ -284,10 +284,10 @@ public class AliyunModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_ALIYUN) + ALIYUN_IMAGES_SYNTHESIS) //
+                    .url(builder.getBaseUrl() + ALIYUN_IMAGES_SYNTHESIS) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(builder.getApiKey(), API_KEY_ALIYUN)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
                     .addHeader(ALIYUN_HEADER_DASH_SCOPE_ASYNC, ALIYUN_HEADER_DASH_SCOPE_ASYNC_VALUE) //
                     .build();
 
@@ -356,10 +356,10 @@ public class AliyunModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_ALIYUN) + ALIYUN_IMAGES_VIRTUAL_MODEL) //
+                    .url(builder.getBaseUrl() + ALIYUN_IMAGES_VIRTUAL_MODEL) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(builder.getApiKey(), API_KEY_ALIYUN)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
                     .addHeader(ALIYUN_HEADER_DASH_SCOPE_ASYNC, ALIYUN_HEADER_DASH_SCOPE_ASYNC_VALUE) //
                     .build();
 
@@ -414,10 +414,10 @@ public class AliyunModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_ALIYUN) + ALIYUN_BACKGROUND_GENERATION) //
+                    .url(builder.getBaseUrl() + ALIYUN_BACKGROUND_GENERATION) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(builder.getApiKey(), API_KEY_ALIYUN)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
                     .addHeader(ALIYUN_HEADER_DASH_SCOPE_ASYNC, ALIYUN_HEADER_DASH_SCOPE_ASYNC_VALUE) //
                     .build();
 
@@ -468,10 +468,10 @@ public class AliyunModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_ALIYUN) + ALIYUN_WORDART_SEMANTIC) //
+                    .url(builder.getBaseUrl() + ALIYUN_WORDART_SEMANTIC) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(builder.getApiKey(), API_KEY_ALIYUN)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
                     .addHeader(ALIYUN_HEADER_DASH_SCOPE_ASYNC, ALIYUN_HEADER_DASH_SCOPE_ASYNC_VALUE) //
                     .build();
 
@@ -539,10 +539,10 @@ public class AliyunModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_ALIYUN) + ALIYUN_WORDART_TEXTURE) //
+                    .url(builder.getBaseUrl() + ALIYUN_WORDART_TEXTURE) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(builder.getApiKey(), API_KEY_ALIYUN)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
                     .addHeader(ALIYUN_HEADER_DASH_SCOPE_ASYNC, ALIYUN_HEADER_DASH_SCOPE_ASYNC_VALUE) //
                     .build();
 
@@ -679,10 +679,10 @@ public class AliyunModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_ALIYUN) + ALIYUN_IMAGES_IMAGE_SYNTHESIS) //
+                    .url(builder.getBaseUrl() + ALIYUN_IMAGES_IMAGE_SYNTHESIS) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(builder.getApiKey(), API_KEY_ALIYUN)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
                     .addHeader(ALIYUN_HEADER_DASH_SCOPE_ASYNC, ALIYUN_HEADER_DASH_SCOPE_ASYNC_VALUE) //
                     .build();
 
@@ -722,10 +722,10 @@ public class AliyunModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_ALIYUN) + ALIYUN_IMAGES_IMAGE_SYNTHESIS) //
+                    .url(builder.getBaseUrl() + ALIYUN_IMAGES_IMAGE_SYNTHESIS) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(builder.getApiKey(), API_KEY_ALIYUN)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
                     .addHeader(ALIYUN_HEADER_DASH_SCOPE_ASYNC, ALIYUN_HEADER_DASH_SCOPE_ASYNC_VALUE) //
                     .build();
 
@@ -787,10 +787,10 @@ public class AliyunModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_ALIYUN) + ALIYUN_IMAGES_OUT_PAINTING) //
+                    .url(builder.getBaseUrl() + ALIYUN_IMAGES_OUT_PAINTING) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(builder.getApiKey(), API_KEY_ALIYUN)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
                     .addHeader(ALIYUN_HEADER_DASH_SCOPE_ASYNC, ALIYUN_HEADER_DASH_SCOPE_ASYNC_VALUE) //
                     .build();
 
@@ -905,10 +905,10 @@ public class AliyunModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_ALIYUN) + ALIYUN_VIDEO_SYNTHESIS) //
+                    .url(builder.getBaseUrl() + ALIYUN_VIDEO_SYNTHESIS) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(builder.getApiKey(), API_KEY_ALIYUN)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
                     .addHeader(ALIYUN_HEADER_DASH_SCOPE_ASYNC, ALIYUN_HEADER_DASH_SCOPE_ASYNC_VALUE) //
                     .build();
 
@@ -973,10 +973,10 @@ public class AliyunModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_ALIYUN) + ALIYUN_IMAGE2_VIDEO_SYNTHESIS) //
+                    .url(builder.getBaseUrl() + ALIYUN_IMAGE2_VIDEO_SYNTHESIS) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(builder.getApiKey(), API_KEY_ALIYUN)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
                     .addHeader(ALIYUN_HEADER_DASH_SCOPE_ASYNC, ALIYUN_HEADER_DASH_SCOPE_ASYNC_VALUE) //
                     .build();
 
@@ -1025,10 +1025,10 @@ public class AliyunModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_ALIYUN) + ALIYUN_AUDIO_GENERATION) //
+                    .url(builder.getBaseUrl() + ALIYUN_AUDIO_GENERATION) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(builder.getApiKey(), API_KEY_ALIYUN)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
                     .build();
 
             Response res = client.newCall(request).execute();
@@ -1082,10 +1082,10 @@ public class AliyunModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_ALIYUN) + ALIYUN_AUDIO_ASR_TRANSCRIPTION) //
+                    .url(builder.getBaseUrl() + ALIYUN_AUDIO_ASR_TRANSCRIPTION) //
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(builder.getApiKey(), API_KEY_ALIYUN)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
                     .addHeader(ALIYUN_HEADER_DASH_SCOPE_ASYNC, ALIYUN_HEADER_DASH_SCOPE_ASYNC_VALUE) //
                     .build();
 
@@ -1247,10 +1247,10 @@ public class AliyunModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(baseUrl, API_URL_ALIYUN) + ALIYUN_TASKS + taskId) //
+                    .url(baseUrl + ALIYUN_TASKS + taskId) //
                     .get() //
                     .addHeader(HttpHeaders.ACCEPT, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(apiKey, API_KEY_ALIYUN)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + apiKey) //
                     .build();
 
             Response res = client.newCall(request).execute();
@@ -1342,10 +1342,10 @@ public class AliyunModelService implements ModelService {
             RequestBody body = RequestBody.create(new JSONObject().toJSONString(), MEDIA_TYPE_JSON);
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(baseUrl, API_URL_ALIYUN) + ALIYUN_TASKS + taskId) //
+                    .url(baseUrl + ALIYUN_TASKS + taskId) //
                     .post(body) //
                     .addHeader(HttpHeaders.ACCEPT, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(apiKey, API_KEY_ALIYUN)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + apiKey) //
                     .build();
 
             Response res = client.newCall(request).execute();

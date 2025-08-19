@@ -31,8 +31,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.shuyoutech.aigc.constant.AiConstants.*;
 import static com.shuyoutech.aigc.provider.AigcModelFactory.MEDIA_TYPE_JSON;
+import static com.shuyoutech.api.constant.AiConstants.GOOGLE_GENERATE_CONTENT;
+import static com.shuyoutech.api.constant.AiConstants.USER_IMAGE_SERVICE;
 import static com.shuyoutech.common.disruptor.init.DisruptorRunner.disruptorProducer;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -122,10 +123,10 @@ public class GoogleModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_GOOGLE) + StringUtils.format("/v1beta/models/{}:streamGenerateContent?alt=sse", builder.getModelName()))//
+                    .url(builder.getBaseUrl() + StringUtils.format("/v1beta/models/{}:streamGenerateContent?alt=sse", builder.getModelName()))//
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader("x-goog-api-key", StringUtils.blankToDefault(builder.getApiKey(), API_KEY_GOOGLE)) //
+                    .addHeader("x-goog-api-key", builder.getApiKey()) //
                     .build();
 
             userToken.setRequestBody(requestBody);
@@ -216,11 +217,10 @@ public class GoogleModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_GOOGLE) //
-                            + StringUtils.format(GOOGLE_GENERATE_CONTENT, builder.getModelName(), StringUtils.blankToDefault(builder.getApiKey(), API_KEY_GOOGLE)))//
+                    .url(builder.getBaseUrl()  + StringUtils.format(GOOGLE_GENERATE_CONTENT, builder.getModelName(), builder.getApiKey()))//
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader("x-goog-api-key", StringUtils.blankToDefault(builder.getApiKey(), API_KEY_GOOGLE)) //
+                    .addHeader("x-goog-api-key", builder.getApiKey()) //
                     .build();
 
             Response res = client.newCall(request).execute();

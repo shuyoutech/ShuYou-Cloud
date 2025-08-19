@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.shuyoutech.aigc.constant.AiConstants.*;
 import static com.shuyoutech.aigc.provider.AigcModelFactory.MEDIA_TYPE_JSON;
+import static com.shuyoutech.api.constant.AiConstants.*;
 import static com.shuyoutech.common.core.constant.CommonConstants.HEADER_AUTHORIZATION_PREFIX;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -102,10 +102,10 @@ public class XAIModelService implements ModelService {
                     .build();
 
             Request request = new Request.Builder() //
-                    .url(StringUtils.blankToDefault(builder.getBaseUrl(), API_URL_XAI) + "/v1/chat/completions")//
+                    .url(builder.getBaseUrl() + OPENAI_CHAT_COMPLETIONS)//
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + StringUtils.blankToDefault(builder.getApiKey(), API_KEY_XAI)) //
+                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
                     .build();
 
             userToken.setRequestBody(requestBody);

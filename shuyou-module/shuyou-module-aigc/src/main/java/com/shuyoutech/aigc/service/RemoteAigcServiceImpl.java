@@ -36,8 +36,8 @@ import org.springframework.web.socket.WebSocketSession;
 import java.util.Date;
 import java.util.List;
 
-import static com.shuyoutech.aigc.constant.AiConstants.ROLE_ASSISTANT;
-import static com.shuyoutech.aigc.constant.AiConstants.ROLE_USER;
+import static com.shuyoutech.api.constant.AiConstants.ROLE_ASSISTANT;
+import static com.shuyoutech.api.constant.AiConstants.ROLE_USER;
 
 /**
  * @author YangChao

@@ -4,7 +4,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.shuyoutech.aigc.constant.AiConstants;
+import com.shuyoutech.api.constant.AiConstants;
 import com.shuyoutech.aigc.domain.bo.AigcAppBo;
 import com.shuyoutech.aigc.domain.bo.AigcChatCompletionsBo;
 import com.shuyoutech.aigc.domain.bo.AigcChatTestBo;
@@ -63,7 +63,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
-import static com.shuyoutech.aigc.constant.AiConstants.EVENT_ANSWER;
+import static com.shuyoutech.api.constant.AiConstants.EVENT_ANSWER;
 import static com.shuyoutech.aigc.provider.AigcModelFactory.MODEL_MAP;
 import static com.shuyoutech.common.disruptor.init.DisruptorRunner.disruptorProducer;
 import static dev.langchain4j.store.embedding.filter.MetadataFilterBuilder.metadataKey;

@@ -1,6 +1,6 @@
 package com.shuyoutech.aigc.service;
 
-import com.shuyoutech.aigc.constant.AiConstants;
+import com.shuyoutech.api.constant.AiConstants;
 import com.shuyoutech.aigc.domain.bo.AigcKnowledgeDocSliceBo;
 import com.shuyoutech.aigc.domain.entity.AigcKnowledgeDocSliceEntity;
 import com.shuyoutech.aigc.domain.vo.AigcKnowledgeDocSliceVo;

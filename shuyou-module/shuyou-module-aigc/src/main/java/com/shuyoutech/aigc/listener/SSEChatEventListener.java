@@ -3,7 +3,7 @@ package com.shuyoutech.aigc.listener;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.shuyoutech.aigc.constant.AiConstants;
+import com.shuyoutech.api.constant.AiConstants;
 import com.shuyoutech.aigc.domain.model.TokenUsage;
 import com.shuyoutech.aigc.domain.model.UserModelUsage;
 import com.shuyoutech.aigc.enums.AiProviderTypeEnum;
@@ -26,7 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.concurrent.CountDownLatch;
 
-import static com.shuyoutech.aigc.constant.AiConstants.*;
+import static com.shuyoutech.api.constant.AiConstants.*;
 import static com.shuyoutech.common.disruptor.init.DisruptorRunner.disruptorProducer;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 

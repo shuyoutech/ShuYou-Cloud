@@ -40,8 +40,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.util.Date;
 import java.util.List;
 
-import static com.shuyoutech.aigc.constant.AiConstants.ROLE_ASSISTANT;
-import static com.shuyoutech.aigc.constant.AiConstants.ROLE_USER;
+import static com.shuyoutech.api.constant.AiConstants.ROLE_ASSISTANT;
+import static com.shuyoutech.api.constant.AiConstants.ROLE_USER;
 import static com.shuyoutech.common.core.constant.CommonConstants.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
