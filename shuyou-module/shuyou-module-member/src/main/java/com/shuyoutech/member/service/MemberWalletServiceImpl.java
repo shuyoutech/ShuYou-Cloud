@@ -2,7 +2,9 @@ package com.shuyoutech.member.service;
 
 import cn.hutool.core.util.IdUtil;
 import com.shuyoutech.api.enums.WalletPayTypeEnum;
+import com.shuyoutech.common.core.util.CollectionUtils;
 import com.shuyoutech.common.core.util.MapstructUtils;
+import com.shuyoutech.common.core.util.NumberUtils;
 import com.shuyoutech.common.mongodb.MongoUtils;
 import com.shuyoutech.common.redis.util.RedissonUtils;
 import com.shuyoutech.common.web.model.PageQuery;
@@ -34,7 +36,18 @@ public class MemberWalletServiceImpl extends SuperServiceImpl<MemberWalletEntity
 
     @Override
     public List<MemberWalletVo> convertTo(List<MemberWalletEntity> list) {
-        return MapstructUtils.convert(list, this.voClass);
+        List<MemberWalletVo> result = CollectionUtils.newArrayList();
+        if (CollectionUtils.isEmpty(list)) {
+            return result;
+        }
+        list.forEach(e -> {
+            MemberWalletVo vo = MapstructUtils.convert(e, MemberWalletVo.class);
+            vo.setBalanceStr(NumberUtils.div(e.getBalance(), 100, 2).toPlainString());
+            vo.setTotalExpenseStr(NumberUtils.div(e.getTotalExpense(), 100, 2).toPlainString());
+            vo.setTotalRechargeStr(NumberUtils.div(e.getTotalRecharge(), 100, 2).toPlainString());
+            result.add(vo);
+        });
+        return result;
     }
 
     public MemberWalletVo convertTo(MemberWalletEntity entity) {

@@ -1,8 +1,9 @@
 package com.shuyoutech.pay.service;
 
-import com.shuyoutech.common.core.util.MapstructUtils;
-import com.shuyoutech.common.core.util.StringUtils;
+import com.shuyoutech.api.enums.PayOrderStatusEnum;
+import com.shuyoutech.common.core.util.*;
 import com.shuyoutech.common.mongodb.MongoUtils;
+import com.shuyoutech.common.satoken.util.AuthUtils;
 import com.shuyoutech.common.web.model.PageQuery;
 import com.shuyoutech.common.web.model.PageResult;
 import com.shuyoutech.common.web.model.ParamUnique;
@@ -31,7 +32,17 @@ public class PayOrderServiceImpl extends SuperServiceImpl<PayOrderEntity, PayOrd
 
     @Override
     public List<PayOrderVo> convertTo(List<PayOrderEntity> list) {
-        return MapstructUtils.convert(list, this.voClass);
+        List<PayOrderVo> result = CollectionUtils.newArrayList();
+        if (CollectionUtils.isEmpty(list)) {
+            return result;
+        }
+        list.forEach(e -> {
+            PayOrderVo vo = MapstructUtils.convert(e, this.voClass);
+            vo.setStatusName(EnumUtils.getLabelByValue(PayOrderStatusEnum.class, e.getStatus()));
+            vo.setAmountStr(NumberUtils.round(NumberUtils.mul(e.getAmount().toString(), "100"), 2).toPlainString());
+            result.add(vo);
+        });
+        return result;
     }
 
     public PayOrderVo convertTo(PayOrderEntity entity) {
@@ -41,6 +52,9 @@ public class PayOrderServiceImpl extends SuperServiceImpl<PayOrderEntity, PayOrd
     @Override
     public Query buildQuery(PayOrderBo bo) {
         Query query = new Query();
+        if (StringUtils.isNotBlank(bo.getCreateUserId())) {
+            query.addCriteria(Criteria.where("createUserId").is(bo.getCreateUserId()));
+        }
         return query;
     }
 
@@ -57,8 +71,10 @@ public class PayOrderServiceImpl extends SuperServiceImpl<PayOrderEntity, PayOrd
 
     @Override
     public PageResult<PayOrderVo> page(PageQuery<PayOrderBo> pageQuery) {
+        PayOrderBo query = pageQuery.getQuery();
+        query.setCreateUserId(AuthUtils.getLoginUserId());
         PageQuery<Query> page = pageQuery.buildPage();
-        page.setQuery(buildQuery(pageQuery.getQuery()));
+        page.setQuery(buildQuery(query));
         return this.selectPageVo(page);
     }
 

@@ -29,6 +29,9 @@ public class PayOrderVo extends BaseVo {
     @Schema(description = "支付状态")
     private String status;
 
+    @Schema(description = "支付状态")
+    private String statusName;
+
     /**
      * 枚举 {@link PayTradeTypeEnum}
      * JSAPI：公众号支付 NATIVE：扫码支付 APP：APP支付 MICROPAY：付款码支付 MWEB：H5支付 FACEPAY：刷脸支付
@@ -56,6 +59,9 @@ public class PayOrderVo extends BaseVo {
 
     @Schema(description = "支付金额,单位分")
     private Integer amount;
+
+    @Schema(description = "支付金额,单位元")
+    private String amountStr;
 
     @Schema(description = "订单失效时间")
     private Date expiredTime;

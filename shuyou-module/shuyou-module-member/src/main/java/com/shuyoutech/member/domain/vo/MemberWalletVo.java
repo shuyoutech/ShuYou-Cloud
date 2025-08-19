@@ -29,4 +29,13 @@ public class MemberWalletVo extends BaseVo {
     @Schema(description = "累计充值，单位分")
     private BigDecimal totalRecharge;
 
+    @Schema(description = "余额，单位元")
+    private String balanceStr;
+
+    @Schema(description = "累计支出，单位元")
+    private String totalExpenseStr;
+
+    @Schema(description = "累计充值，单位元")
+    private String totalRechargeStr;
+
 }
