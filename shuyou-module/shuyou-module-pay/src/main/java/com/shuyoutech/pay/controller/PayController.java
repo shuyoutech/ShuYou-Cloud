@@ -66,6 +66,19 @@ public class PayController {
         return R.success(payService.refund(bo));
     }
 
+    @PostMapping("/pay/queryRefund")
+    @Operation(summary = "查询单笔退款")
+    public R<JSONObject> queryRefund(@Validated @RequestBody QueryRefundBo bo) {
+        return R.success(payService.queryRefund(bo));
+    }
+
+    @PostMapping("/refund/notify/{channelCode}")
+    @Operation(summary = "支付渠道成功回调通知")
+    public R<Void> refundNotify(@PathVariable("channelCode") String channelCode, HttpServletRequest request) {
+        payService.payNotify(channelCode, request);
+        return R.success();
+    }
+
     private final PayService payService;
 
 }

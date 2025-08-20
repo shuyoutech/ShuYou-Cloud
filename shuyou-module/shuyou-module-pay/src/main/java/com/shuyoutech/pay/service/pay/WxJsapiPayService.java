@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.shuyoutech.pay.config.WxPayConfig;
 import com.shuyoutech.pay.domain.entity.PayOrderEntity;
 import com.wechat.pay.java.service.payments.model.Transaction;
+import com.wechat.pay.java.service.refund.model.Refund;
 
 /**
  * @author YangChao
@@ -56,4 +57,11 @@ public interface WxJsapiPayService {
      */
     JSONObject refund(WxPayConfig wxPayConfig, Integer amount, String reason, PayOrderEntity payOrder);
 
+    /**
+     * 查询单笔退款
+     *
+     * @param outRefundNo 商户订单号
+     * @return 订单信息
+     */
+    Refund queryRefund(String outRefundNo);
 }

@@ -22,4 +22,8 @@ public interface PayService {
 
     JSONObject refund(PayRefundBo bo);
 
+    JSONObject queryRefund(QueryRefundBo bo);
+
+    void refundNotify(String channelCode, HttpServletRequest request);
+
 }

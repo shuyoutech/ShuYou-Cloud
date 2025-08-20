@@ -2,13 +2,11 @@ package com.shuyoutech.pay.service.pay;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.shuyoutech.api.enums.PayChannelEnum;
 import com.shuyoutech.api.enums.PayOrderStatusEnum;
 import com.shuyoutech.api.enums.PayRefundStatusEnum;
 import com.shuyoutech.api.enums.PayTradeTypeEnum;
-import com.shuyoutech.common.core.constant.DateConstants;
 import com.shuyoutech.common.mongodb.MongoUtils;
 import com.shuyoutech.common.redis.util.SequenceUtils;
 import com.shuyoutech.common.satoken.util.AuthUtils;
@@ -27,6 +25,7 @@ import com.wechat.pay.java.service.payments.model.Transaction;
 import com.wechat.pay.java.service.refund.RefundService;
 import com.wechat.pay.java.service.refund.model.AmountReq;
 import com.wechat.pay.java.service.refund.model.CreateRequest;
+import com.wechat.pay.java.service.refund.model.QueryByOutRefundNoRequest;
 import com.wechat.pay.java.service.refund.model.Refund;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -97,7 +96,7 @@ public class WxJsapiPayServiceImpl implements WxJsapiPayService {
     public JSONObject prepay(WxPayConfig wxPayConfig, Integer amount) {
         // 订单号
         Date now = new Date();
-        String orderId = DateUtil.format(now, DateConstants.PURE_DATETIME_FORMAT) + IdUtil.getSnowflakeNextIdStr();
+        String orderId = SequenceUtils.getDateId("wx" + PayChannelEnum.WEIXIN_MP.getValue());
         String appid = wxPayConfig.getAppid();
         String mchId = wxPayConfig.getMchId();
 
@@ -176,7 +175,7 @@ public class WxJsapiPayServiceImpl implements WxJsapiPayService {
     public JSONObject refund(WxPayConfig wxPayConfig, Integer amount, String reason, PayOrderEntity payOrder) {
         // 订单号
         Date now = new Date();
-        String refundId = SequenceUtils.getDateId("refund");
+        String refundId = SequenceUtils.getDateId("wx" + payOrder.getChannelCode());
 
         // 退款记录插入
         PayRefundEntity payRefund = new PayRefundEntity();
@@ -211,6 +210,13 @@ public class WxJsapiPayServiceImpl implements WxJsapiPayService {
         vo.put("transactionId", refund.getTransactionId());
         vo.put("outTradeNo", refund.getOutTradeNo());
         return vo;
+    }
+
+    @Override
+    public Refund queryRefund(String outRefundNo) {
+        QueryByOutRefundNoRequest request = new QueryByOutRefundNoRequest();
+        request.setOutRefundNo(outRefundNo);
+        return refundService.queryByOutRefundNo(request);
     }
 
 }

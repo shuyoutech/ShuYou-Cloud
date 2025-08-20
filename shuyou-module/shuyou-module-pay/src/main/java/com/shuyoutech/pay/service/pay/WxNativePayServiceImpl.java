@@ -2,13 +2,12 @@ package com.shuyoutech.pay.service.pay;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.shuyoutech.api.enums.PayChannelEnum;
 import com.shuyoutech.api.enums.PayOrderStatusEnum;
 import com.shuyoutech.api.enums.PayTradeTypeEnum;
-import com.shuyoutech.common.core.constant.DateConstants;
 import com.shuyoutech.common.mongodb.MongoUtils;
+import com.shuyoutech.common.redis.util.SequenceUtils;
 import com.shuyoutech.common.satoken.util.AuthUtils;
 import com.shuyoutech.pay.config.WxPayConfig;
 import com.shuyoutech.pay.domain.entity.PayChannelEntity;
@@ -74,7 +73,7 @@ public class WxNativePayServiceImpl implements WxNativePayService {
     public JSONObject prepay(WxPayConfig wxPayConfig, Integer amount) {
         // 订单号
         Date now = new Date();
-        String orderId = DateUtil.format(now, DateConstants.PURE_DATETIME_FORMAT) + IdUtil.getSnowflakeNextIdStr();
+        String orderId = SequenceUtils.getDateId("wx" + PayChannelEnum.WEIXIN_NATIVE.getValue());
 
         // 订单记录插入
         PayOrderEntity payOrder = new PayOrderEntity();

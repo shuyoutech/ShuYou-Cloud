@@ -2,24 +2,29 @@ package com.shuyoutech.pay.service;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.shuyoutech.api.enums.PayChannelEnum;
 import com.shuyoutech.api.enums.PayOrderStatusEnum;
+import com.shuyoutech.api.enums.PayRefundStatusEnum;
 import com.shuyoutech.api.enums.WalletPayTypeEnum;
 import com.shuyoutech.common.core.exception.BusinessException;
+import com.shuyoutech.common.core.util.NumberUtils;
 import com.shuyoutech.common.mongodb.MongoUtils;
+import com.shuyoutech.common.redis.util.SequenceUtils;
 import com.shuyoutech.common.web.util.JakartaServletUtils;
 import com.shuyoutech.pay.config.WxPayConfig;
 import com.shuyoutech.pay.domain.bo.*;
 import com.shuyoutech.pay.domain.entity.PayChannelEntity;
 import com.shuyoutech.pay.domain.entity.PayNotifyRecordEntity;
 import com.shuyoutech.pay.domain.entity.PayOrderEntity;
+import com.shuyoutech.pay.domain.entity.PayRefundEntity;
 import com.shuyoutech.pay.service.pay.WxJsapiPayService;
 import com.shuyoutech.pay.service.pay.WxNativePayService;
 import com.wechat.pay.java.core.notification.RequestParam;
 import com.wechat.pay.java.service.payments.model.Transaction;
+import com.wechat.pay.java.service.refund.model.Refund;
+import com.wechat.pay.java.service.refund.model.Status;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -135,7 +140,7 @@ public class PayServiceImpl implements PayService {
     public void payNotify(String channelCode, HttpServletRequest request) {
         try {
             // 接收到之后插入商户通知记录表中
-            String recordId = IdUtil.fastSimpleUUID();
+            String recordId = SequenceUtils.getDateId("pay" + channelCode);
             Date now = new Date();
             Map<String, String> headerMap = JakartaServletUtils.getHeaderMap(request);
             String body = JakartaServletUtils.getBody(request);
@@ -205,7 +210,6 @@ public class PayServiceImpl implements PayService {
         } catch (Exception e) {
             log.error("payNotify ================== exception:{}", e.getMessage());
         }
-
     }
 
     @Override
@@ -224,10 +228,89 @@ public class PayServiceImpl implements PayService {
         return wxJsapiPayService.refund(wxPayConfig, bo.getAmount(), bo.getReason(), payOrder);
     }
 
+    @Override
+    public JSONObject queryRefund(QueryRefundBo bo) {
+        return JSONObject.from(wxJsapiPayService.queryRefund(bo.getOutRefundNo()));
+    }
+
+    @Async
+    @Override
+    public void refundNotify(String channelCode, HttpServletRequest request) {
+        try {
+            // 接收到之后插入商户通知记录表中
+            String recordId = SequenceUtils.getDateId("refund" + channelCode);
+            Date now = new Date();
+            Map<String, String> headerMap = JakartaServletUtils.getHeaderMap(request);
+            String body = JakartaServletUtils.getBody(request);
+
+            PayNotifyRecordEntity record = new PayNotifyRecordEntity();
+            record.setId(recordId);
+            record.setCreateTime(now);
+            record.setChannelCode(channelCode);
+            record.setRequestHeaders(JSON.toJSONString(headerMap));
+            record.setRequestParams(JSON.toJSONString(JakartaServletUtils.getParamMap(request)));
+            record.setRequestBody(body);
+            MongoUtils.save(record);
+
+            Query query = new Query();
+            query.addCriteria(Criteria.where("channelCode").is(channelCode));
+            PayChannelEntity payChannel = payChannelService.selectOne(query);
+            if (null == payChannel) {
+                log.error("refundNotify =============== channelCode:{} is not exist", channelCode);
+                return;
+            }
+
+            if (PayChannelEnum.WEIXIN_NATIVE.getValue().equalsIgnoreCase(channelCode) //
+                    || PayChannelEnum.WEIXIN_MP.getValue().equalsIgnoreCase(channelCode)) {
+                // 构造 RequestParam
+                RequestParam requestParam = new RequestParam.Builder() //
+                        .serialNumber(headerMap.get("wechatpay-serial")) //
+                        .nonce(headerMap.get("wechatpay-nonce")) //
+                        .signature(headerMap.get("wechatpay-signature")) //
+                        .timestamp(headerMap.get("wechatpay-timestamp")) //
+                        .body(body) //
+                        .build();
+                // 以支付通知回调为例，验签、解密并转换成 Transaction
+                Refund refund = notificationParser.parse(requestParam, Refund.class);
+                if (null == refund) {
+                    log.error("refundNotify ======================= refund is null");
+                    return;
+                }
+                String outRefundNo = refund.getOutRefundNo();
+                PayRefundEntity payRefund = payRefundService.getById(outRefundNo);
+                if (null == payRefund) {
+                    log.error("refundNotify ======================= outRefundNo：{} 不存在!", outRefundNo);
+                    return;
+                }
+                Update update = new Update();
+                if (Status.SUCCESS == refund.getStatus()) {
+                    update.set("status", PayRefundStatusEnum.SUCCESS.getValue());
+                    update.set("successTime", DateUtil.parse(refund.getSuccessTime(), DatePattern.UTC_WITH_XXX_OFFSET_PATTERN).toJdkDate());
+                } else {
+                    update.set("status", PayRefundStatusEnum.FAILED.getValue());
+                }
+                update.set("transactionId", refund.getTransactionId());
+                MongoUtils.patch(outRefundNo, update, PayRefundEntity.class);
+
+                Update update2 = new Update();
+                update2.set("outTradeNo", outRefundNo);
+                update2.set("transactionId", refund.getTransactionId());
+                update2.set("amount", refund.getAmount().getRefund());
+                MongoUtils.patch(record.getId(), update2, PayNotifyRecordEntity.class);
+
+                String userId = payRefund.getCreateUserId();
+                payWalletService.reduceWalletBalance(userId, WalletPayTypeEnum.RECHARGE_REFUND, outRefundNo, NumberUtils.div(payRefund.getRefundPrice().toString(), "100"));
+            }
+        } catch (Exception e) {
+            log.error("refundNotify ================== exception:{}", e.getMessage());
+        }
+    }
+
     private final PayChannelService payChannelService;
     private final WxNativePayService wxNativePayService;
     private final WxJsapiPayService wxJsapiPayService;
     private final PayOrderService payOrderService;
     private final PayWalletService payWalletService;
+    private final PayRefundService payRefundService;
 
 }
