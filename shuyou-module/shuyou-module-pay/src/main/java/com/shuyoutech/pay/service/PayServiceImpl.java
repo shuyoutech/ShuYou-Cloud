@@ -23,7 +23,7 @@ import com.shuyoutech.pay.service.pay.WxJsapiPayService;
 import com.shuyoutech.pay.service.pay.WxNativePayService;
 import com.wechat.pay.java.core.notification.RequestParam;
 import com.wechat.pay.java.service.payments.model.Transaction;
-import com.wechat.pay.java.service.refund.model.Refund;
+import com.wechat.pay.java.service.refund.model.RefundNotification;
 import com.wechat.pay.java.service.refund.model.Status;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -271,7 +271,7 @@ public class PayServiceImpl implements PayService {
                         .body(body) //
                         .build();
                 // 以支付通知回调为例，验签、解密并转换成 Transaction
-                Refund refund = notificationParser.parse(requestParam, Refund.class);
+                RefundNotification refund = notificationParser.parse(requestParam, RefundNotification.class);
                 if (null == refund) {
                     log.error("refundNotify ======================= refund is null");
                     return;
@@ -283,7 +283,7 @@ public class PayServiceImpl implements PayService {
                     return;
                 }
                 Update update = new Update();
-                if (Status.SUCCESS == refund.getStatus()) {
+                if (Status.SUCCESS == refund.getRefundStatus()) {
                     update.set("status", PayRefundStatusEnum.SUCCESS.getValue());
                     update.set("successTime", DateUtil.parse(refund.getSuccessTime(), DatePattern.UTC_WITH_XXX_OFFSET_PATTERN).toJdkDate());
                 } else {
