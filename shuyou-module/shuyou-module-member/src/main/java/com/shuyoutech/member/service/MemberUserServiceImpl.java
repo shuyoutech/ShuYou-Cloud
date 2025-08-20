@@ -2,17 +2,17 @@ package com.shuyoutech.member.service;
 
 import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson2.JSONObject;
+import com.shuyoutech.api.enums.SocialTypeEnum;
+import com.shuyoutech.api.enums.UserTypeEnum;
 import com.shuyoutech.api.model.AuthAccessToken;
 import com.shuyoutech.api.model.RemoteSysFile;
 import com.shuyoutech.api.model.SocialClientToken;
 import com.shuyoutech.api.model.SocialUserInfo;
+import com.shuyoutech.api.service.RemotePayService;
 import com.shuyoutech.api.service.RemoteSystemService;
 import com.shuyoutech.common.core.enums.StatusEnum;
 import com.shuyoutech.common.core.exception.BusinessException;
-import com.shuyoutech.common.core.util.CollectionUtils;
-import com.shuyoutech.common.core.util.MapstructUtils;
-import com.shuyoutech.common.core.util.SmUtils;
-import com.shuyoutech.common.core.util.StringUtils;
+import com.shuyoutech.common.core.util.*;
 import com.shuyoutech.common.mongodb.MongoUtils;
 import com.shuyoutech.common.redis.util.RedisUtils;
 import com.shuyoutech.common.satoken.util.AuthUtils;
@@ -25,7 +25,6 @@ import com.shuyoutech.member.domain.bo.MemberUserBo;
 import com.shuyoutech.member.domain.bo.SmsLoginBo;
 import com.shuyoutech.member.domain.entity.MemberUserBind;
 import com.shuyoutech.member.domain.entity.MemberUserEntity;
-import com.shuyoutech.member.domain.entity.MemberWalletEntity;
 import com.shuyoutech.member.domain.entity.SocialUserEntity;
 import com.shuyoutech.member.domain.vo.MemberUserVo;
 import com.shuyoutech.member.socail.SocialClientRequest;
@@ -38,7 +37,6 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -125,12 +123,8 @@ public class MemberUserServiceImpl extends SuperServiceImpl<MemberUserEntity, Me
             memberUser.setLoginDate(new Date());
             memberUser.setLoginIp(JakartaServletUtils.getClientIP(JakartaServletUtils.getRequest()));
 
-            MemberWalletEntity wallet = new MemberWalletEntity();
-            wallet.setId(userId);
-            wallet.setBalance(BigDecimal.valueOf(1));
-            wallet.setTotalExpense(BigDecimal.ZERO);
-            wallet.setTotalRecharge(BigDecimal.ZERO);
-            MongoUtils.save(wallet);
+            remotePayService.initPayWallet(UserTypeEnum.MEMBER.getValue(), memberUser.getId());
+
             return MongoUtils.save(memberUser);
         }
         return memberUser;
@@ -140,11 +134,16 @@ public class MemberUserServiceImpl extends SuperServiceImpl<MemberUserEntity, Me
     public MemberUserEntity register(SocialUserInfo userInfo) {
         String socialType = userInfo.getSocialType();
         SocialClientToken token = userInfo.getToken();
+        String mobile = userInfo.getMobile();
         String openId = token.getOpenId();
 
         Query query1 = new Query();
-        query1.addCriteria(Criteria.where("binds.socialType").is(socialType));
-        query1.addCriteria(Criteria.where("binds.socialUserId").is(openId));
+        if (SocialTypeEnum.WECHAT_MINI_PROGRAM.getValue().equals(socialType)) {
+            query1.addCriteria(Criteria.where("mobile").is(mobile));
+        } else {
+            query1.addCriteria(Criteria.where("binds.socialType").is(socialType));
+            query1.addCriteria(Criteria.where("binds.socialUserId").is(openId));
+        }
         MemberUserEntity memberUser = MongoUtils.selectOne(query1, MemberUserEntity.class);
         if (null == memberUser) {
             SocialUserEntity socialUser = new SocialUserEntity();
@@ -159,9 +158,14 @@ public class MemberUserServiceImpl extends SuperServiceImpl<MemberUserEntity, Me
 
             memberUser = new MemberUserEntity();
             memberUser.setId(IdUtil.simpleUUID());
-            memberUser.setStatus(StatusEnum.DISABLE.getValue());
+            if (StringUtils.isNotBlank(mobile)) {
+                memberUser.setStatus(StatusEnum.ENABLE.getValue());
+            } else {
+                memberUser.setStatus(StatusEnum.DISABLE.getValue());
+            }
             memberUser.setCreateTime(new Date());
             memberUser.setNickname(socialUser.getNickname());
+            memberUser.setMobile(mobile);
             memberUser.setAvatar(socialUser.getAvatar());
             MemberUserBind bind = new MemberUserBind();
             bind.setSocialType(socialType);
@@ -170,18 +174,21 @@ public class MemberUserServiceImpl extends SuperServiceImpl<MemberUserEntity, Me
             memberUser.setLoginDate(new Date());
             memberUser.setLoginIp(JakartaServletUtils.getClientIP(JakartaServletUtils.getRequest()));
 
-            MemberWalletEntity wallet = new MemberWalletEntity();
-            wallet.setId(memberUser.getId());
-            wallet.setBalance(BigDecimal.valueOf(1));
-            wallet.setTotalExpense(BigDecimal.ZERO);
-            wallet.setTotalRecharge(BigDecimal.ZERO);
-            MongoUtils.save(wallet);
+            remotePayService.initPayWallet(UserTypeEnum.MEMBER.getValue(), memberUser.getId());
 
             return MongoUtils.save(memberUser);
         } else {
             Update update = new Update();
             update.set("loginDate", new Date());
             update.set("loginIp", JakartaServletUtils.getClientIP(JakartaServletUtils.getRequest()));
+            List<MemberUserBind> binds = memberUser.getBinds();
+            if (CollectionUtils.isNotEmpty(binds) && !StreamUtils.toSet(binds, MemberUserBind::getSocialUserId).contains(openId)) {
+                MemberUserBind bind = new MemberUserBind();
+                bind.setSocialType(socialType);
+                bind.setSocialUserId(openId);
+                binds.add(bind);
+                update.set("binds", binds);
+            }
             MongoUtils.patch(memberUser.getId(), update, MemberUserEntity.class);
         }
         return memberUser;
@@ -290,4 +297,5 @@ public class MemberUserServiceImpl extends SuperServiceImpl<MemberUserEntity, Me
 
     private final SocialClientRequestFactory socialClientRequestFactory;
     private final RemoteSystemService remoteSystemService;
+    private final RemotePayService remotePayService;
 }

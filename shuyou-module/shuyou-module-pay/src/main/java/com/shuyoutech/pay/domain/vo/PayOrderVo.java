@@ -55,7 +55,7 @@ public class PayOrderVo extends BaseVo {
     private String appId;
 
     @Schema(description = "商户订单号")
-    private String mchOrderNo;
+    private String transactionId;
 
     @Schema(description = "支付金额,单位分")
     private Integer amount;

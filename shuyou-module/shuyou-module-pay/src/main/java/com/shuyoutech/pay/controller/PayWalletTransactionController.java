@@ -1,11 +1,11 @@
-package com.shuyoutech.member.controller;
+package com.shuyoutech.pay.controller;
 
 import com.shuyoutech.common.core.model.R;
 import com.shuyoutech.common.web.model.PageQuery;
 import com.shuyoutech.common.web.model.PageResult;
-import com.shuyoutech.member.domain.bo.MemberWalletTransactionBo;
-import com.shuyoutech.member.domain.vo.MemberWalletTransactionVo;
-import com.shuyoutech.member.service.MemberWalletTransactionService;
+import com.shuyoutech.pay.domain.bo.PayWalletTransactionBo;
+import com.shuyoutech.pay.domain.vo.PayWalletTransactionVo;
+import com.shuyoutech.pay.service.PayWalletTransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,22 +25,22 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("memberWalletTransaction")
-@Tag(name = "MemberWalletTransactionController", description = "会员钱包流水管理API控制器")
-public class MemberWalletTransactionController {
+@RequestMapping("payWalletTransaction")
+@Tag(name = "PayWalletTransactionController", description = "会员钱包流水管理API控制器")
+public class PayWalletTransactionController {
 
     @PostMapping("page")
     @Operation(description = "会员钱包流水分页列表")
-    public R<PageResult<MemberWalletTransactionVo>> page(@RequestBody PageQuery<MemberWalletTransactionBo> pageQuery) {
-        return R.success(memberWalletTransactionService.page(pageQuery));
+    public R<PageResult<PayWalletTransactionVo>> page(@RequestBody PageQuery<PayWalletTransactionBo> pageQuery) {
+        return R.success(payWalletTransactionService.page(pageQuery));
     }
 
     @PostMapping(path = "detail/{id}")
     @Operation(description = "查询会员钱包流水详情")
-    public R<MemberWalletTransactionVo> detail(@PathVariable String id) {
-        return R.success(memberWalletTransactionService.detail(id));
+    public R<PayWalletTransactionVo> detail(@PathVariable String id) {
+        return R.success(payWalletTransactionService.detail(id));
     }
 
-    private final MemberWalletTransactionService memberWalletTransactionService;
+    private final PayWalletTransactionService payWalletTransactionService;
 
 }

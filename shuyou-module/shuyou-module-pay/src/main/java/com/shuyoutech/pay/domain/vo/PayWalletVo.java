@@ -1,4 +1,4 @@
-package com.shuyoutech.member.domain.vo;
+package com.shuyoutech.pay.domain.vo;
 
 import com.shuyoutech.common.mongodb.model.BaseVo;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
 @Schema(description = "会员钱包显示类")
-public class MemberWalletVo extends BaseVo {
+public class PayWalletVo extends BaseVo {
 
     @Schema(description = "余额，单位分")
     private BigDecimal balance;

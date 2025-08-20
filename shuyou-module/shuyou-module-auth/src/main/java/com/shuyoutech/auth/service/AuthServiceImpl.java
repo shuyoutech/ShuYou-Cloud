@@ -110,6 +110,7 @@ public class AuthServiceImpl implements AuthService {
         parameter.setExtra(CommonConstants.USER_ID, memberUser.getId());
         parameter.setExtra(CommonConstants.USER_NAME, memberUser.getNickname());
         parameter.setExtra(CommonConstants.USER_TYPE, UserTypeEnum.MEMBER.getValue());
+        parameter.setExtra(CommonConstants.USER_OPENID, socialUser.getToken().getOpenId());
         StpUtil.login(memberUser.getId(), parameter);
         StpUtil.getTokenSession().set(AuthConstants.LOGIN_USER, memberUser);
         return AuthLoginVo.builder() //

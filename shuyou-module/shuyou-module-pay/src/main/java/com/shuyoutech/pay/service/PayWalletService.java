@@ -1,12 +1,12 @@
-package com.shuyoutech.member.service;
+package com.shuyoutech.pay.service;
 
 import com.shuyoutech.api.enums.WalletPayTypeEnum;
 import com.shuyoutech.common.web.model.PageQuery;
 import com.shuyoutech.common.web.model.PageResult;
 import com.shuyoutech.common.web.service.SuperService;
-import com.shuyoutech.member.domain.bo.MemberWalletBo;
-import com.shuyoutech.member.domain.entity.MemberWalletEntity;
-import com.shuyoutech.member.domain.vo.MemberWalletVo;
+import com.shuyoutech.pay.domain.bo.PayWalletBo;
+import com.shuyoutech.pay.domain.entity.PayWalletEntity;
+import com.shuyoutech.pay.domain.vo.PayWalletVo;
 import org.springframework.data.mongodb.core.query.Query;
 
 import java.math.BigDecimal;
@@ -15,13 +15,13 @@ import java.math.BigDecimal;
  * @author YangChao
  * @date 2025-08-04 23:48:45
  **/
-public interface MemberWalletService extends SuperService<MemberWalletEntity, MemberWalletVo> {
+public interface PayWalletService extends SuperService<PayWalletEntity, PayWalletVo> {
 
-    Query buildQuery(MemberWalletBo bo);
+    Query buildQuery(PayWalletBo bo);
 
-    PageResult<MemberWalletVo> page(PageQuery<MemberWalletBo> pageQuery);
+    PageResult<PayWalletVo> page(PageQuery<PayWalletBo> pageQuery);
 
-    MemberWalletVo detail(String id);
+    PayWalletVo detail(String id);
 
     /**
      * 扣减钱包余额

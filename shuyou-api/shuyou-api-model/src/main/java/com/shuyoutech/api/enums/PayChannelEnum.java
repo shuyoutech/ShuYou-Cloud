@@ -14,9 +14,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum PayChannelEnum implements BaseEnum<String, String> {
 
-    WEIXIN_NATIVE("weixin_native", "微信 Native 支付"),
+    WEIXIN_NATIVE("wechatpay_native", "微信Native支付"),
 
-    WEIXIN_MP("weixin_mp", "微信小程序支付"),
+    WEIXIN_MP("wechatpay_mp", "微信小程序支付"),
 
     ;
 

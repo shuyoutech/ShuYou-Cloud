@@ -1,4 +1,4 @@
-package com.shuyoutech.member.service;
+package com.shuyoutech.pay.service;
 
 import cn.hutool.core.util.IdUtil;
 import com.shuyoutech.api.enums.WalletPayTypeEnum;
@@ -10,10 +10,10 @@ import com.shuyoutech.common.redis.util.RedissonUtils;
 import com.shuyoutech.common.web.model.PageQuery;
 import com.shuyoutech.common.web.model.PageResult;
 import com.shuyoutech.common.web.service.SuperServiceImpl;
-import com.shuyoutech.member.domain.bo.MemberWalletBo;
-import com.shuyoutech.member.domain.entity.MemberWalletEntity;
-import com.shuyoutech.member.domain.entity.MemberWalletTransactionEntity;
-import com.shuyoutech.member.domain.vo.MemberWalletVo;
+import com.shuyoutech.pay.domain.entity.PayWalletTransactionEntity;
+import com.shuyoutech.pay.domain.bo.PayWalletBo;
+import com.shuyoutech.pay.domain.entity.PayWalletEntity;
+import com.shuyoutech.pay.domain.vo.PayWalletVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.query.Query;
@@ -32,16 +32,16 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MemberWalletServiceImpl extends SuperServiceImpl<MemberWalletEntity, MemberWalletVo> implements MemberWalletService {
+public class PayWalletServiceImpl extends SuperServiceImpl<PayWalletEntity, PayWalletVo> implements PayWalletService {
 
     @Override
-    public List<MemberWalletVo> convertTo(List<MemberWalletEntity> list) {
-        List<MemberWalletVo> result = CollectionUtils.newArrayList();
+    public List<PayWalletVo> convertTo(List<PayWalletEntity> list) {
+        List<PayWalletVo> result = CollectionUtils.newArrayList();
         if (CollectionUtils.isEmpty(list)) {
             return result;
         }
         list.forEach(e -> {
-            MemberWalletVo vo = MapstructUtils.convert(e, MemberWalletVo.class);
+            PayWalletVo vo = MapstructUtils.convert(e, PayWalletVo.class);
             vo.setBalanceStr(NumberUtils.div(e.getBalance(), 100, 2).toPlainString());
             vo.setTotalExpenseStr(NumberUtils.div(e.getTotalExpense(), 100, 2).toPlainString());
             vo.setTotalRechargeStr(NumberUtils.div(e.getTotalRecharge(), 100, 2).toPlainString());
@@ -50,26 +50,26 @@ public class MemberWalletServiceImpl extends SuperServiceImpl<MemberWalletEntity
         return result;
     }
 
-    public MemberWalletVo convertTo(MemberWalletEntity entity) {
+    public PayWalletVo convertTo(PayWalletEntity entity) {
         return convertTo(Collections.singletonList(entity)).getFirst();
     }
 
     @Override
-    public Query buildQuery(MemberWalletBo bo) {
+    public Query buildQuery(PayWalletBo bo) {
         Query query = new Query();
         return query;
     }
 
     @Override
-    public PageResult<MemberWalletVo> page(PageQuery<MemberWalletBo> pageQuery) {
+    public PageResult<PayWalletVo> page(PageQuery<PayWalletBo> pageQuery) {
         PageQuery<Query> page = pageQuery.buildPage();
         page.setQuery(buildQuery(pageQuery.getQuery()));
         return this.selectPageVo(page);
     }
 
     @Override
-    public MemberWalletVo detail(String id) {
-        MemberWalletEntity entity = this.getById(id);
+    public PayWalletVo detail(String id) {
+        PayWalletEntity entity = this.getById(id);
         return convertTo(entity);
     }
 
@@ -77,7 +77,7 @@ public class MemberWalletServiceImpl extends SuperServiceImpl<MemberWalletEntity
     public void reduceWalletBalance(String walletId, WalletPayTypeEnum payType, String payId, BigDecimal price) {
         RedissonUtils.lock(walletId, 120000L, () -> {
             // 1. 获取钱包
-            MemberWalletEntity wallet = MongoUtils.getById(walletId, MemberWalletEntity.class);
+            PayWalletEntity wallet = MongoUtils.getById(walletId, PayWalletEntity.class);
             if (null == wallet) {
                 log.error("reduceWalletBalance ======== 用户钱包:{}不存在", walletId);
                 return null;
@@ -90,21 +90,21 @@ public class MemberWalletServiceImpl extends SuperServiceImpl<MemberWalletEntity
                     Update update = new Update();
                     update.set("balance", balance.subtract(price));
                     update.set("totalExpense", totalExpense.add(price));
-                    MongoUtils.patch(walletId, update, MemberWalletEntity.class);
+                    MongoUtils.patch(walletId, update, PayWalletEntity.class);
                     break;
                 }
                 case RECHARGE_REFUND: {
                     Update update = new Update();
                     update.set("balance", balance.subtract(price));
                     update.set("totalRecharge", totalRecharge.subtract(price));
-                    MongoUtils.patch(walletId, update, MemberWalletEntity.class);
+                    MongoUtils.patch(walletId, update, PayWalletEntity.class);
                     break;
                 }
                 default: {
                     log.error("reduceWalletBalance ======== 支付方式:{}不支持", payType.getValue());
                 }
             }
-            MemberWalletTransactionEntity transaction = new MemberWalletTransactionEntity();
+            PayWalletTransactionEntity transaction = new PayWalletTransactionEntity();
             transaction.setId(IdUtil.fastSimpleUUID());
             transaction.setCreateTime(new Date());
             transaction.setWalletId(walletId);
@@ -120,7 +120,7 @@ public class MemberWalletServiceImpl extends SuperServiceImpl<MemberWalletEntity
     public void addWalletBalance(String walletId, WalletPayTypeEnum payType, String payId, Integer price) {
         RedissonUtils.lock(walletId, 120000L, () -> {
             // 1. 获取钱包
-            MemberWalletEntity wallet = MongoUtils.getById(walletId, MemberWalletEntity.class);
+            PayWalletEntity wallet = MongoUtils.getById(walletId, PayWalletEntity.class);
             if (null == wallet) {
                 log.error("addWalletBalance ======== 用户钱包:{}不存在", walletId);
                 return null;
@@ -133,27 +133,27 @@ public class MemberWalletServiceImpl extends SuperServiceImpl<MemberWalletEntity
                     Update update = new Update();
                     update.set("balance", balance.add(BigDecimal.valueOf(price)));
                     update.set("totalExpense", totalExpense.subtract(BigDecimal.valueOf(price)));
-                    MongoUtils.patch(walletId, update, MemberWalletEntity.class);
+                    MongoUtils.patch(walletId, update, PayWalletEntity.class);
                     break;
                 }
                 case RECHARGE: {
                     Update update = new Update();
                     update.set("balance", balance.add(BigDecimal.valueOf(price)));
                     update.set("totalRecharge", totalRecharge.add(BigDecimal.valueOf(price)));
-                    MongoUtils.patch(walletId, update, MemberWalletEntity.class);
+                    MongoUtils.patch(walletId, update, PayWalletEntity.class);
                     break;
                 }
                 case UPDATE_BALANCE:
                 case TRANSFER:
                     Update update = new Update();
                     update.set("balance", balance.add(BigDecimal.valueOf(price)));
-                    MongoUtils.patch(walletId, update, MemberWalletEntity.class);
+                    MongoUtils.patch(walletId, update, PayWalletEntity.class);
                     break;
                 default: {
                     log.error("addWalletBalance ======== 支付方式:{}不支持", payType.getValue());
                 }
             }
-            MemberWalletTransactionEntity transaction = new MemberWalletTransactionEntity();
+            PayWalletTransactionEntity transaction = new PayWalletTransactionEntity();
             transaction.setId(IdUtil.fastSimpleUUID());
             transaction.setCreateTime(new Date());
             transaction.setWalletId(walletId);

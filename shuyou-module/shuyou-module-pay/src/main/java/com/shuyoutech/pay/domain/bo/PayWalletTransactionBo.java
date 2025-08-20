@@ -1,8 +1,8 @@
-package com.shuyoutech.member.domain.bo;
+package com.shuyoutech.pay.domain.bo;
 
 import com.shuyoutech.common.core.model.group.StatusGroup;
 import com.shuyoutech.common.core.model.group.UpdateGroup;
-import com.shuyoutech.member.domain.entity.MemberWalletTransactionEntity;
+import com.shuyoutech.pay.domain.entity.PayWalletTransactionEntity;
 import io.github.linpeilie.annotations.AutoMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -19,9 +19,9 @@ import static org.springframework.data.mongodb.core.mapping.FieldType.DECIMAL128
  * @date 2025-08-05 10:13:30
  **/
 @Data
-@AutoMapper(target = MemberWalletTransactionEntity.class)
+@AutoMapper(target = PayWalletTransactionEntity.class)
 @Schema(description = "会员钱包流水类")
-public class MemberWalletTransactionBo implements Serializable {
+public class PayWalletTransactionBo implements Serializable {
 
     @NotBlank(message = "id不能为空", groups = {UpdateGroup.class, StatusGroup.class})
     @Schema(description = "主键")

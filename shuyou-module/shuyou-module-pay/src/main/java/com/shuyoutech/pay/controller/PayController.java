@@ -2,21 +2,24 @@ package com.shuyoutech.pay.controller;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.shuyoutech.common.core.model.R;
-import com.shuyoutech.pay.domain.bo.PayNativePrepayBo;
-import com.shuyoutech.pay.domain.vo.PayNativePrepayVo;
-import com.shuyoutech.pay.service.NativePayService;
-import com.wechat.pay.java.service.payments.model.Transaction;
+import com.shuyoutech.pay.domain.bo.CloseOrderBo;
+import com.shuyoutech.pay.domain.bo.PayPrepayBo;
+import com.shuyoutech.pay.domain.bo.QueryOrderByIdBo;
+import com.shuyoutech.pay.domain.bo.QueryOrderByOutTradeNoBo;
+import com.shuyoutech.pay.service.PayService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * <a href="https://pay.weixin.qq.com/doc/v3/merchant/4012791874">...</a>
+ * <a href="https://pay.weixin.qq.com/doc/v3/merchant/4012791874">微信支付文档</a>
  *
  * @author YangChao
  * @date 2025-07-23 09:44
@@ -28,40 +31,38 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "PayController", description = "支付API控制器")
 public class PayController {
 
-    @PostMapping("/wxpay/native/prepay")
-    @Operation(summary = "Native下单", description = "商户通过调用Native支付下单API接口生成订单并获取二维码code_url，随后将该code_url传递至前端，由前端将其转换为二维码图片展示给用户。")
-    public R<PayNativePrepayVo> nativePrepay(@Validated @RequestBody PayNativePrepayBo bo) {
-        return R.success(nativePayService.prepay(bo.getAmount()));
+    @PostMapping("/pay/prepay")
+    @Operation(summary = "支付下单")
+    public R<JSONObject> payPrepay(@Validated @RequestBody PayPrepayBo bo) {
+        return R.success(payService.payPrepay(bo));
     }
 
-    @PostMapping("/wxpay/native/queryOrderByOutTradeNo")
-    @Operation(summary = "Native商户订单号查询订单")
-    public R<Transaction> queryOrderByOutTradeNo(@RequestBody JSONObject data) {
-        Transaction transaction = nativePayService.queryOrderByOutTradeNo(data.getString("outTradeNo"));
-        return R.success(transaction);
+    @PostMapping("/pay/queryOrderByOutTradeNo")
+    @Operation(summary = "商户订单号查询订单")
+    public R<JSONObject> queryOrderByOutTradeNo(@Validated @RequestBody QueryOrderByOutTradeNoBo bo) {
+        return R.success(payService.queryOrderByOutTradeNo(bo));
     }
 
-    @PostMapping("/wxpay/native/queryOrderById")
-    @Operation(summary = "Native微信支付订单号查询订单")
-    public R<Transaction> queryOrderById(@RequestBody JSONObject data) {
-        Transaction transaction = nativePayService.queryOrderById(data.getString("transactionId"));
-        return R.success(transaction);
+    @PostMapping("/pay/queryOrderById")
+    @Operation(summary = "支付订单号查询订单")
+    public R<JSONObject> queryOrderById(@Validated @RequestBody QueryOrderByIdBo bo) {
+        return R.success(payService.queryOrderById(bo));
     }
 
-    @PostMapping("/wxpay/native/closeOrder")
-    @Operation(summary = "Native关闭订单")
-    public R<Void> closeOrder(@RequestBody JSONObject data) {
-        nativePayService.closeOrder(data.getString("outTradeNo"));
+    @PostMapping("/pay/closeOrder")
+    @Operation(summary = "关闭订单")
+    public R<Void> closeOrder(@Validated @RequestBody CloseOrderBo bo) {
+        payService.closeOrder(bo);
         return R.success();
     }
 
-    @PostMapping("/wxpay/notify")
-    @Operation(summary = "Native支付成功回调通知")
-    public R<Object> notify(@RequestBody JSONObject jsonObject) {
-        nativePayService.notify(jsonObject);
+    @PostMapping("/pay/notify/{channelCode}")
+    @Operation(summary = "支付渠道成功回调通知")
+    public R<Void> payNotify(@PathVariable("channelCode") String channelCode, HttpServletRequest request) {
+        payService.payNotify(channelCode, request);
         return R.success();
     }
 
-    private final NativePayService nativePayService;
+    private final PayService payService;
 
 }

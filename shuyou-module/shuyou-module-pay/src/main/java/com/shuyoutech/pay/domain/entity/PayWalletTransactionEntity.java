@@ -1,7 +1,7 @@
-package com.shuyoutech.member.domain.entity;
+package com.shuyoutech.pay.domain.entity;
 
 import com.shuyoutech.common.mongodb.model.BaseEntity;
-import com.shuyoutech.member.domain.vo.MemberWalletTransactionVo;
+import com.shuyoutech.pay.domain.vo.PayWalletTransactionVo;
 import io.github.linpeilie.annotations.AutoMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -24,10 +24,10 @@ import static org.springframework.data.mongodb.core.mapping.FieldType.DECIMAL128
 @Accessors(chain = true)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@AutoMapper(target = MemberWalletTransactionVo.class)
-@Document(collection = "member_wallet_transaction")
+@AutoMapper(target = PayWalletTransactionVo.class)
+@Document(collection = "pay_wallet_transaction")
 @Schema(description = "会员钱包流水表类")
-public class MemberWalletTransactionEntity extends BaseEntity<MemberWalletTransactionEntity> {
+public class PayWalletTransactionEntity extends BaseEntity<PayWalletTransactionEntity> {
 
     @Schema(description = "创建时间")
     private Date createTime;

@@ -1,12 +1,12 @@
-package com.shuyoutech.member.controller;
+package com.shuyoutech.pay.controller;
 
 import com.shuyoutech.common.core.model.R;
 import com.shuyoutech.common.satoken.util.AuthUtils;
 import com.shuyoutech.common.web.model.PageQuery;
 import com.shuyoutech.common.web.model.PageResult;
-import com.shuyoutech.member.domain.bo.MemberWalletBo;
-import com.shuyoutech.member.domain.vo.MemberWalletVo;
-import com.shuyoutech.member.service.MemberWalletService;
+import com.shuyoutech.pay.domain.bo.PayWalletBo;
+import com.shuyoutech.pay.domain.vo.PayWalletVo;
+import com.shuyoutech.pay.service.PayWalletService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -25,22 +25,22 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("memberWallet")
-@Tag(name = "MemberWalletController", description = "会员钱包管理API控制器")
-public class MemberWalletController {
+@RequestMapping("payWallet")
+@Tag(name = "PayWalletController", description = "会员钱包管理API控制器")
+public class PayWalletController {
 
     @PostMapping("page")
     @Operation(description = "会员钱包分页列表")
-    public R<PageResult<MemberWalletVo>> page(@RequestBody PageQuery<MemberWalletBo> pageQuery) {
-        return R.success(memberWalletService.page(pageQuery));
+    public R<PageResult<PayWalletVo>> page(@RequestBody PageQuery<PayWalletBo> pageQuery) {
+        return R.success(payWalletService.page(pageQuery));
     }
 
     @PostMapping(path = "get")
     @Operation(description = "获得用户钱包详情")
-    public R<MemberWalletVo> getWallet() {
-        return R.success(memberWalletService.detail(AuthUtils.getLoginUserId()));
+    public R<PayWalletVo> getWallet() {
+        return R.success(payWalletService.detail(AuthUtils.getLoginUserId()));
     }
 
-    private final MemberWalletService memberWalletService;
+    private final PayWalletService payWalletService;
 
 }

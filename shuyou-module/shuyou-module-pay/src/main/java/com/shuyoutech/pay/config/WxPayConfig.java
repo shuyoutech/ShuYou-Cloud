@@ -2,17 +2,16 @@ package com.shuyoutech.pay.config;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 /**
  * @author YangChao
  * @date 2025-07-23 10:13
  **/
 @Data
-@Component
-@ConfigurationProperties(prefix = "shuyoutech.pay.wechat")
-public class WxPayProperties {
+public class WxPayConfig {
+
+    @Schema(description = "APPID")
+    private String appid;
 
     @Schema(description = "商户号")
     private String mchId;
@@ -31,9 +30,6 @@ public class WxPayProperties {
 
     @Schema(description = "APIv3密钥")
     private String apiV3Key;
-
-    @Schema(description = "APPID")
-    private String appid;
 
     @Schema(description = "微信服务器地址")
     private String domain;

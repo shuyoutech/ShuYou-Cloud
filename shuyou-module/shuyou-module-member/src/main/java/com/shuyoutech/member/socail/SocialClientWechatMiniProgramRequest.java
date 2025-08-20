@@ -18,6 +18,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * <a href="https://mp.weixin.qq.com/">...</a>
+ *
  * @author YangChao
  * @date 2025-07-10 09:59
  **/
@@ -95,6 +97,7 @@ public class SocialClientWechatMiniProgramRequest implements SocialClientRequest
         // phoneInfo {用户绑定的手机号（国外手机号会有区号） phoneNumber  没有区号的手机号 purePhoneNumber 区号 countryCode}
         return SocialUserInfo.builder() //
                 .socialType(SocialTypeEnum.WECHAT_MINI_PROGRAM.getValue()) //
+                .nickname(phoneInfo.getString("purePhoneNumber")) //
                 .mobile(phoneInfo.getString("purePhoneNumber")) //
                 .token(token) //
                 .build();
