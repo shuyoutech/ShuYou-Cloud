@@ -1,5 +1,6 @@
 package com.shuyoutech.pay.domain.entity;
 
+import com.shuyoutech.api.enums.PayChannelEnum;
 import com.shuyoutech.api.enums.PayOrderStatusEnum;
 import com.shuyoutech.api.enums.PayTradeTypeEnum;
 import com.shuyoutech.common.mongodb.model.BaseEntity;
@@ -27,20 +28,6 @@ import java.util.Date;
 @Schema(description = "支付订单表类")
 public class PayOrderEntity extends BaseEntity<PayOrderEntity> {
 
-    /**
-     * 枚举 {@link PayOrderStatusEnum}
-     * 0-订单生成, 1-支付中, 2-支付成功, 3-支付失败, 4-已撤销, 5-已退款, 6-订单关闭
-     */
-    @Schema(description = "支付状态")
-    private String status;
-
-    /**
-     * 枚举 {@link PayTradeTypeEnum}
-     * JSAPI：公众号支付 NATIVE：扫码支付 APP：APP支付 MICROPAY：付款码支付 MWEB：H5支付 FACEPAY：刷脸支付
-     */
-    @Schema(description = "交易类型")
-    private String tradeType;
-
     @Schema(description = "创建时间")
     private Date createTime;
 
@@ -49,6 +36,25 @@ public class PayOrderEntity extends BaseEntity<PayOrderEntity> {
 
     @Schema(description = "创建人名称")
     private String createUserName;
+
+    /**
+     * 枚举 {@link PayOrderStatusEnum}
+     * 0-订单生成, 1-支付中, 2-支付成功, 3-支付失败, 4-已撤销, 5-已退款, 6-订单关闭
+     */
+    @Schema(description = "支付状态")
+    private String status;
+
+    /**
+     * 枚举 {@link PayChannelEnum}
+     */
+    @Schema(description = "渠道编码")
+    private String channelCode;
+
+    /**
+     * 枚举 {@link PayTradeTypeEnum}
+     */
+    @Schema(description = "交易类型")
+    private String tradeType;
 
     @Schema(description = "商户号")
     private String mchId;
@@ -60,7 +66,7 @@ public class PayOrderEntity extends BaseEntity<PayOrderEntity> {
     private String transactionId;
 
     @Schema(description = "支付金额,单位分")
-    private Integer amount;
+    private Integer payPrice;
 
     @Schema(description = "订单失效时间")
     private Date expiredTime;

@@ -6,13 +6,16 @@ import cn.hutool.core.util.IdUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.shuyoutech.api.enums.PayChannelEnum;
 import com.shuyoutech.api.enums.PayOrderStatusEnum;
+import com.shuyoutech.api.enums.PayRefundStatusEnum;
 import com.shuyoutech.api.enums.PayTradeTypeEnum;
 import com.shuyoutech.common.core.constant.DateConstants;
 import com.shuyoutech.common.mongodb.MongoUtils;
+import com.shuyoutech.common.redis.util.SequenceUtils;
 import com.shuyoutech.common.satoken.util.AuthUtils;
 import com.shuyoutech.pay.config.WxPayConfig;
 import com.shuyoutech.pay.domain.entity.PayChannelEntity;
 import com.shuyoutech.pay.domain.entity.PayOrderEntity;
+import com.shuyoutech.pay.domain.entity.PayRefundEntity;
 import com.wechat.pay.java.core.Config;
 import com.wechat.pay.java.core.RSAPublicKeyConfig;
 import com.wechat.pay.java.core.notification.NotificationConfig;
@@ -21,6 +24,10 @@ import com.wechat.pay.java.core.notification.RSAPublicKeyNotificationConfig;
 import com.wechat.pay.java.service.payments.jsapi.JsapiServiceExtension;
 import com.wechat.pay.java.service.payments.jsapi.model.*;
 import com.wechat.pay.java.service.payments.model.Transaction;
+import com.wechat.pay.java.service.refund.RefundService;
+import com.wechat.pay.java.service.refund.model.AmountReq;
+import com.wechat.pay.java.service.refund.model.CreateRequest;
+import com.wechat.pay.java.service.refund.model.Refund;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +51,7 @@ public class WxJsapiPayServiceImpl implements WxJsapiPayService {
 
     public static JsapiServiceExtension jsapiService;
     public static NotificationParser notificationParser;
+    public static RefundService refundService;
 
     @PostConstruct
     public void init() {
@@ -68,6 +76,9 @@ public class WxJsapiPayServiceImpl implements WxJsapiPayService {
 
             // 构建小程序 service
             jsapiService = new JsapiServiceExtension.Builder().config(config).build();
+
+            // 退款 service
+            refundService = new RefundService.Builder().config(config).build();
 
             // 1. 如果你使用的是微信支付公私钥，则使用 RSAPublicKeyNotificationConfig
             NotificationConfig notificationConfig = new RSAPublicKeyNotificationConfig.Builder() //
@@ -94,13 +105,14 @@ public class WxJsapiPayServiceImpl implements WxJsapiPayService {
         PayOrderEntity payOrder = new PayOrderEntity();
         payOrder.setId(orderId);
         payOrder.setCreateTime(now);
-        payOrder.setStatus(PayOrderStatusEnum.GENERATE.getValue());
+        payOrder.setStatus(PayOrderStatusEnum.PAYING.getValue());
+        payOrder.setChannelCode(PayChannelEnum.WEIXIN_MP.getValue());
         payOrder.setTradeType(PayTradeTypeEnum.JSAPI.getValue());
         payOrder.setCreateUserId(AuthUtils.getLoginUserId());
         payOrder.setCreateUserName(AuthUtils.getLoginUserName());
         payOrder.setAppId(appid);
         payOrder.setMchId(mchId);
-        payOrder.setAmount(amount);
+        payOrder.setPayPrice(amount);
         payOrder.setExpiredTime(DateUtil.offsetHour(now, 2));
         MongoUtils.save(payOrder);
 
@@ -113,18 +125,13 @@ public class WxJsapiPayServiceImpl implements WxJsapiPayService {
         request.setAppid(appid);
         request.setMchid(mchId);
         request.setDescription("数游AI-JSAPI");
-        request.setNotifyUrl(wxPayConfig.getNotifyUrl());
+        request.setNotifyUrl(wxPayConfig.getPayNotifyUrl());
         request.setOutTradeNo(orderId);
         request.setTimeExpire(DateUtil.format(payOrder.getExpiredTime(), DatePattern.UTC_WITH_XXX_OFFSET_PATTERN));
         Payer payer = new Payer();
         payer.setOpenid(AuthUtils.getLoginUserOpenid());
         request.setPayer(payer);
         PrepayWithRequestPaymentResponse response = jsapiService.prepayWithRequestPayment(request);
-
-        // 更新支付订单表状态为支付中
-        Update update = new Update();
-        update.set("status", PayOrderStatusEnum.PAYING.getValue());
-        MongoUtils.patch(orderId, update, PayOrderEntity.class);
 
         JSONObject vo = new JSONObject();
         vo.put("outTradeNo", orderId);
@@ -163,6 +170,47 @@ public class WxJsapiPayServiceImpl implements WxJsapiPayService {
         Update update = new Update();
         update.set("status", PayOrderStatusEnum.CLOSE.getValue());
         MongoUtils.patch(outTradeNo, update, PayOrderEntity.class);
+    }
+
+    @Override
+    public JSONObject refund(WxPayConfig wxPayConfig, Integer amount, String reason, PayOrderEntity payOrder) {
+        // 订单号
+        Date now = new Date();
+        String refundId = SequenceUtils.getDateId("refund");
+
+        // 退款记录插入
+        PayRefundEntity payRefund = new PayRefundEntity();
+        payRefund.setId(refundId);
+        payRefund.setCreateTime(now);
+        payRefund.setStatus(PayRefundStatusEnum.REFUNDING.getValue());
+        payRefund.setCreateUserId(AuthUtils.getLoginUserId());
+        payRefund.setCreateUserName(AuthUtils.getLoginUserName());
+        payRefund.setRefundPrice(amount);
+        payRefund.setPayPrice(payOrder.getPayPrice());
+        payRefund.setOutTradeNo(payOrder.getId());
+        payRefund.setChannelCode(payOrder.getChannelCode());
+        payRefund.setReason(reason);
+        MongoUtils.save(payRefund);
+
+        AmountReq amt = new AmountReq();
+        amt.setRefund(amount.longValue());
+        amt.setTotal(payOrder.getPayPrice().longValue());
+        amt.setCurrency("CNY");
+
+        CreateRequest request = new CreateRequest();
+        request.setAmount(amt);
+        request.setOutTradeNo(payOrder.getId());
+        request.setNotifyUrl(wxPayConfig.getRefundNotifyUrl());
+        request.setOutRefundNo(refundId);
+        request.setReason(reason);
+        Refund refund = refundService.create(request);
+
+        JSONObject vo = new JSONObject();
+        vo.put("refundId", refund.getRefundId());
+        vo.put("outRefundNo", refund.getOutRefundNo());
+        vo.put("transactionId", refund.getTransactionId());
+        vo.put("outTradeNo", refund.getOutTradeNo());
+        return vo;
     }
 
 }

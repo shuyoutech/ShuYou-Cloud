@@ -1,18 +1,18 @@
 package com.shuyoutech.aigc.service;
 
 import com.alibaba.fastjson2.JSON;
-import com.shuyoutech.api.constant.AiConstants;
 import com.shuyoutech.aigc.domain.bo.AigcKnowledgeBo;
 import com.shuyoutech.aigc.domain.entity.AigcKnowledgeEntity;
 import com.shuyoutech.aigc.domain.entity.AigcModelEntity;
 import com.shuyoutech.aigc.domain.entity.AigcVectorStoreEntity;
 import com.shuyoutech.aigc.domain.vo.AigcKnowledgeVo;
-import com.shuyoutech.common.cache.enums.CacheMsgTypeEnum;
+import com.shuyoutech.api.constant.AiConstants;
 import com.shuyoutech.common.core.util.CollectionUtils;
 import com.shuyoutech.common.core.util.MapstructUtils;
 import com.shuyoutech.common.core.util.StreamUtils;
 import com.shuyoutech.common.core.util.StringUtils;
 import com.shuyoutech.common.redis.constant.CacheConstants;
+import com.shuyoutech.common.redis.enums.CacheMsgTypeEnum;
 import com.shuyoutech.common.redis.model.RedisMessage;
 import com.shuyoutech.common.redis.util.RedisUtils;
 import com.shuyoutech.common.web.model.PageQuery;

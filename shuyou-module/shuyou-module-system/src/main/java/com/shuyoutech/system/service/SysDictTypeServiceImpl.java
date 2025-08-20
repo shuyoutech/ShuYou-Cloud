@@ -1,11 +1,11 @@
 package com.shuyoutech.system.service;
 
-import com.shuyoutech.common.cache.util.CacheUtils;
 import com.shuyoutech.common.core.util.CollectionUtils;
 import com.shuyoutech.common.core.util.MapstructUtils;
 import com.shuyoutech.common.core.util.StringUtils;
 import com.shuyoutech.common.mongodb.MongoUtils;
 import com.shuyoutech.common.redis.constant.CacheConstants;
+import com.shuyoutech.common.redis.util.CacheUtils;
 import com.shuyoutech.common.web.model.PageQuery;
 import com.shuyoutech.common.web.model.PageResult;
 import com.shuyoutech.common.web.model.ParamUnique;

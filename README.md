@@ -12,7 +12,8 @@ ShuYou-Cloud，采用SpringBoot3.5、SpringCloud2025、SpringCloudAlibaba2023等
 |                     |            |    |
 
 
-
+微信支付：
+https://github.com/wechatpay-apiv3/wechatpay-java/tree/main/service/src/example
 
 ## 快速链接
 github地址：https://github.com/shuyoutech/ShuYou-Cloud

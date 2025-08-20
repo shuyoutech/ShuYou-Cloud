@@ -34,7 +34,10 @@ public class WxPayConfig {
     @Schema(description = "微信服务器地址")
     private String domain;
 
-    @Schema(description = "接收结果通知地址")
-    private String notifyUrl;
+    @Schema(description = "支付回调地址")
+    private String payNotifyUrl;
+
+    @Schema(description = "退款回调地址")
+    private String refundNotifyUrl;
 
 }

@@ -12,10 +12,7 @@ import com.shuyoutech.common.core.exception.BusinessException;
 import com.shuyoutech.common.mongodb.MongoUtils;
 import com.shuyoutech.common.web.util.JakartaServletUtils;
 import com.shuyoutech.pay.config.WxPayConfig;
-import com.shuyoutech.pay.domain.bo.CloseOrderBo;
-import com.shuyoutech.pay.domain.bo.PayPrepayBo;
-import com.shuyoutech.pay.domain.bo.QueryOrderByIdBo;
-import com.shuyoutech.pay.domain.bo.QueryOrderByOutTradeNoBo;
+import com.shuyoutech.pay.domain.bo.*;
 import com.shuyoutech.pay.domain.entity.PayChannelEntity;
 import com.shuyoutech.pay.domain.entity.PayNotifyRecordEntity;
 import com.shuyoutech.pay.domain.entity.PayOrderEntity;
@@ -209,6 +206,22 @@ public class PayServiceImpl implements PayService {
             log.error("payNotify ================== exception:{}", e.getMessage());
         }
 
+    }
+
+    @Override
+    public JSONObject refund(PayRefundBo bo) {
+        PayOrderEntity payOrder = payOrderService.getById(bo.getOutTradeNo());
+        if (null == payOrder) {
+            throw new BusinessException("商户订单号不存在!");
+        }
+        Query query = new Query();
+        query.addCriteria(Criteria.where("channelCode").is(PayChannelEnum.WEIXIN_MP.getValue()));
+        PayChannelEntity payChannel = payChannelService.selectOne(query);
+        if (null == payChannel) {
+            throw new BusinessException("没有配置渠道!");
+        }
+        WxPayConfig wxPayConfig = JSONObject.parseObject(payChannel.getChannelConfig(), WxPayConfig.class);
+        return wxJsapiPayService.refund(wxPayConfig, bo.getAmount(), bo.getReason(), payOrder);
     }
 
     private final PayChannelService payChannelService;

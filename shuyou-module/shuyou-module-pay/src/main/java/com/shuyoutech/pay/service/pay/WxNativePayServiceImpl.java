@@ -64,6 +64,7 @@ public class WxNativePayServiceImpl implements WxNativePayService {
 
             // 构建Native service
             nativePayService = new NativePayService.Builder().config(config).build();
+
         } catch (Exception exception) {
             log.error("init ======================== exception:{}", exception.getMessage());
         }
@@ -78,14 +79,15 @@ public class WxNativePayServiceImpl implements WxNativePayService {
         // 订单记录插入
         PayOrderEntity payOrder = new PayOrderEntity();
         payOrder.setId(orderId);
-        payOrder.setStatus(PayOrderStatusEnum.GENERATE.getValue());
+        payOrder.setStatus(PayOrderStatusEnum.PAYING.getValue());
+        payOrder.setChannelCode(PayChannelEnum.WEIXIN_NATIVE.getValue());
         payOrder.setTradeType(PayTradeTypeEnum.NATIVE.getValue());
         payOrder.setCreateTime(now);
         payOrder.setCreateUserId(AuthUtils.getLoginUserId());
         payOrder.setCreateUserName(AuthUtils.getLoginUserName());
         payOrder.setAppId(wxPayConfig.getAppid());
         payOrder.setMchId(wxPayConfig.getMchId());
-        payOrder.setAmount(amount);
+        payOrder.setPayPrice(amount);
         payOrder.setExpiredTime(DateUtil.offsetHour(now, 2));
         MongoUtils.save(payOrder);
 
@@ -98,18 +100,13 @@ public class WxNativePayServiceImpl implements WxNativePayService {
         request.setAppid(wxPayConfig.getAppid());
         request.setMchid(wxPayConfig.getMchId());
         request.setDescription("AI Token NATIVE");
-        request.setNotifyUrl(wxPayConfig.getNotifyUrl());
+        request.setNotifyUrl(wxPayConfig.getPayNotifyUrl());
         request.setOutTradeNo(orderId);
         request.setTimeExpire(DateUtil.format(payOrder.getExpiredTime(), DatePattern.UTC_WITH_XXX_OFFSET_PATTERN));
         // 调用下单方法，得到应答
         PrepayResponse response = nativePayService.prepay(request);
         // 使用微信扫描 code_url 对应的二维码，即可体验Native支付
         String codeUrl = response.getCodeUrl();
-
-        // 更新支付订单表状态为支付中
-        Update update = new Update();
-        update.set("status", PayOrderStatusEnum.PAYING.getValue());
-        MongoUtils.patch(orderId, update, PayOrderEntity.class);
 
         JSONObject vo = new JSONObject();
         vo.put("codeUrl", codeUrl);
@@ -144,4 +141,5 @@ public class WxNativePayServiceImpl implements WxNativePayService {
         update.set("status", PayOrderStatusEnum.CLOSE.getValue());
         MongoUtils.patch(outTradeNo, update, PayOrderEntity.class);
     }
+
 }

@@ -2,6 +2,7 @@ package com.shuyoutech.pay.service.pay;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.shuyoutech.pay.config.WxPayConfig;
+import com.shuyoutech.pay.domain.entity.PayOrderEntity;
 import com.wechat.pay.java.service.payments.model.Transaction;
 
 /**
@@ -43,5 +44,16 @@ public interface WxJsapiPayService {
      * @param outTradeNo 商户订单号
      */
     void closeOrder(String mchId, String outTradeNo);
+
+    /**
+     * 退款申请
+     *
+     * @param wxPayConfig 配置
+     * @param amount      退款金额
+     * @param reason      退款原因
+     * @param payOrder    订单信息
+     * @return 退款信息
+     */
+    JSONObject refund(WxPayConfig wxPayConfig, Integer amount, String reason, PayOrderEntity payOrder);
 
 }

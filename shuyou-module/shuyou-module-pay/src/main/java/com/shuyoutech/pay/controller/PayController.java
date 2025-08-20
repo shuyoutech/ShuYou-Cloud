@@ -2,10 +2,7 @@ package com.shuyoutech.pay.controller;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.shuyoutech.common.core.model.R;
-import com.shuyoutech.pay.domain.bo.CloseOrderBo;
-import com.shuyoutech.pay.domain.bo.PayPrepayBo;
-import com.shuyoutech.pay.domain.bo.QueryOrderByIdBo;
-import com.shuyoutech.pay.domain.bo.QueryOrderByOutTradeNoBo;
+import com.shuyoutech.pay.domain.bo.*;
 import com.shuyoutech.pay.service.PayService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -61,6 +58,12 @@ public class PayController {
     public R<Void> payNotify(@PathVariable("channelCode") String channelCode, HttpServletRequest request) {
         payService.payNotify(channelCode, request);
         return R.success();
+    }
+
+    @PostMapping("/pay/refund")
+    @Operation(summary = "申请退款")
+    public R<JSONObject> refund(@Validated @RequestBody PayRefundBo bo) {
+        return R.success(payService.refund(bo));
     }
 
     private final PayService payService;

@@ -2,11 +2,9 @@ package com.shuyoutech.pay.service;
 
 import com.shuyoutech.api.enums.PayOrderStatusEnum;
 import com.shuyoutech.common.core.util.*;
-import com.shuyoutech.common.mongodb.MongoUtils;
 import com.shuyoutech.common.satoken.util.AuthUtils;
 import com.shuyoutech.common.web.model.PageQuery;
 import com.shuyoutech.common.web.model.PageResult;
-import com.shuyoutech.common.web.model.ParamUnique;
 import com.shuyoutech.common.web.service.SuperServiceImpl;
 import com.shuyoutech.pay.domain.bo.PayOrderBo;
 import com.shuyoutech.pay.domain.entity.PayOrderEntity;
@@ -15,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -39,7 +36,7 @@ public class PayOrderServiceImpl extends SuperServiceImpl<PayOrderEntity, PayOrd
         list.forEach(e -> {
             PayOrderVo vo = MapstructUtils.convert(e, this.voClass);
             vo.setStatusName(EnumUtils.getLabelByValue(PayOrderStatusEnum.class, e.getStatus()));
-            vo.setAmountStr(NumberUtils.round(NumberUtils.mul(e.getAmount().toString(), "100"), 2).toPlainString());
+            vo.setPayPriceStr(FormatUtils.formatDotZero(NumberUtils.div(e.getPayPrice().toString(), "100", 2).toPlainString()));
             result.add(vo);
         });
         return result;
@@ -59,17 +56,6 @@ public class PayOrderServiceImpl extends SuperServiceImpl<PayOrderEntity, PayOrd
     }
 
     @Override
-    public boolean checkUnique(ParamUnique paramUnique) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where(paramUnique.getParamCode()).is(paramUnique.getParamValue()));
-        PayOrderEntity role = this.selectOne(query);
-        if (null == role) {
-            return true;
-        }
-        return StringUtils.isNotBlank(paramUnique.getId()) && paramUnique.getId().equals(role.getId());
-    }
-
-    @Override
     public PageResult<PayOrderVo> page(PageQuery<PayOrderBo> pageQuery) {
         PayOrderBo query = pageQuery.getQuery();
         query.setCreateUserId(AuthUtils.getLoginUserId());
@@ -82,33 +68,6 @@ public class PayOrderServiceImpl extends SuperServiceImpl<PayOrderEntity, PayOrd
     public PayOrderVo detail(String id) {
         PayOrderEntity entity = this.getById(id);
         return convertTo(entity);
-    }
-
-    @Override
-    public String savePayOrder(PayOrderBo bo) {
-        PayOrderEntity entity = this.save(bo);
-        return null == entity ? null : entity.getId();
-    }
-
-    @Override
-    public boolean updatePayOrder(PayOrderBo bo) {
-        return this.patch(bo);
-    }
-
-    @Override
-    public boolean deletePayOrder(List<String> ids) {
-        return this.deleteByIds(ids);
-    }
-
-    @Override
-    public boolean statusPayOrder(String id, String status) {
-        PayOrderEntity entity = this.getById(id);
-        if (null == entity) {
-            return false;
-        }
-        Update update = new Update();
-        update.set("status", status);
-        return MongoUtils.patch(id, update, PayOrderEntity.class);
     }
 
 }
