@@ -8,7 +8,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.shuyoutech.aigc.domain.model.CommonModelBuilder;
 import com.shuyoutech.aigc.domain.model.UserModelUsage;
-import com.shuyoutech.aigc.enums.AiProviderTypeEnum;
+import com.shuyoutech.api.enums.AiProviderTypeEnum;
 import com.shuyoutech.aigc.provider.service.ModelService;
 import com.shuyoutech.common.core.model.R;
 import com.shuyoutech.common.core.util.CollectionUtils;
@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.shuyoutech.aigc.enums.AiModelFunctionEnum.*;
+import static com.shuyoutech.api.enums.AiModelFunctionEnum.*;
 import static com.shuyoutech.aigc.provider.AigcModelFactory.MEDIA_TYPE_JSON;
 import static com.shuyoutech.api.constant.AiConstants.*;
 import static com.shuyoutech.common.core.constant.CommonConstants.HEADER_AUTHORIZATION_PREFIX;

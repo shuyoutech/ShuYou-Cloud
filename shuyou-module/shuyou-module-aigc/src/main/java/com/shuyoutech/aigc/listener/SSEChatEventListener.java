@@ -6,7 +6,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.shuyoutech.api.constant.AiConstants;
 import com.shuyoutech.aigc.domain.model.TokenUsage;
 import com.shuyoutech.aigc.domain.model.UserModelUsage;
-import com.shuyoutech.aigc.enums.AiProviderTypeEnum;
+import com.shuyoutech.api.enums.AiProviderTypeEnum;
 import com.shuyoutech.common.core.util.NumberUtils;
 import com.shuyoutech.common.core.util.StringUtils;
 import com.shuyoutech.common.disruptor.model.DisruptorData;

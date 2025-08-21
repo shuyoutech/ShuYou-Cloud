@@ -1,33 +1,33 @@
-package com.shuyoutech.aigc.enums;
+package com.shuyoutech.api.enums;
 
 import com.shuyoutech.common.core.enums.BaseEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 消息类型枚举
+ * 向量数据库类型枚举
  *
  * @author YangChao
  * @date 2025-05-12 12:00
  **/
 @Getter
 @AllArgsConstructor
-public enum MessageTypeEnum implements BaseEnum<String, String> {
+public enum VectorStoreTypeEnum implements BaseEnum<String, String> {
 
     /**
-     * text
+     * PGVector
      */
-    TEXT("text", "文本"),
+    PGVECTOR("1", "PGVector"),
 
     /**
-     * image
+     * Milvus
      */
-    IMAGE("image", "图片"),
+    MILVUS("2", "Milvus"),
 
     /**
-     * audio
+     * Elasticsearch
      */
-    AUDIO("audio", "音频");
+    ELASTICSEARCH("3", "Elasticsearch");
 
     private final String value;
     private final String label;

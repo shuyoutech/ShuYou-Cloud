@@ -145,6 +145,12 @@ public interface AiConstants {
             add(MODEL_ALIYUN_QWEN_DOC_TURBO);
         }
     };
+    List<String> EMBEDDING_MODEL_ALIYUN_LIST = new ArrayList<>() {
+        {
+            add(MODEL_ALIYUN_TEXT_EMBEDDING_V4);
+            add(MODEL_ALIYUN_MULTIMODAL_EMBEDDING_V1);
+        }
+    };
 
     List<String> CHAT_MODEL_OPENAI_LIST = new ArrayList<>() {
         {

@@ -1,8 +1,8 @@
 package com.shuyoutech.aigc.domain.vo;
 
-import com.shuyoutech.aigc.enums.AiModelFeeRuleEnum;
-import com.shuyoutech.aigc.enums.AiTokenPriceUnitEnum;
-import com.shuyoutech.aigc.enums.CurrencyUnitTypeEnum;
+import com.shuyoutech.api.enums.AiModelFeeRuleEnum;
+import com.shuyoutech.api.enums.AiTokenPriceUnitEnum;
+import com.shuyoutech.api.enums.CurrencyUnitTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

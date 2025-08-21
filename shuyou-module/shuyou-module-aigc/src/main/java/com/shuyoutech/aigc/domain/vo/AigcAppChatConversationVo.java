@@ -1,6 +1,6 @@
 package com.shuyoutech.aigc.domain.vo;
 
-import com.shuyoutech.aigc.enums.AiSourceTypeEnum;
+import com.shuyoutech.api.enums.AiSourceTypeEnum;
 import com.shuyoutech.common.mongodb.model.BaseVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

@@ -1,7 +1,7 @@
 package com.shuyoutech.aigc.domain.bo;
 
 import com.shuyoutech.aigc.domain.entity.AigcVectorStoreEntity;
-import com.shuyoutech.aigc.enums.VectorStoreTypeEnum;
+import com.shuyoutech.api.enums.VectorStoreTypeEnum;
 import com.shuyoutech.common.core.model.group.StatusGroup;
 import com.shuyoutech.common.core.model.group.UpdateGroup;
 import io.github.linpeilie.annotations.AutoMapper;

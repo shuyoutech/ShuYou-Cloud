@@ -13,11 +13,9 @@ import com.shuyoutech.aigc.domain.model.UserModelUsage;
 import com.shuyoutech.aigc.provider.AigcModelFactory;
 import com.shuyoutech.aigc.provider.service.ModelService;
 import com.shuyoutech.aigc.provider.service.impl.OpenRouterService;
+import com.shuyoutech.api.model.RemoteModel;
 import com.shuyoutech.api.service.RemoteAigcService;
-import com.shuyoutech.common.core.util.BooleanUtils;
-import com.shuyoutech.common.core.util.CollectionUtils;
-import com.shuyoutech.common.core.util.SpringUtils;
-import com.shuyoutech.common.core.util.StringUtils;
+import com.shuyoutech.common.core.util.*;
 import com.shuyoutech.common.mongodb.MongoUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +34,7 @@ import org.springframework.web.socket.WebSocketSession;
 import java.util.Date;
 import java.util.List;
 
+import static com.shuyoutech.aigc.provider.AigcModelFactory.MODEL_NAME_MAP;
 import static com.shuyoutech.api.constant.AiConstants.ROLE_ASSISTANT;
 import static com.shuyoutech.api.constant.AiConstants.ROLE_USER;
 
@@ -47,6 +46,15 @@ import static com.shuyoutech.api.constant.AiConstants.ROLE_USER;
 @Service
 @RequiredArgsConstructor
 public class RemoteAigcServiceImpl implements RemoteAigcService {
+
+    @Override
+    public RemoteModel getModel(String provider, String modelName) {
+        AigcModelEntity model = MODEL_NAME_MAP.get(StringUtils.format("{}/{}", provider, modelName));
+        if (null == model) {
+            return null;
+        }
+        return MapstructUtils.convert(model, RemoteModel.class);
+    }
 
     @Override
     public void chat(String userId, String message, WebSocketSession webSocketSession) {

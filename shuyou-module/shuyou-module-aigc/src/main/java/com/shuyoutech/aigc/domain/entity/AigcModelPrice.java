@@ -1,9 +1,10 @@
 package com.shuyoutech.aigc.domain.entity;
 
 import com.shuyoutech.aigc.domain.vo.AigcModelPriceVo;
-import com.shuyoutech.aigc.enums.AiModelFeeRuleEnum;
-import com.shuyoutech.aigc.enums.AiTokenPriceUnitEnum;
-import com.shuyoutech.aigc.enums.CurrencyUnitTypeEnum;
+import com.shuyoutech.api.enums.AiModelFeeRuleEnum;
+import com.shuyoutech.api.enums.AiTokenPriceUnitEnum;
+import com.shuyoutech.api.enums.CurrencyUnitTypeEnum;
+import com.shuyoutech.api.model.RemoteModelPrice;
 import io.github.linpeilie.annotations.AutoMapper;
 import io.github.linpeilie.annotations.AutoMappers;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,7 +21,7 @@ import static org.springframework.data.mongodb.core.mapping.FieldType.DECIMAL128
  * @date 2025-07-14 21:54
  **/
 @Data
-@AutoMappers({@AutoMapper(target = AigcModelPriceVo.class)})
+@AutoMappers({@AutoMapper(target = AigcModelPriceVo.class), @AutoMapper(target = RemoteModelPrice.class)})
 public class AigcModelPrice implements Serializable {
 
     /**

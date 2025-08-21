@@ -4,7 +4,6 @@ import com.alibaba.fastjson2.JSONObject;
 import com.shuyoutech.api.service.aigc.listener.SSEChatEventListener;
 import com.shuyoutech.common.core.util.BooleanUtils;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -12,7 +11,6 @@ import okhttp3.Response;
 import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSources;
 import org.springframework.http.HttpHeaders;
-import org.springframework.stereotype.Component;
 
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
@@ -34,12 +32,10 @@ import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
  * @date 2025-07-13 20:18
  **/
 @Slf4j
-@Component
-@RequiredArgsConstructor
 public class DeepseekProvider {
 
-    private String baseUrl;
-    private String apiKey;
+    private final String baseUrl;
+    private final String apiKey;
 
     public DeepseekProvider(String baseUrl, String apiKey) {
         this.baseUrl = baseUrl;

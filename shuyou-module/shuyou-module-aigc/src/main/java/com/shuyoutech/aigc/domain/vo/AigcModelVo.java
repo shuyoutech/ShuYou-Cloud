@@ -1,9 +1,9 @@
 package com.shuyoutech.aigc.domain.vo;
 
-import com.shuyoutech.aigc.enums.AiChargeTypeEnum;
-import com.shuyoutech.aigc.enums.AiModalityTypeEnum;
-import com.shuyoutech.aigc.enums.AiProviderTypeEnum;
-import com.shuyoutech.aigc.enums.ModelTypeEnum;
+import com.shuyoutech.api.enums.AiChargeTypeEnum;
+import com.shuyoutech.api.enums.AiModalityTypeEnum;
+import com.shuyoutech.api.enums.AiProviderTypeEnum;
+import com.shuyoutech.api.enums.ModelTypeEnum;
 import com.shuyoutech.common.core.enums.StatusEnum;
 import com.shuyoutech.common.mongodb.model.BaseVo;
 import io.swagger.v3.oas.annotations.media.Schema;

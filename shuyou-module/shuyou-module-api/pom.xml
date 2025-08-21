@@ -24,7 +24,7 @@
         </dependency>
         <dependency>
             <groupId>com.shuyoutech</groupId>
-            <artifactId>shuyou-api-model</artifactId>
+            <artifactId>shuyou-api-service</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

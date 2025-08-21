@@ -1,7 +1,7 @@
 package com.shuyoutech.aigc.provider.build;
 
 import com.shuyoutech.aigc.domain.entity.AigcModelEntity;
-import com.shuyoutech.aigc.enums.AiProviderTypeEnum;
+import com.shuyoutech.api.enums.AiProviderTypeEnum;
 import dev.langchain4j.community.model.dashscope.QwenChatModel;
 import dev.langchain4j.community.model.dashscope.QwenEmbeddingModel;
 import dev.langchain4j.community.model.dashscope.QwenStreamingChatModel;

@@ -3,7 +3,7 @@ package com.shuyoutech.aigc.provider;
 import com.shuyoutech.aigc.domain.entity.AigcModelEntity;
 import com.shuyoutech.aigc.domain.vo.AigcAppVo;
 import com.shuyoutech.aigc.domain.vo.AigcKnowledgeVo;
-import com.shuyoutech.aigc.enums.ModelTypeEnum;
+import com.shuyoutech.api.enums.ModelTypeEnum;
 import com.shuyoutech.aigc.provider.build.ModelBuildHandler;
 import com.shuyoutech.aigc.provider.build.OpenAIModelBuildHandler;
 import com.shuyoutech.aigc.provider.service.ModelService;
@@ -41,6 +41,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class AigcModelFactory implements CommandLineRunner, ApplicationContextAware {
 
     public static final Map<String, AigcModelEntity> MODEL_MAP = new ConcurrentHashMap<>();
+    public static final Map<String, AigcModelEntity> MODEL_NAME_MAP = new ConcurrentHashMap<>();
     public static final Map<String, ModelBuildHandler> MODEL_STRATEGY_MAP = new ConcurrentHashMap<>();
     public static final Map<String, StreamingChatModel> STREAMING_CHAT_MODEL_MAP = new ConcurrentHashMap<>();
     public static final Map<String, ChatModel> CHAT_MODEL_MAP = new ConcurrentHashMap<>();
@@ -114,6 +115,7 @@ public class AigcModelFactory implements CommandLineRunner, ApplicationContextAw
                 }
                 MODEL_MAP.put(model.getId(), model);
             }
+            MODEL_NAME_MAP.put(StringUtils.format("{}/{}", model.getProvider(), model.getModelName()), model);
         } catch (Exception e) {
             log.error("buildModel id: {} name: {} 配置报错, 错误信息:{}", model.getId(), model.getModelName(), e.getMessage());
         }

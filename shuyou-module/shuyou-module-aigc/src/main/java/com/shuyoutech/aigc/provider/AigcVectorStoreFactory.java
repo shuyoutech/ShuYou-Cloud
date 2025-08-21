@@ -2,7 +2,7 @@ package com.shuyoutech.aigc.provider;
 
 import com.shuyoutech.aigc.domain.entity.AigcVectorStoreEntity;
 import com.shuyoutech.aigc.domain.vo.AigcKnowledgeVo;
-import com.shuyoutech.aigc.enums.VectorStoreTypeEnum;
+import com.shuyoutech.api.enums.VectorStoreTypeEnum;
 import com.shuyoutech.aigc.service.AigcVectorStoreService;
 import com.shuyoutech.common.core.exception.BusinessException;
 import dev.langchain4j.data.segment.TextSegment;

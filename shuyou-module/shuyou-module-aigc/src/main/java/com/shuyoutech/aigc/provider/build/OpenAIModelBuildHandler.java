@@ -1,7 +1,7 @@
 package com.shuyoutech.aigc.provider.build;
 
 import com.shuyoutech.aigc.domain.entity.AigcModelEntity;
-import com.shuyoutech.aigc.enums.AiProviderTypeEnum;
+import com.shuyoutech.api.enums.AiProviderTypeEnum;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;

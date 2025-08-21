@@ -1,7 +1,7 @@
 package com.shuyoutech.aigc.domain.entity;
 
 import com.shuyoutech.aigc.domain.vo.AigcVectorStoreVo;
-import com.shuyoutech.aigc.enums.VectorStoreTypeEnum;
+import com.shuyoutech.api.enums.VectorStoreTypeEnum;
 import com.shuyoutech.common.mongodb.model.BaseEntity;
 import io.github.linpeilie.annotations.AutoMapper;
 import io.swagger.v3.oas.annotations.media.Schema;

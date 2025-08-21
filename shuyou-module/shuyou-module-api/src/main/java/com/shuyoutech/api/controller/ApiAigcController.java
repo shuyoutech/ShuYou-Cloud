@@ -1,6 +1,6 @@
 package com.shuyoutech.api.controller;
 
-import com.shuyoutech.api.service.aigc.AigcService;
+import com.shuyoutech.api.service.aigc.ApiAigcService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,15 +22,15 @@ import static com.shuyoutech.common.core.constant.CommonConstants.CHARSET_UTF_8;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "AigcController", description = "AIGC API控制器")
-public class AigcController {
+@Tag(name = "ApiAigcController", description = "AIGC API控制器")
+public class ApiAigcController {
 
     @PostMapping(value = "/v1/chat/completions")
     @Operation(summary = "对话补全接口")
     public void chatCompletions(HttpServletRequest request, HttpServletResponse response) {
         response.setCharacterEncoding(CHARSET_UTF_8);
         response.setStatus(HttpStatus.OK.value());
-        aigcService.chatCompletion(request, response);
+        apiAigcService.chatCompletion(request, response);
     }
 
     @PostMapping(value = "/v1/beta/completions")
@@ -38,9 +38,15 @@ public class AigcController {
     public void betaCompletions(HttpServletRequest request, HttpServletResponse response) {
         response.setCharacterEncoding(CHARSET_UTF_8);
         response.setStatus(HttpStatus.OK.value());
-        aigcService.betaCompletion(request, response);
+        apiAigcService.betaCompletion(request, response);
     }
 
-    private final AigcService aigcService;
+    @PostMapping(value = "/v1/embeddings")
+    @Operation(summary = "文本向量化接口")
+    public void embedding(HttpServletRequest request, HttpServletResponse response) {
+        apiAigcService.embedding(request, response);
+    }
+
+    private final ApiAigcService apiAigcService;
 
 }

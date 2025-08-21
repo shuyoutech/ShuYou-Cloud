@@ -4,7 +4,6 @@ import com.alibaba.fastjson2.JSONObject;
 import com.shuyoutech.api.service.aigc.listener.SSEChatEventListener;
 import com.shuyoutech.common.core.util.BooleanUtils;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -12,14 +11,12 @@ import okhttp3.Response;
 import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSources;
 import org.springframework.http.HttpHeaders;
-import org.springframework.stereotype.Component;
 
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
-import static com.shuyoutech.api.constant.AiConstants.ALIYUN_CHAT_COMPLETIONS;
-import static com.shuyoutech.api.constant.AiConstants.STREAM;
+import static com.shuyoutech.api.constant.AiConstants.*;
 import static com.shuyoutech.api.init.ApiRunner.MEDIA_TYPE_JSON;
 import static com.shuyoutech.api.init.ApiRunner.OK_HTTP_CLIENT;
 import static com.shuyoutech.common.core.constant.CommonConstants.HEADER_AUTHORIZATION_PREFIX;
@@ -31,12 +28,10 @@ import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
  * @date 2025-08-10 21:24
  **/
 @Slf4j
-@Component
-@RequiredArgsConstructor
 public class AliyunProvider {
 
-    private String baseUrl;
-    private String apiKey;
+    private final String baseUrl;
+    private final String apiKey;
 
     public AliyunProvider(String baseUrl, String apiKey) {
         this.baseUrl = baseUrl;
@@ -73,6 +68,17 @@ public class AliyunProvider {
             }
         } catch (Exception e) {
             log.error("chatCompletion aliyun ===================== exception:{}", e.getMessage());
+        }
+    }
+
+    public void embedding(String body, HttpServletResponse response) {
+        try {
+            Request request = this.buildRequest(body, ALIYUN_EMBEDDINGS);
+            response.setContentType(APPLICATION_JSON_VALUE);
+            Response res = OK_HTTP_CLIENT.newCall(request).execute();
+            dealResponse(res, response);
+        } catch (Exception e) {
+            log.error("embedding aliyun ===================== exception:{}", e.getMessage());
         }
     }
 

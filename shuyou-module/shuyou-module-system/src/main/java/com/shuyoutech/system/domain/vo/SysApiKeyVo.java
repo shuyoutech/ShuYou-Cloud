@@ -1,14 +1,11 @@
-package com.shuyoutech.member.domain.entity;
+package com.shuyoutech.system.domain.vo;
 
-import com.shuyoutech.common.mongodb.model.BaseEntity;
-import com.shuyoutech.member.domain.vo.MemberApiKeyVo;
-import io.github.linpeilie.annotations.AutoMapper;
+import com.shuyoutech.common.mongodb.model.BaseVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
@@ -19,17 +16,18 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
-@AutoMapper(target = MemberApiKeyVo.class)
-@Document(collection = "member_api_key")
-@Schema(description = "用户API key表类")
-public class MemberApiKeyEntity extends BaseEntity<MemberApiKeyEntity> {
+@EqualsAndHashCode(callSuper = false)
+@Schema(description = "用户API key显示类")
+public class SysApiKeyVo extends BaseVo {
 
     @Schema(description = "创建时间")
     private Date createTime;
 
     @Schema(description = "用户ID")
     private String userId;
+
+    @Schema(description = "用户类型")
+    private String userType;
 
     @Schema(description = "名称")
     private String apiName;

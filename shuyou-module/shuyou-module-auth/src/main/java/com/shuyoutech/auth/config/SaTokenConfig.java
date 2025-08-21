@@ -22,7 +22,8 @@ public class SaTokenConfig implements WebMvcConfigurer {
                 .excludePathPatterns( //
                         "/favicon.ico",  //
                         "/api/**", //
-                        "/wxpay/notify", //
+                        "/pay/notify/**", //
+                        "/refund/notify/**", //
                         "/provider/page", //
                         "/model/page"
                 );

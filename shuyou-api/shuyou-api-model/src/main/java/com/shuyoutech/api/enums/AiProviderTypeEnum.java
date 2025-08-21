@@ -1,4 +1,4 @@
-package com.shuyoutech.aigc.enums;
+package com.shuyoutech.api.enums;
 
 import com.shuyoutech.common.core.enums.BaseEnum;
 import lombok.AllArgsConstructor;

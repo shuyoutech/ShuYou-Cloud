@@ -6,7 +6,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.shuyoutech.aigc.domain.model.ChatModelBuilder;
 import com.shuyoutech.aigc.domain.model.CommonModelBuilder;
 import com.shuyoutech.aigc.domain.model.UserModelUsage;
-import com.shuyoutech.aigc.enums.AiProviderTypeEnum;
+import com.shuyoutech.api.enums.AiProviderTypeEnum;
 import com.shuyoutech.aigc.listener.SSEChatEventListener;
 import com.shuyoutech.aigc.provider.service.ModelService;
 import com.shuyoutech.common.core.model.R;

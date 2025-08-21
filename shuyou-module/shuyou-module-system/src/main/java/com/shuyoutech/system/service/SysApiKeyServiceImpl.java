@@ -1,4 +1,4 @@
-package com.shuyoutech.member.service;
+package com.shuyoutech.system.service;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
@@ -8,9 +8,9 @@ import com.shuyoutech.common.core.util.StringUtils;
 import com.shuyoutech.common.mongodb.MongoUtils;
 import com.shuyoutech.common.satoken.util.AuthUtils;
 import com.shuyoutech.common.web.service.SuperServiceImpl;
-import com.shuyoutech.member.domain.bo.MemberApiKeyBo;
-import com.shuyoutech.member.domain.entity.MemberApiKeyEntity;
-import com.shuyoutech.member.domain.vo.MemberApiKeyVo;
+import com.shuyoutech.system.domain.bo.SysApiKeyBo;
+import com.shuyoutech.system.domain.entity.SysApiKeyEntity;
+import com.shuyoutech.system.domain.vo.SysApiKeyVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -29,28 +29,28 @@ import java.util.regex.Pattern;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MemberApiKeyServiceImpl extends SuperServiceImpl<MemberApiKeyEntity, MemberApiKeyVo> implements MemberApiKeyService {
+public class SysApiKeyServiceImpl extends SuperServiceImpl<SysApiKeyEntity, SysApiKeyVo> implements SysApiKeyService {
 
     @Override
-    public List<MemberApiKeyVo> convertTo(List<MemberApiKeyEntity> list) {
-        List<MemberApiKeyVo> result = CollectionUtils.newArrayList();
+    public List<SysApiKeyVo> convertTo(List<SysApiKeyEntity> list) {
+        List<SysApiKeyVo> result = CollectionUtils.newArrayList();
         if (CollectionUtils.isEmpty(list)) {
             return result;
         }
         list.forEach(e -> {
-            MemberApiKeyVo vo = MapstructUtils.convert(e, this.voClass);
+            SysApiKeyVo vo = MapstructUtils.convert(e, this.voClass);
             vo.setApiKey(StrUtil.hide(e.getApiKey(), 8, 31));
             result.add(vo);
         });
         return result;
     }
 
-    public MemberApiKeyVo convertTo(MemberApiKeyEntity entity) {
+    public SysApiKeyVo convertTo(SysApiKeyEntity entity) {
         return convertTo(Collections.singletonList(entity)).getFirst();
     }
 
     @Override
-    public Query buildQuery(MemberApiKeyBo bo) {
+    public Query buildQuery(SysApiKeyBo bo) {
         Query query = new Query();
         if (StringUtils.isNotBlank(bo.getUserId())) {
             query.addCriteria(Criteria.where("userId").is(bo.getUserId()));
@@ -62,31 +62,31 @@ public class MemberApiKeyServiceImpl extends SuperServiceImpl<MemberApiKeyEntity
     }
 
     @Override
-    public List<MemberApiKeyVo> list(MemberApiKeyBo bo) {
+    public List<SysApiKeyVo> list(SysApiKeyBo bo) {
         bo.setUserId(AuthUtils.getLoginUserId());
         Query query = buildQuery(bo);
         return this.selectListVo(query);
     }
 
     @Override
-    public MemberApiKeyVo detail(String id) {
-        MemberApiKeyEntity entity = this.getById(id);
+    public SysApiKeyVo detail(String id) {
+        SysApiKeyEntity entity = this.getById(id);
         return convertTo(entity);
     }
 
     @Override
-    public String saveMemberApiKey(MemberApiKeyBo bo) {
+    public String saveMemberApiKey(SysApiKeyBo bo) {
         bo.setUserId(AuthUtils.getLoginUserId());
         bo.setApiKey("sk-" + IdUtil.simpleUUID());
-        MemberApiKeyEntity entity = this.save(bo);
+        SysApiKeyEntity entity = this.save(bo);
         return null == entity ? null : entity.getApiKey();
     }
 
     @Override
-    public boolean updateMemberApiKey(MemberApiKeyBo bo) {
+    public boolean updateMemberApiKey(SysApiKeyBo bo) {
         Update update = new Update();
         update.set("apiName", bo.getApiName());
-        return MongoUtils.patch(bo.getId(), update, MemberApiKeyEntity.class);
+        return MongoUtils.patch(bo.getId(), update, SysApiKeyEntity.class);
     }
 
     @Override

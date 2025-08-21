@@ -5,7 +5,7 @@ import com.alibaba.fastjson2.JSON;
 import com.shuyoutech.aigc.domain.bo.AigcVectorStoreBo;
 import com.shuyoutech.aigc.domain.entity.AigcVectorStoreEntity;
 import com.shuyoutech.aigc.domain.vo.AigcVectorStoreVo;
-import com.shuyoutech.aigc.enums.VectorStoreTypeEnum;
+import com.shuyoutech.api.enums.VectorStoreTypeEnum;
 import com.shuyoutech.api.constant.AiConstants;
 import com.shuyoutech.api.enums.DictTypeEnum;
 import com.shuyoutech.api.service.RemoteSystemService;

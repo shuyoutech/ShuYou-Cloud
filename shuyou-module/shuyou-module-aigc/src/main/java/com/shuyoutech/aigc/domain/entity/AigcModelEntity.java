@@ -1,13 +1,12 @@
 package com.shuyoutech.aigc.domain.entity;
 
-import com.shuyoutech.aigc.domain.vo.AigcModelPriceVo;
 import com.shuyoutech.aigc.domain.vo.AigcModelVo;
-import com.shuyoutech.aigc.enums.*;
+import com.shuyoutech.api.enums.*;
+import com.shuyoutech.api.model.RemoteModel;
 import com.shuyoutech.common.core.enums.StatusEnum;
 import com.shuyoutech.common.mongodb.model.BaseEntity;
 import io.github.linpeilie.annotations.AutoMapper;
 import io.github.linpeilie.annotations.AutoMappers;
-import io.github.linpeilie.annotations.AutoMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,7 +25,7 @@ import java.util.List;
 @Accessors(chain = true)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@AutoMappers({@AutoMapper(target = AigcModelVo.class)})
+@AutoMappers({@AutoMapper(target = AigcModelVo.class), @AutoMapper(target = RemoteModel.class)})
 @Document(collection = "aigc_model")
 @Schema(description = "模型表类")
 public class AigcModelEntity extends BaseEntity<AigcModelEntity> {
@@ -95,7 +94,6 @@ public class AigcModelEntity extends BaseEntity<AigcModelEntity> {
     @Schema(title = "计费类型")
     private String chargeType;
 
-    @AutoMapping(targetClass = AigcModelPriceVo.class)
     @Schema(title = "价格集合")
     private List<AigcModelPrice> prices;
 
