@@ -77,7 +77,7 @@ public class AigcServiceImpl implements AigcService {
             if (BooleanUtils.isTrue(enableMemory) && StringUtils.isNotEmpty(bo.getConversationId())) {
                 Query query = new Query();
                 query.addCriteria(Criteria.where("conversationId").is(bo.getConversationId()));
-                Pageable pageable = PageRequest.of(0, 2);
+                Pageable pageable = PageRequest.of(0, 5);
                 query.with(pageable);
                 query.with(Sort.by(Sort.Direction.DESC, "requestTime"));
                 List<AigcChatMessageEntity> chatMessageList = MongoUtils.selectList(query, AigcChatMessageEntity.class);
