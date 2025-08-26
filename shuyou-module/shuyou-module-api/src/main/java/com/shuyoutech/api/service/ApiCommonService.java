@@ -9,6 +9,6 @@ import jakarta.servlet.http.HttpServletResponse;
  **/
 public interface ApiCommonService {
 
-    void commonInterfaceV1(HttpServletRequest request, HttpServletResponse response);
+    void interfaceV1(HttpServletRequest request, HttpServletResponse response);
 
 }

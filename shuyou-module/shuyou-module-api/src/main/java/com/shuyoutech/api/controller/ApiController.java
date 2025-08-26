@@ -22,15 +22,15 @@ import static com.shuyoutech.common.core.constant.CommonConstants.CHARSET_UTF_8;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "ApiCommonController", description = "通用API控制器")
-public class ApiCommonController {
+@Tag(name = "ApiController", description = "统一入口API控制器")
+public class ApiController {
 
-    @PostMapping(value = "/v1/common/interface")
+    @PostMapping(value = "/v1/interface")
     @Operation(summary = "通用接口")
-    public void commonInterfaceV1(HttpServletRequest request, HttpServletResponse response) {
+    public void interfaceV1(HttpServletRequest request, HttpServletResponse response) {
         response.setCharacterEncoding(CHARSET_UTF_8);
         response.setStatus(HttpStatus.OK.value());
-        apiCommonService.commonInterfaceV1(request, response);
+        apiCommonService.interfaceV1(request, response);
     }
 
     private final ApiCommonService apiCommonService;

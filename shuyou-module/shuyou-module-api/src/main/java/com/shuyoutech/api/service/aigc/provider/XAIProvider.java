@@ -38,12 +38,11 @@ public class XAIProvider implements ModelProvider {
     }
 
     @Override
-    public void chatCompletion(String baseUrl, String apiKey, String body, HttpServletResponse response) {
+    public void chatCompletion(String baseUrl, String apiKey, JSONObject body, HttpServletResponse response) {
         try {
-            JSONObject bodyJson = JSONObject.parseObject(body);
             String url = baseUrl + OPENAI_CHAT_COMPLETIONS;
-            Request request = buildRequest(url, apiKey, body);
-            if (BooleanUtils.isFalse(bodyJson.getBooleanValue(STREAM, false))) {
+            Request request = buildRequest(url, apiKey, body.toJSONString());
+            if (BooleanUtils.isFalse(body.getBooleanValue(STREAM, false))) {
                 response.setContentType(APPLICATION_JSON_VALUE);
                 Response res = OK_HTTP_CLIENT.newCall(request).execute();
                 dealResponse(res, response);

@@ -1,5 +1,6 @@
 package com.shuyoutech.api.service.aigc.provider;
 
+import com.alibaba.fastjson2.JSONObject;
 import jakarta.servlet.http.HttpServletResponse;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -44,7 +45,28 @@ public interface ModelProvider {
         }
     }
 
-    default void chatCompletion(String baseUrl, String apiKey, String body, HttpServletResponse response) {
+    default void chatCompletion(String baseUrl, String apiKey, JSONObject body, HttpServletResponse response) {
+    }
+
+    default void betaCompletion(String baseUrl, String apiKey, JSONObject body, HttpServletResponse response) {
+    }
+
+    default void imageGeneration(String baseUrl, String apiKey, JSONObject body, HttpServletResponse response) {
+    }
+
+    default void audioSpeech(String baseUrl, String apiKey, JSONObject body, HttpServletResponse response) {
+    }
+
+    default void audioTranscription(String baseUrl, String apiKey, JSONObject body, HttpServletResponse response) {
+    }
+
+    default void audioTranslation(String baseUrl, String apiKey, JSONObject body, HttpServletResponse response) {
+    }
+
+    default void embedding(String baseUrl, String apiKey, JSONObject body, HttpServletResponse response) {
+    }
+
+    default void moderation(String baseUrl, String apiKey, JSONObject body, HttpServletResponse response) {
     }
 
 }

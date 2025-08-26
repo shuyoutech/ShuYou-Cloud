@@ -8,21 +8,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSources;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
 import static com.shuyoutech.api.constant.AiConstants.*;
-import static com.shuyoutech.api.init.ApiRunner.MEDIA_TYPE_JSON;
 import static com.shuyoutech.api.init.ApiRunner.OK_HTTP_CLIENT;
-import static com.shuyoutech.common.core.constant.CommonConstants.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
 
@@ -45,12 +39,11 @@ public class DeepseekProvider implements ModelProvider {
     }
 
     @Override
-    public void chatCompletion(String baseUrl, String apiKey, String body, HttpServletResponse response) {
+    public void chatCompletion(String baseUrl, String apiKey, JSONObject body, HttpServletResponse response) {
         try {
-            JSONObject bodyJson = JSONObject.parseObject(body);
             String url = baseUrl + DEEPSEEK_CHAT_COMPLETIONS;
-            Request request = buildRequest(url, apiKey, body);
-            if (BooleanUtils.isFalse(bodyJson.getBooleanValue(STREAM, false))) {
+            Request request = buildRequest(url, apiKey, body.toJSONString());
+            if (BooleanUtils.isFalse(body.getBooleanValue(STREAM, false))) {
                 response.setContentType(APPLICATION_JSON_VALUE);
                 Response res = OK_HTTP_CLIENT.newCall(request).execute();
                 dealResponse(res, response);
@@ -69,11 +62,12 @@ public class DeepseekProvider implements ModelProvider {
         }
     }
 
-    public void betaCompletion(String body, HttpServletResponse response) {
+    @Override
+    public void betaCompletion(String baseUrl, String apiKey, JSONObject body, HttpServletResponse response) {
         try {
-            JSONObject bodyJson = JSONObject.parseObject(body);
-            Request request = this.buildRequest(body, DEEPSEEK_BETA_COMPLETIONS);
-            if (BooleanUtils.isFalse(bodyJson.getBooleanValue(STREAM, false))) {
+            String url = baseUrl + DEEPSEEK_BETA_COMPLETIONS;
+            Request request = this.buildRequest(url, apiKey, body.toJSONString());
+            if (BooleanUtils.isFalse(body.getBooleanValue(STREAM, false))) {
                 response.setContentType(APPLICATION_JSON_VALUE);
                 Response res = OK_HTTP_CLIENT.newCall(request).execute();
                 dealResponse(res, response);

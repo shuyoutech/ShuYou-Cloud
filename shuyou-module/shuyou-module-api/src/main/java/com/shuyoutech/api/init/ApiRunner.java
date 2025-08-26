@@ -2,7 +2,7 @@ package com.shuyoutech.api.init;
 
 import cn.hutool.core.util.IdUtil;
 import com.shuyoutech.api.domain.entity.ApiInterfaceEntity;
-import com.shuyoutech.api.service.ApiService;
+import com.shuyoutech.api.service.api.ApiService;
 import com.shuyoutech.common.core.util.CollectionUtils;
 import com.shuyoutech.common.core.util.StreamUtils;
 import com.shuyoutech.common.mongodb.MongoUtils;
@@ -52,7 +52,7 @@ public class ApiRunner implements CommandLineRunner, ApplicationContextAware {
     private void initApiService() {
         Map<String, ApiService> beanMap = applicationContext.getBeansOfType(ApiService.class);
         for (ApiService apiService : beanMap.values()) {
-            serviceMap.put(apiService.providerName().toLowerCase(), modelService);
+            serviceMap.put(apiService.interfaceName().toLowerCase(), apiService);
         }
     }
 

@@ -8,15 +8,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSources;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
 import static com.shuyoutech.api.constant.AiConstants.*;
@@ -39,12 +35,11 @@ public class AliyunProvider implements ModelProvider {
     }
 
     @Override
-    public void chatCompletion(String baseUrl, String apiKey, String body, HttpServletResponse response) {
+    public void chatCompletion(String baseUrl, String apiKey, JSONObject body, HttpServletResponse response) {
         try {
-            JSONObject bodyJson = JSONObject.parseObject(body);
             String url = baseUrl + ALIYUN_CHAT_COMPLETIONS;
-            Request request = buildRequest(url, apiKey, body);
-            if (BooleanUtils.isFalse(bodyJson.getBooleanValue(STREAM, false))) {
+            Request request = buildRequest(url, apiKey, body.toJSONString());
+            if (BooleanUtils.isFalse(body.getBooleanValue(STREAM, false))) {
                 response.setContentType(APPLICATION_JSON_VALUE);
                 Response res = OK_HTTP_CLIENT.newCall(request).execute();
                 dealResponse(res, response);
@@ -63,9 +58,10 @@ public class AliyunProvider implements ModelProvider {
         }
     }
 
-    public void embedding(String body, HttpServletResponse response) {
+    public void embedding(String baseUrl, String apiKey, String body, HttpServletResponse response) {
         try {
-            Request request = this.buildRequest(body, ALIYUN_EMBEDDINGS);
+            String url = baseUrl + ALIYUN_EMBEDDINGS;
+            Request request = this.buildRequest(url, apiKey, body);
             response.setContentType(APPLICATION_JSON_VALUE);
             Response res = OK_HTTP_CLIENT.newCall(request).execute();
             dealResponse(res, response);
@@ -74,9 +70,10 @@ public class AliyunProvider implements ModelProvider {
         }
     }
 
-    public void multimodalEmbedding(String body, HttpServletResponse response) {
+    public void multimodalEmbedding(String baseUrl, String apiKey, String body, HttpServletResponse response) {
         try {
-            Request request = this.buildRequest(body, ALIYUN_MULTIMODAL_EMBEDDINGS);
+            String url = baseUrl + ALIYUN_MULTIMODAL_EMBEDDINGS;
+            Request request = this.buildRequest(url, apiKey, body);
             response.setContentType(APPLICATION_JSON_VALUE);
             Response res = OK_HTTP_CLIENT.newCall(request).execute();
             dealResponse(res, response);
