@@ -8,41 +8,40 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSources;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
-import static com.shuyoutech.api.constant.AiConstants.*;
+import static com.shuyoutech.api.constant.AiConstants.OPENAI_CHAT_COMPLETIONS;
+import static com.shuyoutech.api.constant.AiConstants.STREAM;
 import static com.shuyoutech.api.init.ApiRunner.OK_HTTP_CLIENT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
 
 /**
+ * <a href="https://docs.x.ai/docs/api-reference">role:developer,user,assistant,tool</a>
+ *
  * @author YangChao
- * @date 2025-08-10 21:24
+ * @date 2025-07-13 20:18
  **/
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class AliyunProvider implements ModelProvider {
+public class XAIProvider implements ModelProvider {
 
     @Override
     public String providerName() {
-        return AiProviderTypeEnum.ALIYUN.getValue();
+        return AiProviderTypeEnum.XAI.getValue();
     }
 
     @Override
     public void chatCompletion(String baseUrl, String apiKey, String body, HttpServletResponse response) {
         try {
             JSONObject bodyJson = JSONObject.parseObject(body);
-            String url = baseUrl + ALIYUN_CHAT_COMPLETIONS;
+            String url = baseUrl + OPENAI_CHAT_COMPLETIONS;
             Request request = buildRequest(url, apiKey, body);
             if (BooleanUtils.isFalse(bodyJson.getBooleanValue(STREAM, false))) {
                 response.setContentType(APPLICATION_JSON_VALUE);
@@ -55,33 +54,11 @@ public class AliyunProvider implements ModelProvider {
                 factory.newEventSource(request, sseChatEventListener);
                 boolean await = sseChatEventListener.getCountDownLatch().await(5, TimeUnit.MINUTES);
                 if (!await) {
-                    log.error("chatCompletion aliyun ==================== getCountDownLatch timed out");
+                    log.error("chatCompletion xai ====================  getCountDownLatch timed out");
                 }
             }
         } catch (Exception e) {
-            log.error("chatCompletion aliyun ===================== exception:{}", e.getMessage());
-        }
-    }
-
-    public void embedding(String body, HttpServletResponse response) {
-        try {
-            Request request = this.buildRequest(body, ALIYUN_EMBEDDINGS);
-            response.setContentType(APPLICATION_JSON_VALUE);
-            Response res = OK_HTTP_CLIENT.newCall(request).execute();
-            dealResponse(res, response);
-        } catch (Exception e) {
-            log.error("embedding aliyun ===================== exception:{}", e.getMessage());
-        }
-    }
-
-    public void multimodalEmbedding(String body, HttpServletResponse response) {
-        try {
-            Request request = this.buildRequest(body, ALIYUN_MULTIMODAL_EMBEDDINGS);
-            response.setContentType(APPLICATION_JSON_VALUE);
-            Response res = OK_HTTP_CLIENT.newCall(request).execute();
-            dealResponse(res, response);
-        } catch (Exception e) {
-            log.error("multimodalEmbedding aliyun ===================== exception:{}", e.getMessage());
+            log.error("chatCompletion xai ===================== exception:{}", e.getMessage());
         }
     }
 

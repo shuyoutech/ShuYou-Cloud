@@ -48,8 +48,8 @@ import static com.shuyoutech.api.constant.AiConstants.ROLE_USER;
 public class RemoteAigcServiceImpl implements RemoteAigcService {
 
     @Override
-    public RemoteModel getModel(String provider, String modelName) {
-        AigcModelEntity model = MODEL_NAME_MAP.get(StringUtils.format("{}/{}", provider, modelName));
+    public RemoteModel getModel(String modelName) {
+        AigcModelEntity model = MODEL_NAME_MAP.get(modelName);
         if (null == model) {
             return null;
         }

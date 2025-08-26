@@ -9,7 +9,7 @@ import org.springframework.web.socket.WebSocketSession;
  **/
 public interface RemoteAigcService {
 
-    RemoteModel getModel(String provider, String modelName);
+    RemoteModel getModel(String modelName);
 
     void chat(String userId, String message, WebSocketSession webSocketSession);
 

@@ -217,6 +217,7 @@ public interface AiConstants {
     String ALIYUN_HEADER_DASH_SCOPE_ASYNC_VALUE = "enable";
     String ALIYUN_CHAT_COMPLETIONS = "/compatible-mode/v1/chat/completions";
     String ALIYUN_EMBEDDINGS = "/compatible-mode/v1/embeddings";
+    String ALIYUN_MULTIMODAL_EMBEDDINGS = "/api/v1/services/embeddings/multimodal-embedding/multimodal-embedding";
     String ALIYUN_IMAGES_SYNTHESIS = "/api/v1/services/aigc/text2image/image-synthesis";
     String ALIYUN_TASKS = "/api/v1/tasks/";
     String ALIYUN_IMAGES_IMAGE_SYNTHESIS = "/api/v1/services/aigc/image2image/image-synthesis";
@@ -251,10 +252,15 @@ public interface AiConstants {
     String OPENAI_MODERATIONS = "/v1/moderations";
 
     String API_URL_GOOGLE = "https://generativelanguage.googleapis.com";
+    String HEADER_GOOGLE_X_API_KEY = "x-goog-api-key";
     String GOOGLE_GENERATE_CONTENT = "/v1beta/models/{}:generateContent?key={}";
 
     String API_URL_ANTHROPIC = "https://api.anthropic.com";
     String ANTHROPIC_CHAT_COMPLETIONS = "/v1/messages";
+    String HEADER_ANTHROPIC_VERSION = "anthropic-version";
+    String HEADER_ANTHROPIC_VERSION_VALUE = "2023-06-01";
+    String HEADER_ANTHROPIC_X_API_KEY = "x-api-key";
+
 
     String API_URL_XAI = "https://api.x.ai";
 

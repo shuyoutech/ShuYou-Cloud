@@ -4,14 +4,17 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.net.multipart.MultipartFormData;
 import cn.hutool.core.net.multipart.UploadFile;
 import com.alibaba.fastjson2.JSONObject;
+import com.shuyoutech.api.enums.AiProviderTypeEnum;
 import com.shuyoutech.api.service.aigc.listener.SSEChatEventListener;
 import com.shuyoutech.common.core.util.BooleanUtils;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSources;
 import org.apache.hc.core5.http.HttpHeaders;
+import org.springframework.stereotype.Component;
 
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
@@ -33,30 +36,21 @@ import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
  * @date 2025-07-13 20:18
  **/
 @Slf4j
-public class OpenAiProvider {
+@Component
+@RequiredArgsConstructor
+public class OpenAiProvider implements ModelProvider {
 
-    private final String baseUrl;
-    private final String apiKey;
-
-    public OpenAiProvider(String baseUrl, String apiKey) {
-        this.baseUrl = baseUrl;
-        this.apiKey = apiKey;
+    @Override
+    public String providerName() {
+        return AiProviderTypeEnum.OPENAI.getValue();
     }
 
-    private Request buildRequest(String body, String endpoints) {
-        RequestBody requestBody = RequestBody.create(body, MEDIA_TYPE_JSON);
-        return new Request.Builder() //
-                .url(baseUrl + endpoints)//
-                .post(requestBody) //
-                .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + apiKey) //
-                .build();
-    }
-
-    public void chatCompletion(String body, HttpServletResponse response) {
+    @Override
+    public void chatCompletion(String baseUrl, String apiKey, String body, HttpServletResponse response) {
         try {
             JSONObject bodyJson = JSONObject.parseObject(body);
-            Request request = this.buildRequest(body, OPENAI_CHAT_COMPLETIONS);
+            String url = baseUrl + OPENAI_CHAT_COMPLETIONS;
+            Request request = buildRequest(url, apiKey, body);
             if (BooleanUtils.isFalse(bodyJson.getBooleanValue(STREAM, false))) {
                 response.setContentType(APPLICATION_JSON_VALUE);
                 Response res = OK_HTTP_CLIENT.newCall(request).execute();
@@ -179,18 +173,6 @@ public class OpenAiProvider {
             dealResponse(res, response);
         } catch (Exception e) {
             log.error("moderation openai ===================== exception:{}", e.getMessage());
-        }
-    }
-
-    private void dealResponse(Response res, HttpServletResponse response) {
-        try {
-            PrintWriter writer = response.getWriter();
-            String bodyStr = new String(res.body().bytes(), StandardCharsets.UTF_8);
-            response.setStatus(res.code());
-            writer.write(bodyStr);
-            writer.flush();
-        } catch (Exception e) {
-            log.error("dealResponse openai ===================== exception:{}", e.getMessage());
         }
     }
 

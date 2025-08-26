@@ -115,7 +115,7 @@ public class AigcModelFactory implements CommandLineRunner, ApplicationContextAw
                 }
                 MODEL_MAP.put(model.getId(), model);
             }
-            MODEL_NAME_MAP.put(StringUtils.format("{}/{}", model.getProvider(), model.getModelName()), model);
+            MODEL_NAME_MAP.put(model.getModelName(), model);
         } catch (Exception e) {
             log.error("buildModel id: {} name: {} 配置报错, 错误信息:{}", model.getId(), model.getModelName(), e.getMessage());
         }

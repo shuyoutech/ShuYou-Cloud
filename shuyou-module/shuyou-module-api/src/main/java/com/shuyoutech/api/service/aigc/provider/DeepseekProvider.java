@@ -1,9 +1,11 @@
 package com.shuyoutech.api.service.aigc.provider;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.shuyoutech.api.enums.AiProviderTypeEnum;
 import com.shuyoutech.api.service.aigc.listener.SSEChatEventListener;
 import com.shuyoutech.common.core.util.BooleanUtils;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -11,6 +13,7 @@ import okhttp3.Response;
 import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSources;
 import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Component;
 
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
@@ -32,35 +35,27 @@ import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
  * @date 2025-07-13 20:18
  **/
 @Slf4j
-public class DeepseekProvider {
+@Component
+@RequiredArgsConstructor
+public class DeepseekProvider implements ModelProvider {
 
-    private final String baseUrl;
-    private final String apiKey;
-
-    public DeepseekProvider(String baseUrl, String apiKey) {
-        this.baseUrl = baseUrl;
-        this.apiKey = apiKey;
+    @Override
+    public String providerName() {
+        return AiProviderTypeEnum.DEEPSEEK.getValue();
     }
 
-    public void chatCompletion(String body, HttpServletResponse response) {
+    @Override
+    public void chatCompletion(String baseUrl, String apiKey, String body, HttpServletResponse response) {
         try {
             JSONObject bodyJson = JSONObject.parseObject(body);
-            RequestBody requestBody = RequestBody.create(body, MEDIA_TYPE_JSON);
-
-            Request request = new Request.Builder() //
-                    .url(baseUrl + DEEPSEEK_CHAT_COMPLETIONS)//
-                    .post(requestBody) //
-                    .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + apiKey) //
-                    .build();
-
+            String url = baseUrl + DEEPSEEK_CHAT_COMPLETIONS;
+            Request request = buildRequest(url, apiKey, body);
             if (BooleanUtils.isFalse(bodyJson.getBooleanValue(STREAM, false))) {
                 response.setContentType(APPLICATION_JSON_VALUE);
                 Response res = OK_HTTP_CLIENT.newCall(request).execute();
                 dealResponse(res, response);
             } else {
                 response.setContentType(TEXT_EVENT_STREAM_VALUE);
-                response.setHeader(CACHE_CONTROL, NO_CACHE);
                 SSEChatEventListener sseChatEventListener = new SSEChatEventListener(response);
                 EventSource.Factory factory = EventSources.createFactory(OK_HTTP_CLIENT);
                 factory.newEventSource(request, sseChatEventListener);
@@ -77,22 +72,13 @@ public class DeepseekProvider {
     public void betaCompletion(String body, HttpServletResponse response) {
         try {
             JSONObject bodyJson = JSONObject.parseObject(body);
-            RequestBody requestBody = RequestBody.create(body, MEDIA_TYPE_JSON);
-
-            Request request = new Request.Builder() //
-                    .url(baseUrl + DEEPSEEK_BETA_COMPLETIONS)//
-                    .post(requestBody) //
-                    .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
-                    .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + apiKey) //
-                    .build();
-
+            Request request = this.buildRequest(body, DEEPSEEK_BETA_COMPLETIONS);
             if (BooleanUtils.isFalse(bodyJson.getBooleanValue(STREAM, false))) {
                 response.setContentType(APPLICATION_JSON_VALUE);
                 Response res = OK_HTTP_CLIENT.newCall(request).execute();
                 dealResponse(res, response);
             } else {
                 response.setContentType(TEXT_EVENT_STREAM_VALUE);
-                response.setHeader(CACHE_CONTROL, NO_CACHE);
                 SSEChatEventListener sseChatEventListener = new SSEChatEventListener(response);
                 EventSource.Factory factory = EventSources.createFactory(OK_HTTP_CLIENT);
                 factory.newEventSource(request, sseChatEventListener);
@@ -103,18 +89,6 @@ public class DeepseekProvider {
             }
         } catch (Exception e) {
             log.error("betaCompletion deepseek ===================== exception:{}", e.getMessage());
-        }
-    }
-
-    private void dealResponse(Response res, HttpServletResponse response) {
-        try {
-            PrintWriter writer = response.getWriter();
-            String bodyStr = new String(res.body().bytes(), StandardCharsets.UTF_8);
-            response.setStatus(res.code());
-            writer.write(bodyStr);
-            writer.flush();
-        } catch (Exception e) {
-            log.error("dealResponse deepseek ===================== exception:{}", e.getMessage());
         }
     }
 

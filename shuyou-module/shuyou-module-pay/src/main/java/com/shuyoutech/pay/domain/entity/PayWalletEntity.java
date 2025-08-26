@@ -31,15 +31,15 @@ public class PayWalletEntity extends BaseEntity<PayWalletEntity> {
     @Schema(description = "用户类型")
     private String userType;
 
-    @Schema(description = "余额，单位分")
+    @Schema(description = "积分余额，单位算力")
     @Field(targetType = DECIMAL128)
     private BigDecimal balance;
 
-    @Schema(description = "累计支出，单位分")
+    @Schema(description = "积分累计支出，单位算力")
     @Field(targetType = DECIMAL128)
     private BigDecimal totalExpense;
 
-    @Schema(description = "累计充值，单位分")
+    @Schema(description = "积分累计充值，单位算力")
     private BigDecimal totalRecharge;
 
 }

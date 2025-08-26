@@ -15,34 +15,47 @@ import okhttp3.sse.EventSources;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
 import static com.shuyoutech.api.constant.AiConstants.*;
+import static com.shuyoutech.api.init.ApiRunner.MEDIA_TYPE_JSON;
 import static com.shuyoutech.api.init.ApiRunner.OK_HTTP_CLIENT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
 
 /**
+ * <a href="https://docs.anthropic.com/en/api/messages">role:developer,user,assistant,tool</a>
+ *
  * @author YangChao
- * @date 2025-08-10 21:24
+ * @date 2025-08-22 11:08
  **/
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class AliyunProvider implements ModelProvider {
+public class AnthropicProvider implements ModelProvider {
 
     @Override
     public String providerName() {
-        return AiProviderTypeEnum.ALIYUN.getValue();
+        return AiProviderTypeEnum.ANTHROPIC.getValue();
+    }
+
+    @Override
+    public Request buildRequest(String url, String apiKey, String body) {
+        RequestBody requestBody = RequestBody.create(body, MEDIA_TYPE_JSON);
+        return new Request.Builder() //
+                .url(url)//
+                .post(requestBody) //
+                .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
+                .addHeader(HEADER_ANTHROPIC_VERSION, HEADER_ANTHROPIC_VERSION_VALUE) //
+                .addHeader(HEADER_ANTHROPIC_X_API_KEY, apiKey) //
+                .build();
     }
 
     @Override
     public void chatCompletion(String baseUrl, String apiKey, String body, HttpServletResponse response) {
         try {
             JSONObject bodyJson = JSONObject.parseObject(body);
-            String url = baseUrl + ALIYUN_CHAT_COMPLETIONS;
+            String url = baseUrl + ANTHROPIC_CHAT_COMPLETIONS;
             Request request = buildRequest(url, apiKey, body);
             if (BooleanUtils.isFalse(bodyJson.getBooleanValue(STREAM, false))) {
                 response.setContentType(APPLICATION_JSON_VALUE);
@@ -55,33 +68,11 @@ public class AliyunProvider implements ModelProvider {
                 factory.newEventSource(request, sseChatEventListener);
                 boolean await = sseChatEventListener.getCountDownLatch().await(5, TimeUnit.MINUTES);
                 if (!await) {
-                    log.error("chatCompletion aliyun ==================== getCountDownLatch timed out");
+                    log.error("chatCompletion anthropic ==================== getCountDownLatch timed out");
                 }
             }
         } catch (Exception e) {
-            log.error("chatCompletion aliyun ===================== exception:{}", e.getMessage());
-        }
-    }
-
-    public void embedding(String body, HttpServletResponse response) {
-        try {
-            Request request = this.buildRequest(body, ALIYUN_EMBEDDINGS);
-            response.setContentType(APPLICATION_JSON_VALUE);
-            Response res = OK_HTTP_CLIENT.newCall(request).execute();
-            dealResponse(res, response);
-        } catch (Exception e) {
-            log.error("embedding aliyun ===================== exception:{}", e.getMessage());
-        }
-    }
-
-    public void multimodalEmbedding(String body, HttpServletResponse response) {
-        try {
-            Request request = this.buildRequest(body, ALIYUN_MULTIMODAL_EMBEDDINGS);
-            response.setContentType(APPLICATION_JSON_VALUE);
-            Response res = OK_HTTP_CLIENT.newCall(request).execute();
-            dealResponse(res, response);
-        } catch (Exception e) {
-            log.error("multimodalEmbedding aliyun ===================== exception:{}", e.getMessage());
+            log.error("chatCompletion anthropic ===================== exception:{}", e.getMessage());
         }
     }
 
