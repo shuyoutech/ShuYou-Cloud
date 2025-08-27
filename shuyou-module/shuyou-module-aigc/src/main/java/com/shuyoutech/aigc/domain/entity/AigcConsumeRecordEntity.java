@@ -54,4 +54,7 @@ public class AigcConsumeRecordEntity extends BaseEntity<AigcConsumeRecordEntity>
     @Field(targetType = DECIMAL128)
     private BigDecimal price;
 
+    @Schema(description = "消费算力")
+    private Long credit;
+
 }

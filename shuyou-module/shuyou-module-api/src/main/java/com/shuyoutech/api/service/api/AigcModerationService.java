@@ -3,7 +3,7 @@ package com.shuyoutech.api.service.api;
 import com.alibaba.fastjson2.JSONObject;
 import com.shuyoutech.api.constant.AiConstants;
 import com.shuyoutech.api.model.RemoteModel;
-import com.shuyoutech.api.service.aigc.AigcModelFactory;
+import com.shuyoutech.api.service.aigc.ApiModelFactory;
 import com.shuyoutech.api.service.aigc.AigcService;
 import com.shuyoutech.api.service.aigc.provider.ModelProvider;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,7 +32,7 @@ public class AigcModerationService implements ApiService {
     public void execute(HttpServletRequest request, HttpServletResponse response) {
         JSONObject body = getBody(request);
         RemoteModel model = aigcService.getModel(body.getString(AiConstants.MODEL));
-        ModelProvider modelProvider = AigcModelFactory.getModelService(model.getProvider());
+        ModelProvider modelProvider = ApiModelFactory.getModelService(model.getProvider());
         modelProvider.moderation(model.getBaseUrl(), model.getApiKey(), body, response);
     }
 

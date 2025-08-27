@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class AigcModelFactory implements CommandLineRunner, ApplicationContextAware {
+public class ApiModelFactory implements CommandLineRunner, ApplicationContextAware {
 
     public static final Map<String, ModelProvider> providers = new ConcurrentHashMap<>();
     private ApplicationContext applicationContext;
