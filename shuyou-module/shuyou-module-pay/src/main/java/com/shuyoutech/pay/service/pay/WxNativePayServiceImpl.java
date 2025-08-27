@@ -70,7 +70,7 @@ public class WxNativePayServiceImpl implements WxNativePayService {
     }
 
     @Override
-    public JSONObject prepay(WxPayConfig wxPayConfig, Integer amount) {
+    public JSONObject prepay(WxPayConfig wxPayConfig, Long amount, String rechargePackageId) {
         // 订单号
         Date now = new Date();
         String orderId = SequenceUtils.getDateId("wx" + PayChannelEnum.WEIXIN_NATIVE.getValue());
@@ -87,6 +87,7 @@ public class WxNativePayServiceImpl implements WxNativePayService {
         payOrder.setAppId(wxPayConfig.getAppid());
         payOrder.setMchId(wxPayConfig.getMchId());
         payOrder.setPayPrice(amount);
+        payOrder.setRechargePackageId(rechargePackageId);
         payOrder.setExpiredTime(DateUtil.offsetHour(now, 2));
         MongoUtils.save(payOrder);
 
@@ -94,7 +95,7 @@ public class WxNativePayServiceImpl implements WxNativePayService {
         PrepayRequest request = new PrepayRequest();
         Amount amt = new Amount();
         amt.setCurrency("CNY");
-        amt.setTotal(amount);
+        amt.setTotal(amount.intValue());
         request.setAmount(amt);
         request.setAppid(wxPayConfig.getAppid());
         request.setMchid(wxPayConfig.getMchId());

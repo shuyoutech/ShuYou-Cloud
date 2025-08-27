@@ -58,10 +58,11 @@ public class AliyunProvider implements ModelProvider {
         }
     }
 
-    public void embedding(String baseUrl, String apiKey, String body, HttpServletResponse response) {
+    @Override
+    public void embedding(String baseUrl, String apiKey, JSONObject body, HttpServletResponse response) {
         try {
             String url = baseUrl + ALIYUN_EMBEDDINGS;
-            Request request = this.buildRequest(url, apiKey, body);
+            Request request = this.buildRequest(url, apiKey, body.toJSONString());
             response.setContentType(APPLICATION_JSON_VALUE);
             Response res = OK_HTTP_CLIENT.newCall(request).execute();
             dealResponse(res, response);
@@ -70,10 +71,11 @@ public class AliyunProvider implements ModelProvider {
         }
     }
 
-    public void multimodalEmbedding(String baseUrl, String apiKey, String body, HttpServletResponse response) {
+    @Override
+    public void multimodalEmbedding(String baseUrl, String apiKey, JSONObject body, HttpServletResponse response) {
         try {
             String url = baseUrl + ALIYUN_MULTIMODAL_EMBEDDINGS;
-            Request request = this.buildRequest(url, apiKey, body);
+            Request request = this.buildRequest(url, apiKey, body.toJSONString());
             response.setContentType(APPLICATION_JSON_VALUE);
             Response res = OK_HTTP_CLIENT.newCall(request).execute();
             dealResponse(res, response);

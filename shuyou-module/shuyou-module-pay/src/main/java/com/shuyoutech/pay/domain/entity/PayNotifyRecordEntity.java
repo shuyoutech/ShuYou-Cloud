@@ -64,6 +64,6 @@ public class PayNotifyRecordEntity extends BaseEntity<PayNotifyRecordEntity> {
     private String transactionId;
 
     @Schema(description = "支付金额,单位分")
-    private Integer amount;
+    private Long amount;
 
 }

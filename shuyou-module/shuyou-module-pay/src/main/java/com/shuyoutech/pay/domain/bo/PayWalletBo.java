@@ -9,7 +9,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
  * @author YangChao
@@ -27,13 +26,13 @@ public class PayWalletBo implements Serializable {
     @Schema(description = "用户类型")
     private String userType;
 
-    @Schema(description = "余额，单位分")
-    private BigDecimal balance;
+    @Schema(description = "积分余额，单位算力")
+    private Long balance;
 
-    @Schema(description = "累计支出，单位分")
-    private BigDecimal totalExpense;
+    @Schema(description = "积分累计支出，单位算力")
+    private Long totalExpense;
 
-    @Schema(description = "累计充值，单位分")
-    private BigDecimal totalRecharge;
+    @Schema(description = "积分累计充值，单位算力")
+    private Long totalRecharge;
 
 }

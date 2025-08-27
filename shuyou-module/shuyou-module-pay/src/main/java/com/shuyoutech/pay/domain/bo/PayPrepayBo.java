@@ -21,6 +21,9 @@ public class PayPrepayBo implements Serializable {
 
     @NotNull(message = "支付金额不能为空")
     @Schema(description = "支付金额,单位分")
-    private Integer amount;
+    private Long amount;
+
+    @Schema(description = "充值套餐")
+    private String rechargePackageId;
 
 }

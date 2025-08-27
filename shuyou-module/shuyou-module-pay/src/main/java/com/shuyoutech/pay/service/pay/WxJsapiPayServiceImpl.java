@@ -93,7 +93,7 @@ public class WxJsapiPayServiceImpl implements WxJsapiPayService {
     }
 
     @Override
-    public JSONObject prepay(WxPayConfig wxPayConfig, Integer amount) {
+    public JSONObject prepay(WxPayConfig wxPayConfig, Long amount, String rechargePackageId) {
         // 订单号
         Date now = new Date();
         String orderId = SequenceUtils.getDateId("wx" + PayChannelEnum.WEIXIN_MP.getValue());
@@ -112,13 +112,14 @@ public class WxJsapiPayServiceImpl implements WxJsapiPayService {
         payOrder.setAppId(appid);
         payOrder.setMchId(mchId);
         payOrder.setPayPrice(amount);
+        payOrder.setRechargePackageId(rechargePackageId);
         payOrder.setExpiredTime(DateUtil.offsetHour(now, 2));
         MongoUtils.save(payOrder);
 
         // 支付下单
         PrepayRequest request = new PrepayRequest();
         Amount amt = new Amount();
-        amt.setTotal(amount);
+        amt.setTotal(amount.intValue());
         amt.setCurrency("CNY");
         request.setAmount(amt);
         request.setAppid(appid);
@@ -172,7 +173,7 @@ public class WxJsapiPayServiceImpl implements WxJsapiPayService {
     }
 
     @Override
-    public JSONObject refund(WxPayConfig wxPayConfig, Integer amount, String reason, PayOrderEntity payOrder) {
+    public JSONObject refund(WxPayConfig wxPayConfig, Long amount, String reason, PayOrderEntity payOrder) {
         // 订单号
         Date now = new Date();
         String refundId = SequenceUtils.getDateId("wx" + payOrder.getChannelCode());
@@ -188,6 +189,7 @@ public class WxJsapiPayServiceImpl implements WxJsapiPayService {
         payRefund.setPayPrice(payOrder.getPayPrice());
         payRefund.setOutTradeNo(payOrder.getId());
         payRefund.setChannelCode(payOrder.getChannelCode());
+        payRefund.setRechargePackageId(payOrder.getRechargePackageId());
         payRefund.setReason(reason);
         MongoUtils.save(payRefund);
 

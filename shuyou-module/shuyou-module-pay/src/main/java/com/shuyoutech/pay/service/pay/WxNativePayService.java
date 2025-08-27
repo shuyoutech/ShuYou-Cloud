@@ -13,11 +13,12 @@ public interface WxNativePayService {
     /**
      * 下单
      *
-     * @param wxPayConfig 配置
-     * @param amount      金额 分
+     * @param wxPayConfig       配置
+     * @param amount            金额 分
+     * @param rechargePackageId 套餐ID
      * @return 二维码地址
      */
-    JSONObject prepay(WxPayConfig wxPayConfig, Integer amount);
+    JSONObject prepay(WxPayConfig wxPayConfig, Long amount, String rechargePackageId);
 
     /**
      * 订单支付成功后，商户可使用微信订单号查询订单或商户订单号查询订单；若订单未支付，则只能使用商户订单号查询订单。

@@ -12,20 +12,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import static com.shuyoutech.api.enums.InterfaceFunctionEnum.AIGC_CHAT_COMPLETION;
-
 /**
+ * 多模态向量
+ *
  * @author YangChao
  * @date 2025-08-26 22:23
  **/
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AigcChatCompletionService implements ApiService {
+public class AigcMultimodalEmbeddingService implements ApiService {
 
     @Override
     public String interfaceName() {
-        return AIGC_CHAT_COMPLETION.getValue();
+        return "aigcMultimodalEmbedding";
     }
 
     @Override
@@ -33,7 +33,7 @@ public class AigcChatCompletionService implements ApiService {
         JSONObject body = getBody(request);
         RemoteModel model = aigcService.getModel(body.getString(AiConstants.MODEL));
         ModelProvider modelProvider = AigcModelFactory.getModelService(model.getProvider());
-        modelProvider.chatCompletion(model.getBaseUrl(), model.getApiKey(), body, response);
+        modelProvider.multimodalEmbedding(model.getBaseUrl(), model.getApiKey(), body, response);
     }
 
     private final AigcService aigcService;

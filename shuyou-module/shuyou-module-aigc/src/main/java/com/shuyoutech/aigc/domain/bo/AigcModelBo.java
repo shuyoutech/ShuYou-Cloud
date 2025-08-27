@@ -71,6 +71,14 @@ public class AigcModelBo implements Serializable {
     @Schema(description = "模型描述")
     private String modelDesc;
 
+    /**
+     * 8192 = 8K
+     * 32768 = 32K
+     * 131072 = 128K
+     */
+    @Schema(description = "上下文长度-tokens")
+    private Integer contextWindow;
+
     @Schema(description = "代理地址")
     private String baseUrl;
 

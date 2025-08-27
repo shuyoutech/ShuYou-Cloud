@@ -39,10 +39,10 @@ public class PayRefundVo extends BaseVo {
     private String channelCode;
 
     @Schema(description = "支付金额，分单位")
-    private Integer payPrice;
+    private Long payPrice;
 
     @Schema(description = "退款金额，分单位")
-    private Integer refundPrice;
+    private Long refundPrice;
 
     @Schema(description = "退款原因")
     private String reason;

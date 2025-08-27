@@ -43,11 +43,14 @@ public class PayRefundEntity extends BaseEntity<PayRefundEntity> {
     @Schema(description = "渠道编码")
     private String channelCode;
 
+    @Schema(description = "充值套餐")
+    private String rechargePackageId;
+
     @Schema(description = "支付金额，分单位")
-    private Integer payPrice;
+    private Long payPrice;
 
     @Schema(description = "退款金额，分单位")
-    private Integer refundPrice;
+    private Long refundPrice;
 
     @Schema(description = "退款原因")
     private String reason;

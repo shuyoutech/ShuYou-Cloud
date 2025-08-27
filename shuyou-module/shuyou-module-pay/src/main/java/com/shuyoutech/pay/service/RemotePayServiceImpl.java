@@ -7,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-
 /**
  * @author YangChao
  * @date 2025-08-20 16:11
@@ -23,9 +21,9 @@ public class RemotePayServiceImpl implements RemotePayService {
         PayWalletEntity wallet = new PayWalletEntity();
         wallet.setId(userId);
         wallet.setUserType(userType);
-        wallet.setBalance(BigDecimal.valueOf(1));
-        wallet.setTotalExpense(BigDecimal.ZERO);
-        wallet.setTotalRecharge(BigDecimal.ZERO);
+        wallet.setBalance(500L);
+        wallet.setTotalExpense(0L);
+        wallet.setTotalRecharge(0L);
         MongoUtils.save(wallet);
     }
 

@@ -45,6 +45,11 @@ public enum AiProviderTypeEnum implements BaseEnum<String, String> {
     XAI("xai", "xAI"),
 
     /**
+     * Kimi
+     */
+    MOONSHOT("moonshot", "月之暗面"),
+
+    /**
      * 千帆 文心一言
      */
     BAIDU("baidu", "百度千帆"),

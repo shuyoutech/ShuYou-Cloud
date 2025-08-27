@@ -59,6 +59,6 @@ public class PayNotifyRecordVo extends BaseVo {
     private String transactionId;
 
     @Schema(description = "支付金额,单位分")
-    private Integer amount;
+    private Long amount;
 
 }

@@ -9,8 +9,6 @@ import com.shuyoutech.pay.domain.entity.PayWalletEntity;
 import com.shuyoutech.pay.domain.vo.PayWalletVo;
 import org.springframework.data.mongodb.core.query.Query;
 
-import java.math.BigDecimal;
-
 /**
  * @author YangChao
  * @date 2025-08-04 23:48:45
@@ -24,13 +22,13 @@ public interface PayWalletService extends SuperService<PayWalletEntity, PayWalle
     PayWalletVo detail(String id);
 
     /**
-     * 扣减钱包余额
+     * 扣减钱包积分
      */
-    void reduceWalletBalance(String walletId, WalletPayTypeEnum payType, String payId, BigDecimal price);
+    void reduceWalletBalance(String walletId, WalletPayTypeEnum payType, String payId, Long credit);
 
     /**
-     * 增加钱包余额
+     * 增加钱包积分
      */
-    void addWalletBalance(String walletId, WalletPayTypeEnum payType, String payId, Integer price);
+    void addWalletBalance(String walletId, WalletPayTypeEnum payType, String payId, Long credit);
 
 }

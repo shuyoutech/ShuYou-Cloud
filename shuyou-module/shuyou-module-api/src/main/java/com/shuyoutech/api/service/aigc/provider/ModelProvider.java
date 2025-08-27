@@ -66,6 +66,9 @@ public interface ModelProvider {
     default void embedding(String baseUrl, String apiKey, JSONObject body, HttpServletResponse response) {
     }
 
+    default void multimodalEmbedding(String baseUrl, String apiKey, JSONObject body, HttpServletResponse response) {
+    }
+
     default void moderation(String baseUrl, String apiKey, JSONObject body, HttpServletResponse response) {
     }
 

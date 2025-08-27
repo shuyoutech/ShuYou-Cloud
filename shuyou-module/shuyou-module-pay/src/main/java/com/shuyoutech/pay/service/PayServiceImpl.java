@@ -9,16 +9,12 @@ import com.shuyoutech.api.enums.PayOrderStatusEnum;
 import com.shuyoutech.api.enums.PayRefundStatusEnum;
 import com.shuyoutech.api.enums.WalletPayTypeEnum;
 import com.shuyoutech.common.core.exception.BusinessException;
-import com.shuyoutech.common.core.util.NumberUtils;
 import com.shuyoutech.common.mongodb.MongoUtils;
 import com.shuyoutech.common.redis.util.SequenceUtils;
 import com.shuyoutech.common.web.util.JakartaServletUtils;
 import com.shuyoutech.pay.config.WxPayConfig;
 import com.shuyoutech.pay.domain.bo.*;
-import com.shuyoutech.pay.domain.entity.PayChannelEntity;
-import com.shuyoutech.pay.domain.entity.PayNotifyRecordEntity;
-import com.shuyoutech.pay.domain.entity.PayOrderEntity;
-import com.shuyoutech.pay.domain.entity.PayRefundEntity;
+import com.shuyoutech.pay.domain.entity.*;
 import com.shuyoutech.pay.service.pay.WxJsapiPayService;
 import com.shuyoutech.pay.service.pay.WxNativePayService;
 import com.wechat.pay.java.core.notification.RequestParam;
@@ -36,6 +32,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.shuyoutech.pay.service.pay.WxJsapiPayServiceImpl.notificationParser;
 
@@ -51,20 +48,26 @@ public class PayServiceImpl implements PayService {
     @Override
     public JSONObject payPrepay(PayPrepayBo bo) {
         String channelCode = bo.getChannelCode();
-        Integer amount = bo.getAmount();
+        Long amount = bo.getAmount();
+        String rechargePackageId = bo.getRechargePackageId();
+        PayRechargePackageEntity rechargePackage = payRechargePackageService.getById(rechargePackageId);
+        if (null == rechargePackage) {
+            log.error("payPrepay =============== rechargePackageId:{} is not exist", rechargePackageId);
+            throw new BusinessException("充值套餐不存在");
+        }
         Query query = new Query();
         query.addCriteria(Criteria.where("channelCode").is(channelCode));
         PayChannelEntity payChannel = payChannelService.selectOne(query);
         if (null == payChannel) {
             log.error("payPrepay =============== channelCode:{} is not exist", channelCode);
-            throw new BusinessException("channelCode is not exist");
+            throw new BusinessException("渠道编号不存在");
         }
         if (PayChannelEnum.WEIXIN_NATIVE.getValue().equalsIgnoreCase(channelCode)) {
             WxPayConfig wxPayConfig = JSONObject.parseObject(payChannel.getChannelConfig(), WxPayConfig.class);
-            return wxNativePayService.prepay(wxPayConfig, amount);
+            return wxNativePayService.prepay(wxPayConfig, amount, rechargePackageId);
         } else if (PayChannelEnum.WEIXIN_MP.getValue().equalsIgnoreCase(channelCode)) {
             WxPayConfig wxPayConfig = JSONObject.parseObject(payChannel.getChannelConfig(), WxPayConfig.class);
-            return wxJsapiPayService.prepay(wxPayConfig, amount);
+            return wxJsapiPayService.prepay(wxPayConfig, amount, rechargePackageId);
         }
         return null;
     }
@@ -204,8 +207,14 @@ public class PayServiceImpl implements PayService {
                 update2.set("amount", transaction.getAmount().getTotal());
                 MongoUtils.patch(record.getId(), update2, PayNotifyRecordEntity.class);
 
+                String rechargePackageId = payOrder.getRechargePackageId();
+                PayRechargePackageEntity rechargePackage = payRechargePackageService.getById(rechargePackageId);
+                if (null == rechargePackage) {
+                    log.error("payNotify ======================= rechargePackage：{} 不存在!", rechargePackageId);
+                    return;
+                }
                 String userId = payOrder.getCreateUserId();
-                payWalletService.addWalletBalance(userId, WalletPayTypeEnum.RECHARGE, outTradeNo, transaction.getAmount().getTotal());
+                payWalletService.addWalletBalance(userId, WalletPayTypeEnum.RECHARGE, outTradeNo, rechargePackage.getPackageCredit());
             }
         } catch (Exception e) {
             log.error("payNotify ================== exception:{}", e.getMessage());
@@ -299,7 +308,21 @@ public class PayServiceImpl implements PayService {
                 MongoUtils.patch(record.getId(), update2, PayNotifyRecordEntity.class);
 
                 String userId = payRefund.getCreateUserId();
-                payWalletService.reduceWalletBalance(userId, WalletPayTypeEnum.RECHARGE_REFUND, outRefundNo, NumberUtils.div(payRefund.getRefundPrice().toString(), "100"));
+                String rechargePackageId = payRefund.getRechargePackageId();
+                PayRechargePackageEntity rechargePackage = payRechargePackageService.getById(rechargePackageId);
+                if (null == rechargePackage) {
+                    log.error("refundNotify ======================= rechargePackage：{} 不存在!", rechargePackageId);
+                    return;
+                }
+                Long refundPrice = payRefund.getRefundPrice();
+                Long packageCredit = rechargePackage.getPackageCredit();
+                Long packagePrice = rechargePackage.getPackagePrice();
+                if (Objects.equals(refundPrice, packagePrice)) {
+                    payWalletService.reduceWalletBalance(userId, WalletPayTypeEnum.RECHARGE_REFUND, outRefundNo, packageCredit);
+                } else {
+                    long credit = refundPrice * packageCredit / packagePrice;
+                    payWalletService.reduceWalletBalance(userId, WalletPayTypeEnum.RECHARGE_REFUND, outRefundNo, credit);
+                }
             }
         } catch (Exception e) {
             log.error("refundNotify ================== exception:{}", e.getMessage());
@@ -312,5 +335,6 @@ public class PayServiceImpl implements PayService {
     private final PayOrderService payOrderService;
     private final PayWalletService payWalletService;
     private final PayRefundService payRefundService;
+    private final PayRechargePackageService payRechargePackageService;
 
 }

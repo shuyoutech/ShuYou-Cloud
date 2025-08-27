@@ -7,8 +7,6 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import java.math.BigDecimal;
-
 /**
  * @author YangChao
  * @date 2025-08-05 10:13:30
@@ -29,10 +27,10 @@ public class PayWalletTransactionVo extends BaseVo {
     @Schema(description = "关联业务ID")
     private String payId;
 
-    @Schema(description = "交易金额，单位分")
-    private BigDecimal price;
+    @Schema(description = "充值积分，单位算力")
+    private Long credit;
 
-    @Schema(description = " 交易后余额，单位分")
-    private BigDecimal balance;
+    @Schema(description = " 交易后积分，单位算力")
+    private Long balance;
 
 }

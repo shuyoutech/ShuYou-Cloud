@@ -17,7 +17,7 @@ public class PayRefundBo implements Serializable {
     private String outTradeNo;
 
     @Schema(description = "退款金额，分单位")
-    private Integer amount;
+    private Long amount;
 
     @Schema(description = "退款原因")
     private String reason;

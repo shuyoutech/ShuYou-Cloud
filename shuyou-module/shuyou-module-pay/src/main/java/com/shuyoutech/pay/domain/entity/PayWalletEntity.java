@@ -9,11 +9,6 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
-import java.math.BigDecimal;
-
-import static org.springframework.data.mongodb.core.mapping.FieldType.DECIMAL128;
 
 /**
  * @author YangChao
@@ -31,15 +26,16 @@ public class PayWalletEntity extends BaseEntity<PayWalletEntity> {
     @Schema(description = "用户类型")
     private String userType;
 
+    /**
+     * 1R == 200算力扣除
+     */
     @Schema(description = "积分余额，单位算力")
-    @Field(targetType = DECIMAL128)
-    private BigDecimal balance;
+    private Long balance;
 
     @Schema(description = "积分累计支出，单位算力")
-    @Field(targetType = DECIMAL128)
-    private BigDecimal totalExpense;
+    private Long totalExpense;
 
     @Schema(description = "积分累计充值，单位算力")
-    private BigDecimal totalRecharge;
+    private Long totalRecharge;
 
 }

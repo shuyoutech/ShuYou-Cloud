@@ -23,6 +23,9 @@ public interface AiConstants {
     String EVENT_ANSWER = "answer";
     String EVENT_END = "end";
     String EVENT_ERROR = "error";
+    Integer CONTEXT_WINDOW_8K = 8192;
+    Integer CONTEXT_WINDOW_32K = 32768;
+    Integer CONTEXT_WINDOW_128K = 131072;
 
     String MODEL_ALIYUN_QWEN_MAX = "qwen-max";
     String MODEL_ALIYUN_QWEN_PLUS = "qwen-plus";
@@ -112,6 +115,18 @@ public interface AiConstants {
     String MODEL_KLING_V2_1_MASTER = "kling-v2-1-master";
     String MODEL_KLING_V2_1 = "kling-v2-1";
     String MODEL_KLING_V2 = "kling-v2";
+    String MODEL_MOONSHOT_KIMI_K2_0711_PREVIEW = "kimi-k2-0711-preview";
+    String MODEL_MOONSHOT_KIMI_K2_TURBO_PREVIEW = "kimi-k2-turbo-preview";
+    String MODEL_MOONSHOT_KIMI_LATEST_8K = "kimi-latest-8k";
+    String MODEL_MOONSHOT_KIMI_LATEST_32K = "kimi-latest-32k";
+    String MODEL_MOONSHOT_KIMI_LATEST_128K = "kimi-latest-128k";
+    String MODEL_MOONSHOT_MOONSHOT_V1_8K = "moonshot-v1-8k";
+    String MODEL_MOONSHOT_MOONSHOT_V1_32K = "moonshot-v1-32k";
+    String MODEL_MOONSHOT_MOONSHOT_V1_128K = "moonshot-v1-128k";
+    String MODEL_MOONSHOT_MOONSHOT_V1_8K_VISION_PREVIEW = "moonshot-v1-8k-vision-preview";
+    String MODEL_MOONSHOT_MOONSHOT_V1_32K_VISION_PREVIEW = "moonshot-v1-32k-vision-preview";
+    String MODEL_MOONSHOT_MOONSHOT_V1_128K_VISION_PREVIEW = "moonshot-v1-128k-vision-preview";
+    String MODEL_MOONSHOT_KIMI_THINKING_PREVIEW = "kimi-thinking-preview";
 
     List<String> CHAT_MODEL_DEEPSEEK_LIST = new ArrayList<>() {
         {
@@ -263,6 +278,7 @@ public interface AiConstants {
 
 
     String API_URL_XAI = "https://api.x.ai";
+    String API_URL_MOONSHOT = "https://api.moonshot.cn";
 
     String API_URL_RUNWAY = "https://api.dev.runwayml.com";
     String RUNWAY_HEADER_X_RUNWAY_VERSION = "X-Runway-Version";

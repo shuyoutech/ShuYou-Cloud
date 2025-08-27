@@ -3,10 +3,9 @@ package com.shuyoutech.aigc.listener;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.shuyoutech.api.constant.AiConstants;
 import com.shuyoutech.aigc.domain.model.TokenUsage;
 import com.shuyoutech.aigc.domain.model.UserModelUsage;
-import com.shuyoutech.api.enums.AiProviderTypeEnum;
+import com.shuyoutech.api.constant.AiConstants;
 import com.shuyoutech.common.core.util.NumberUtils;
 import com.shuyoutech.common.core.util.StringUtils;
 import com.shuyoutech.common.disruptor.model.DisruptorData;
@@ -88,20 +87,7 @@ public class SSEChatEventListener extends EventSourceListener {
             json.put("outputTokenCount", userModelUsage.getOutputTokenCount());
             json.put("durationSeconds", userModelUsage.getDurationSeconds());
             json.put("totalLength", contentSb.length());
-
-            if (null != response) {
-                response.getWriter().write("event:" + EVENT_END);
-                response.getWriter().println();
-                response.getWriter().write("data: " + json.toJSONString());
-                response.getWriter().println();
-                response.getWriter().println();
-                response.getWriter().flush();
-            } else {
-                JSONObject object = new JSONObject();
-                object.put("event", EVENT_END);
-                object.put("data", json.toJSONString());
-                webSocketSession.sendMessage(new TextMessage(object.toJSONString()));
-            }
+            dealResponse(EVENT_END, json.toString());
             countDownLatch.countDown();
         } catch (Exception e) {
             log.error("onClosed ====================== exception:{}", e.getMessage());
@@ -116,124 +102,111 @@ public class SSEChatEventListener extends EventSourceListener {
                 return;
             }
             JSONObject object = JSONObject.parseObject(data);
-            if (AiProviderTypeEnum.GOOGLE.getValue().equals(provider)) {
-                JSONArray candidates = object.getJSONArray("candidates");
-                JSONObject usage = object.getJSONObject("usageMetadata");
-                if (null != usage) {
-                    tokenUsage.setInputTokenCount(usage.getIntValue("promptTokenCount", 0));
-                    tokenUsage.setOutputTokenCount(usage.getIntValue("candidatesTokenCount", 0));
-                    tokenUsage.setTotalTokenCount(usage.getIntValue("totalTokenCount", 0));
-                }
-                if (null != candidates && !candidates.isEmpty()) {
-                    JSONObject content = candidates.getJSONObject(0).getJSONObject("content");
-                    if (null != content && null != content.getJSONArray("parts") && !content.getJSONArray("parts").isEmpty()) {
-                        JSONArray parts = content.getJSONArray("parts");
-                        JSONObject part = parts.getJSONObject(0);
-                        contentSb.append(part.getString("text"));
-                        JSONObject json = new JSONObject();
-                        json.put("content", part.getString("text"));
-                        if (null != response) {
-                            response.getWriter().write("event:" + EVENT_ANSWER);
-                            response.getWriter().println();
-                            response.getWriter().write("data: " + json.toJSONString());
-                            response.getWriter().println();
-                            response.getWriter().println();
-                            response.getWriter().flush();
-                        } else {
-                            JSONObject object2 = new JSONObject();
-                            object2.put("event", EVENT_ANSWER);
-                            object2.put("data", json.toJSONString());
-                            webSocketSession.sendMessage(new TextMessage(object2.toJSONString()));
-                        }
-                    }
-                }
-            } else if (AiProviderTypeEnum.ANTHROPIC.getValue().equals(provider)) {
-                JSONObject delta = object.getJSONObject("delta");
-                JSONObject usage = object.getJSONObject("usage");
-                if (null != usage) {
-                    if (usage.containsKey("input_tokens")) {
-                        tokenUsage.setInputTokenCount(usage.getIntValue("input_tokens", 0) + tokenUsage.getInputTokenCount());
-                    }
-                    if (usage.containsKey("output_tokens")) {
-                        tokenUsage.setOutputTokenCount(usage.getIntValue("output_tokens", 0) + tokenUsage.getOutputTokenCount());
-                    }
-                    tokenUsage.setTotalTokenCount(tokenUsage.getInputTokenCount() + tokenUsage.getOutputTokenCount());
-                }
-                if (null != delta) {
-                    String content = null;
-                    if (StringUtils.isNotBlank(delta.getString("text"))) {
-                        content = delta.getString("text");
-                    } else if (StringUtils.isNotBlank(delta.getString("thinking"))) {
-                        content = delta.getString("thinking");
-                    } else if (StringUtils.isNotBlank(delta.getString("partial_json"))) {
-                        content = delta.getString("partial_json");
-                    }
-                    if (StringUtils.isNotBlank(content)) {
-                        contentSb.append(content);
-                        JSONObject json = new JSONObject();
-                        json.put("content", content);
-                        if (null != response) {
-                            response.getWriter().write("event:" + EVENT_ANSWER);
-                            response.getWriter().println();
-                            response.getWriter().write("data: " + json.toJSONString());
-                            response.getWriter().println();
-                            response.getWriter().println();
-                            response.getWriter().flush();
-                        } else {
-                            JSONObject object2 = new JSONObject();
-                            object2.put("event", EVENT_ANSWER);
-                            object2.put("data", json.toJSONString());
-                            webSocketSession.sendMessage(new TextMessage(object2.toJSONString()));
-                        }
-                    }
-                }
-            } else {
-                JSONArray choices = object.getJSONArray("choices");
-                JSONObject usage = object.getJSONObject("usage");
-                if (null != usage) {
-                    if (usage.containsKey("prompt_tokens")) {
-                        tokenUsage.setInputTokenCount(usage.getIntValue("prompt_tokens", 0));
-                    } else if (usage.containsKey("input_tokens")) {
-                        tokenUsage.setInputTokenCount(usage.getIntValue("input_tokens", 0));
-                    }
-                    if (usage.containsKey("completion_tokens")) {
-                        tokenUsage.setOutputTokenCount(usage.getIntValue("completion_tokens", 0));
-                    } else if (usage.containsKey("output_tokens")) {
-                        tokenUsage.setOutputTokenCount(usage.getIntValue("output_tokens", 0));
-                    }
-                    if (usage.containsKey("total_tokens")) {
-                        tokenUsage.setTotalTokenCount(usage.getIntValue("total_tokens", 0));
-                    } else {
-                        tokenUsage.setTotalTokenCount(tokenUsage.getInputTokenCount() + tokenUsage.getOutputTokenCount());
-                    }
-                }
-                if (null != choices && !choices.isEmpty()) {
-                    JSONObject delta = choices.getJSONObject(0).getJSONObject("delta");
-                    if (null != delta) {
-                        String content = delta.getString("content");
-                        if (StringUtils.isNotBlank(content)) {
-                            contentSb.append(content);
-                            JSONObject json = new JSONObject();
-                            json.put("content", content);
-                            if (null != response) {
-                                response.getWriter().write("event:" + EVENT_ANSWER);
-                                response.getWriter().println();
-                                response.getWriter().write("data: " + json.toJSONString());
-                                response.getWriter().println();
-                                response.getWriter().println();
-                                response.getWriter().flush();
-                            } else {
-                                JSONObject object2 = new JSONObject();
-                                object2.put("event", EVENT_ANSWER);
-                                object2.put("data", json.toJSONString());
-                                webSocketSession.sendMessage(new TextMessage(object2.toJSONString()));
-                            }
-                        }
-                    }
-                }
-            }
+            dealUsage(object, tokenUsage);
+            dealContent(object);
         } catch (Exception e) {
             log.error("onEvent ====================== exception:{}", e.getMessage());
+        }
+    }
+
+    private void dealUsage(JSONObject data, TokenUsage tokenUsage) {
+        JSONObject usage = null;
+        if (data.containsKey("usage")) {
+            usage = data.getJSONObject("usage");
+        } else if (data.containsKey("choices") && data.getJSONArray("choices").getJSONObject(0).containsKey("usage")) {
+            usage = data.getJSONArray("choices").getJSONObject(0).getJSONObject("usage");
+        } else if (data.containsKey("usageMetadata")) {
+            usage = data.getJSONObject("usageMetadata");
+        }
+        if (null == usage || usage.isEmpty()) {
+            return;
+        }
+        if (usage.containsKey("prompt_tokens")) {
+            tokenUsage.setInputTokenCount(usage.getIntValue("prompt_tokens", 0));
+        } else if (usage.containsKey("input_tokens")) {
+            tokenUsage.setInputTokenCount(usage.getIntValue("input_tokens", 0));
+        } else if (usage.containsKey("promptTokenCount")) {
+            tokenUsage.setInputTokenCount(usage.getIntValue("promptTokenCount", 0));
+        }
+        if (usage.containsKey("completion_tokens")) {
+            tokenUsage.setOutputTokenCount(usage.getIntValue("completion_tokens", 0));
+        } else if (usage.containsKey("output_tokens")) {
+            tokenUsage.setOutputTokenCount(usage.getIntValue("output_tokens", 0));
+        } else if (usage.containsKey("candidatesTokenCount")) {
+            tokenUsage.setOutputTokenCount(usage.getIntValue("candidatesTokenCount", 0));
+        }
+        if (usage.containsKey("total_tokens")) {
+            tokenUsage.setTotalTokenCount(usage.getIntValue("total_tokens", 0));
+        } else if (usage.containsKey("totalTokenCount")) {
+            tokenUsage.setTotalTokenCount(usage.getIntValue("totalTokenCount", 0));
+        } else {
+            tokenUsage.setTotalTokenCount(tokenUsage.getInputTokenCount() + tokenUsage.getOutputTokenCount());
+        }
+    }
+
+    private void dealContent(JSONObject data) {
+        String content = null;
+        if (data.containsKey("choices")) {
+            JSONArray choices = data.getJSONArray("choices");
+            if (null == choices || choices.isEmpty()) {
+                return;
+            }
+            JSONObject delta = choices.getJSONObject(0).getJSONObject("delta");
+            if (null == delta) {
+                return;
+            }
+            content = delta.getString("content");
+        } else if (data.containsKey("candidates")) {
+            JSONArray candidates = data.getJSONArray("candidates");
+            if (null == candidates || candidates.isEmpty()) {
+                return;
+            }
+            JSONObject contentJson = candidates.getJSONObject(0).getJSONObject("content");
+            if (null == contentJson || contentJson.getJSONArray("parts").isEmpty()) {
+                return;
+            }
+            JSONArray parts = contentJson.getJSONArray("parts");
+            JSONObject part = parts.getJSONObject(0);
+            content = part.getString("text");
+        } else if (data.containsKey("delta")) {
+            JSONObject delta = data.getJSONObject("delta");
+            if (null == delta || delta.isEmpty()) {
+                return;
+            }
+            if (StringUtils.isNotBlank(delta.getString("text"))) {
+                content = delta.getString("text");
+            } else if (StringUtils.isNotBlank(delta.getString("thinking"))) {
+                content = delta.getString("thinking");
+            } else if (StringUtils.isNotBlank(delta.getString("partial_json"))) {
+                content = delta.getString("partial_json");
+            }
+        }
+        if (StringUtils.isBlank(content)) {
+            return;
+        }
+        contentSb.append(content);
+        JSONObject json = new JSONObject();
+        json.put("content", content);
+        dealResponse(EVENT_ANSWER, json.toJSONString());
+    }
+
+    private void dealResponse(String event, String data) {
+        try {
+            if (null != response) {
+                response.getWriter().write("event:" + event);
+                response.getWriter().println();
+                response.getWriter().write("data: " + data);
+                response.getWriter().println();
+                response.getWriter().println();
+                response.getWriter().flush();
+            } else {
+                JSONObject object = new JSONObject();
+                object.put("event", EVENT_ANSWER);
+                object.put("data", data);
+                webSocketSession.sendMessage(new TextMessage(object.toJSONString()));
+            }
+        } catch (Exception e) {
+            log.error("dealResponse ============== exception:{}", e.getMessage());
         }
     }
 

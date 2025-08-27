@@ -4,15 +4,14 @@ import cn.hutool.core.util.IdUtil;
 import com.shuyoutech.api.enums.WalletPayTypeEnum;
 import com.shuyoutech.common.core.util.CollectionUtils;
 import com.shuyoutech.common.core.util.MapstructUtils;
-import com.shuyoutech.common.core.util.NumberUtils;
 import com.shuyoutech.common.mongodb.MongoUtils;
 import com.shuyoutech.common.redis.util.RedissonUtils;
 import com.shuyoutech.common.web.model.PageQuery;
 import com.shuyoutech.common.web.model.PageResult;
 import com.shuyoutech.common.web.service.SuperServiceImpl;
-import com.shuyoutech.pay.domain.entity.PayWalletTransactionEntity;
 import com.shuyoutech.pay.domain.bo.PayWalletBo;
 import com.shuyoutech.pay.domain.entity.PayWalletEntity;
+import com.shuyoutech.pay.domain.entity.PayWalletTransactionEntity;
 import com.shuyoutech.pay.domain.vo.PayWalletVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +19,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -42,9 +40,6 @@ public class PayWalletServiceImpl extends SuperServiceImpl<PayWalletEntity, PayW
         }
         list.forEach(e -> {
             PayWalletVo vo = MapstructUtils.convert(e, PayWalletVo.class);
-            vo.setBalanceStr(NumberUtils.div(e.getBalance(), 100, 2).toPlainString());
-            vo.setTotalExpenseStr(NumberUtils.div(e.getTotalExpense(), 100, 2).toPlainString());
-            vo.setTotalRechargeStr(NumberUtils.div(e.getTotalRecharge(), 100, 2).toPlainString());
             result.add(vo);
         });
         return result;
@@ -74,7 +69,7 @@ public class PayWalletServiceImpl extends SuperServiceImpl<PayWalletEntity, PayW
     }
 
     @Override
-    public void reduceWalletBalance(String walletId, WalletPayTypeEnum payType, String payId, BigDecimal price) {
+    public void reduceWalletBalance(String walletId, WalletPayTypeEnum payType, String payId, Long credit) {
         RedissonUtils.lock(walletId, 120000L, () -> {
             // 1. 获取钱包
             PayWalletEntity wallet = MongoUtils.getById(walletId, PayWalletEntity.class);
@@ -82,21 +77,21 @@ public class PayWalletServiceImpl extends SuperServiceImpl<PayWalletEntity, PayW
                 log.error("reduceWalletBalance ======== 用户钱包:{}不存在", walletId);
                 return null;
             }
-            BigDecimal balance = wallet.getBalance();
-            BigDecimal totalExpense = wallet.getTotalExpense();
-            BigDecimal totalRecharge = wallet.getTotalRecharge();
+            Long balance = wallet.getBalance();
+            Long totalExpense = wallet.getTotalExpense();
+            Long totalRecharge = wallet.getTotalRecharge();
             switch (payType) {
                 case PAYMENT: {
                     Update update = new Update();
-                    update.set("balance", balance.subtract(price));
-                    update.set("totalExpense", totalExpense.add(price));
+                    update.set("balance", balance - credit);
+                    update.set("totalExpense", totalExpense + credit);
                     MongoUtils.patch(walletId, update, PayWalletEntity.class);
                     break;
                 }
                 case RECHARGE_REFUND: {
                     Update update = new Update();
-                    update.set("balance", balance.subtract(price));
-                    update.set("totalRecharge", totalRecharge.subtract(price));
+                    update.set("balance", balance - credit);
+                    update.set("totalRecharge", totalRecharge - credit);
                     MongoUtils.patch(walletId, update, PayWalletEntity.class);
                     break;
                 }
@@ -110,14 +105,14 @@ public class PayWalletServiceImpl extends SuperServiceImpl<PayWalletEntity, PayW
             transaction.setWalletId(walletId);
             transaction.setPayType(payType.getValue());
             transaction.setPayId(payId);
-            transaction.setPrice(price);
-            transaction.setBalance(balance.subtract(price));
+            transaction.setCredit(credit);
+            transaction.setBalance(balance - credit);
             return MongoUtils.save(transaction);
         });
     }
 
     @Override
-    public void addWalletBalance(String walletId, WalletPayTypeEnum payType, String payId, Integer price) {
+    public void addWalletBalance(String walletId, WalletPayTypeEnum payType, String payId, Long credit) {
         RedissonUtils.lock(walletId, 120000L, () -> {
             // 1. 获取钱包
             PayWalletEntity wallet = MongoUtils.getById(walletId, PayWalletEntity.class);
@@ -125,28 +120,28 @@ public class PayWalletServiceImpl extends SuperServiceImpl<PayWalletEntity, PayW
                 log.error("addWalletBalance ======== 用户钱包:{}不存在", walletId);
                 return null;
             }
-            BigDecimal balance = wallet.getBalance();
-            BigDecimal totalExpense = wallet.getTotalExpense();
-            BigDecimal totalRecharge = wallet.getTotalRecharge();
+            Long balance = wallet.getBalance();
+            Long totalExpense = wallet.getTotalExpense();
+            Long totalRecharge = wallet.getTotalRecharge();
             switch (payType) {
                 case PAYMENT_REFUND: {
                     Update update = new Update();
-                    update.set("balance", balance.add(BigDecimal.valueOf(price)));
-                    update.set("totalExpense", totalExpense.subtract(BigDecimal.valueOf(price)));
+                    update.set("balance", balance + credit);
+                    update.set("totalExpense", totalExpense - credit);
                     MongoUtils.patch(walletId, update, PayWalletEntity.class);
                     break;
                 }
                 case RECHARGE: {
                     Update update = new Update();
-                    update.set("balance", balance.add(BigDecimal.valueOf(price)));
-                    update.set("totalRecharge", totalRecharge.add(BigDecimal.valueOf(price)));
+                    update.set("balance", balance + credit);
+                    update.set("totalRecharge", totalRecharge + credit);
                     MongoUtils.patch(walletId, update, PayWalletEntity.class);
                     break;
                 }
                 case UPDATE_BALANCE:
                 case TRANSFER:
                     Update update = new Update();
-                    update.set("balance", balance.add(BigDecimal.valueOf(price)));
+                    update.set("balance", balance + credit);
                     MongoUtils.patch(walletId, update, PayWalletEntity.class);
                     break;
                 default: {
@@ -159,8 +154,8 @@ public class PayWalletServiceImpl extends SuperServiceImpl<PayWalletEntity, PayW
             transaction.setWalletId(walletId);
             transaction.setPayType(payType.getValue());
             transaction.setPayId(payId);
-            transaction.setPrice(BigDecimal.valueOf(price));
-            transaction.setBalance(balance.add(BigDecimal.valueOf(price)));
+            transaction.setCredit(credit);
+            transaction.setBalance(balance + credit);
             return MongoUtils.save(transaction);
         });
     }

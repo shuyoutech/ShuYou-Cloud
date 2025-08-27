@@ -38,7 +38,7 @@ public class AigcModelPrice implements Serializable {
      * 枚举 {@link AiTokenPriceUnitEnum}
      * 千Token、百万Token
      */
-    @Schema(description = "token价格单位")
+    @Schema(description = "计费单位")
     private String tokenPriceUnit;
 
     /**

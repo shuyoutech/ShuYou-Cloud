@@ -66,7 +66,10 @@ public class PayOrderEntity extends BaseEntity<PayOrderEntity> {
     private String transactionId;
 
     @Schema(description = "支付金额,单位分")
-    private Integer payPrice;
+    private Long payPrice;
+
+    @Schema(description = "充值套餐")
+    private String rechargePackageId;
 
     @Schema(description = "订单失效时间")
     private Date expiredTime;

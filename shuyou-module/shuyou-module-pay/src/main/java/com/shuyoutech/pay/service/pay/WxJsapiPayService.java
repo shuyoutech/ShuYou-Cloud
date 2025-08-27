@@ -18,7 +18,7 @@ public interface WxJsapiPayService {
      * @param amount 金额 分
      * @return 预支付交易会话标识
      */
-    JSONObject prepay(WxPayConfig wxPayConfig, Integer amount);
+    JSONObject prepay(WxPayConfig wxPayConfig, Long amount, String rechargePackageId);
 
     /**
      * 商户订单号查询
@@ -55,7 +55,7 @@ public interface WxJsapiPayService {
      * @param payOrder    订单信息
      * @return 退款信息
      */
-    JSONObject refund(WxPayConfig wxPayConfig, Integer amount, String reason, PayOrderEntity payOrder);
+    JSONObject refund(WxPayConfig wxPayConfig, Long amount, String reason, PayOrderEntity payOrder);
 
     /**
      * 查询单笔退款
