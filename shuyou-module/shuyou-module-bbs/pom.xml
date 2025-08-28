@@ -12,7 +12,7 @@
 
     <artifactId>shuyou-module-bbs</artifactId>
     <name>ShuYou Module BBS</name>
-    <description>ShuYou Module Auth</description>
+    <description>ShuYou Module BBS</description>
     <packaging>jar</packaging>
     <url>https://github.com/shuyoutech/ShuYou-Cloud</url>
 
