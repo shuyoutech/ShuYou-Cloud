@@ -5,8 +5,6 @@ import com.shuyoutech.api.service.api.ApiService;
 import com.shuyoutech.common.core.constant.CommonConstants;
 import com.shuyoutech.common.core.exception.BusinessException;
 import com.shuyoutech.common.core.util.StringUtils;
-import com.shuyoutech.common.web.util.JakartaServletUtils;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,12 +30,11 @@ public class ApiCommonServiceImpl implements ApiCommonService {
     }
 
     @Override
-    public void interfaceV1(HttpServletRequest request, HttpServletResponse response) {
-        String body = JakartaServletUtils.getBody(request);
-        JSONObject bodyJson = JSONObject.parseObject(body);
-        String api = bodyJson.getString(CommonConstants.API);
+    public void interfaceV1(JSONObject request, HttpServletResponse response) {
+        String api = request.getString(CommonConstants.API);
+        JSONObject params = request.getJSONObject(CommonConstants.PARAMS);
         ApiService apiService = getService(api);
-        apiService.execute(request, response);
+        apiService.execute(params, response);
     }
 
 }

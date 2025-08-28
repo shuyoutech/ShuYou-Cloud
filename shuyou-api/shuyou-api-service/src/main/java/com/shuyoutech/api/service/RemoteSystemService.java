@@ -2,6 +2,7 @@ package com.shuyoutech.api.service;
 
 import com.shuyoutech.api.model.RemoteSysFile;
 import com.shuyoutech.common.satoken.model.LoginUser;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 import java.util.Set;
@@ -31,4 +32,6 @@ public interface RemoteSystemService {
     String generatedUrl(String ossId);
 
     RemoteSysFile upload(String originalFilename, byte[] data);
+
+    RemoteSysFile upload(MultipartFile file);
 }

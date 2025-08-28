@@ -48,6 +48,9 @@ public class SysFileVo extends BaseVo {
     @Schema(description = "文件格式")
     private String fileType;
 
+    @Schema(description = "媒体类型")
+    private String mimeType;
+
     @Schema(description = "文件路径")
     private String filePath;
 

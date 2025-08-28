@@ -62,13 +62,4 @@ public interface SysFileService extends SuperService<SysFileEntity, SysFileVo> {
      */
     String generatedUrl(String ossId);
 
-    /**
-     * 生成预览在线地址
-     *
-     * @param ossId      文件id
-     * @param expiration 失效时间
-     * @return 地址
-     */
-    String generatedUrl(String ossId, Long expiration);
-
 }

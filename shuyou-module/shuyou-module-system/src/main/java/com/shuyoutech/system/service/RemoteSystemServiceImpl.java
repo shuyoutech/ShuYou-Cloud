@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -111,6 +112,12 @@ public class RemoteSystemServiceImpl implements RemoteSystemService {
     @Override
     public RemoteSysFile upload(String originalFilename, byte[] data) {
         SysFileVo sysFile = sysFileService.upload(originalFilename, data);
+        return MapstructUtils.convert(sysFile, RemoteSysFile.class);
+    }
+
+    @Override
+    public RemoteSysFile upload(MultipartFile file) {
+        SysFileVo sysFile = sysFileService.upload(file);
         return MapstructUtils.convert(sysFile, RemoteSysFile.class);
     }
 

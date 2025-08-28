@@ -399,7 +399,7 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserEntity, SysUserV
             List<SysRoleEntity> roles = sysRoleService.getByIds(roleIds);
             profile.setRoleNames(CollectionUtils.join(StreamUtils.toList(roles, SysRoleEntity::getRoleName), ","));
             if (StringUtils.isNotBlank(user.getAvatar())) {
-                profile.setAvatar(sysFileService.generatedUrl(user.getAvatar(), 86400000L));
+                profile.setAvatar(sysFileService.generatedUrl(user.getAvatar()));
             }
         }
         return profile;

@@ -3,14 +3,15 @@ package com.shuyoutech.api.service.api;
 import com.alibaba.fastjson2.JSONObject;
 import com.shuyoutech.api.constant.AiConstants;
 import com.shuyoutech.api.model.RemoteModel;
-import com.shuyoutech.api.service.aigc.ApiModelFactory;
 import com.shuyoutech.api.service.aigc.AigcService;
+import com.shuyoutech.api.service.aigc.ApiModelFactory;
 import com.shuyoutech.api.service.aigc.provider.ModelProvider;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import static com.shuyoutech.api.enums.InterfaceFunctionEnum.AIGC_AUDIO_TRANSLATION;
 
 /**
  * 音频翻译为文本
@@ -25,15 +26,14 @@ public class AigcAudioTranslationService implements ApiService {
 
     @Override
     public String interfaceName() {
-        return "aigcAudioTranslation";
+        return AIGC_AUDIO_TRANSLATION.getValue();
     }
 
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) {
-        JSONObject body = getBody(request);
-        RemoteModel model = aigcService.getModel(body.getString(AiConstants.MODEL));
+    public void execute(JSONObject params, HttpServletResponse response) {
+        RemoteModel model = aigcService.getModel(params.getString(AiConstants.MODEL));
         ModelProvider modelProvider = ApiModelFactory.getModelService(model.getProvider());
-        modelProvider.audioTranslation(model.getBaseUrl(), model.getApiKey(), body, response);
+        modelProvider.audioTranslation(model.getBaseUrl(), model.getApiKey(), params, response);
     }
 
     private final AigcService aigcService;

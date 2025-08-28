@@ -281,8 +281,8 @@ public interface AiConstants {
     String API_URL_MOONSHOT = "https://api.moonshot.cn";
 
     String API_URL_RUNWAY = "https://api.dev.runwayml.com";
-    String RUNWAY_HEADER_X_RUNWAY_VERSION = "X-Runway-Version";
-    String RUNWAY_HEADER_X_RUNWAY_VERSION_VALUE = "2024-11-06";
+    String HEADER_RUNWAY_X_RUNWAY_VERSION = "X-Runway-Version";
+    String HEADER_RUNWAY_X_RUNWAY_VERSION_VALUE = "2024-11-06";
     String RUNWAY_TEXT_TO_IMAGE = "/v1/text_to_image";
     String RUNWAY_IMAGE_TO_VIDEO = "/v1/image_to_video";
     String RUNWAY_VIDEO_UPSCALE = "/v1/video_upscale";

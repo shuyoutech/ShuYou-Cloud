@@ -51,7 +51,13 @@ public interface ModelProvider {
     default void betaCompletion(String baseUrl, String apiKey, JSONObject body, HttpServletResponse response) {
     }
 
-    default void imageGeneration(String baseUrl, String apiKey, JSONObject body, HttpServletResponse response) {
+    default void textToImage(String baseUrl, String apiKey, JSONObject body, HttpServletResponse response) {
+    }
+
+    default void imageToImage(String baseUrl, String apiKey, JSONObject body, HttpServletResponse response) {
+    }
+
+    default void multiImageToImage(String baseUrl, String apiKey, JSONObject body, HttpServletResponse response) {
     }
 
     default void audioSpeech(String baseUrl, String apiKey, JSONObject body, HttpServletResponse response) {

@@ -52,7 +52,7 @@ public class ApiRunner implements CommandLineRunner, ApplicationContextAware {
     private void initApiService() {
         Map<String, ApiService> beanMap = applicationContext.getBeansOfType(ApiService.class);
         for (ApiService apiService : beanMap.values()) {
-            serviceMap.put(apiService.interfaceName().toLowerCase(), apiService);
+            serviceMap.put(apiService.interfaceName(), apiService);
         }
     }
 

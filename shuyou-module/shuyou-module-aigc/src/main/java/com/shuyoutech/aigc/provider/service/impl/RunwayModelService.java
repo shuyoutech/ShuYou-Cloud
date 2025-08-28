@@ -100,7 +100,7 @@ public class RunwayModelService implements ModelService {
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
                     .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
-                    .addHeader(RUNWAY_HEADER_X_RUNWAY_VERSION, RUNWAY_HEADER_X_RUNWAY_VERSION_VALUE) //
+                    .addHeader(HEADER_RUNWAY_X_RUNWAY_VERSION, HEADER_RUNWAY_X_RUNWAY_VERSION_VALUE) //
                     .build();
 
             Response res = client.newCall(request).execute();
@@ -162,7 +162,7 @@ public class RunwayModelService implements ModelService {
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
                     .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
-                    .addHeader(RUNWAY_HEADER_X_RUNWAY_VERSION, RUNWAY_HEADER_X_RUNWAY_VERSION_VALUE) //
+                    .addHeader(HEADER_RUNWAY_X_RUNWAY_VERSION, HEADER_RUNWAY_X_RUNWAY_VERSION_VALUE) //
                     .build();
 
             Response res = client.newCall(request).execute();
@@ -199,7 +199,7 @@ public class RunwayModelService implements ModelService {
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
                     .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
-                    .addHeader(RUNWAY_HEADER_X_RUNWAY_VERSION, RUNWAY_HEADER_X_RUNWAY_VERSION_VALUE) //
+                    .addHeader(HEADER_RUNWAY_X_RUNWAY_VERSION, HEADER_RUNWAY_X_RUNWAY_VERSION_VALUE) //
                     .build();
 
             Response res = client.newCall(request).execute();
@@ -261,7 +261,7 @@ public class RunwayModelService implements ModelService {
                     .post(body) //
                     .addHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON_VALUE) //
                     .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + builder.getApiKey()) //
-                    .addHeader(RUNWAY_HEADER_X_RUNWAY_VERSION, RUNWAY_HEADER_X_RUNWAY_VERSION_VALUE) //
+                    .addHeader(HEADER_RUNWAY_X_RUNWAY_VERSION, HEADER_RUNWAY_X_RUNWAY_VERSION_VALUE) //
                     .build();
 
             Response res = client.newCall(request).execute();
@@ -349,7 +349,7 @@ public class RunwayModelService implements ModelService {
                     .url(baseUrl + RUNWAY_TASKS + taskId) //
                     .get() //
                     .addHeader(HttpHeaders.AUTHORIZATION, HEADER_AUTHORIZATION_PREFIX + apiKey) //
-                    .addHeader(RUNWAY_HEADER_X_RUNWAY_VERSION, RUNWAY_HEADER_X_RUNWAY_VERSION_VALUE) //
+                    .addHeader(HEADER_RUNWAY_X_RUNWAY_VERSION, HEADER_RUNWAY_X_RUNWAY_VERSION_VALUE) //
                     .build();
 
             Response res = client.newCall(request).execute();

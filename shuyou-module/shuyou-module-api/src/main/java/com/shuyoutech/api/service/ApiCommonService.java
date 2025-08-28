@@ -1,6 +1,6 @@
 package com.shuyoutech.api.service;
 
-import jakarta.servlet.http.HttpServletRequest;
+import com.alibaba.fastjson2.JSONObject;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
@@ -9,6 +9,6 @@ import jakarta.servlet.http.HttpServletResponse;
  **/
 public interface ApiCommonService {
 
-    void interfaceV1(HttpServletRequest request, HttpServletResponse response);
+    void interfaceV1(JSONObject request, HttpServletResponse response);
 
 }

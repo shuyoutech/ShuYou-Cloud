@@ -14,11 +14,27 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum InterfaceFunctionEnum implements BaseEnum<String, String> {
 
-    AIGC_CHAT_COMPLETION("aigcChatCompletion", "AI-对话"),
+    AIGC_CHAT_COMPLETION("aigcChatCompletionService", "AI-对话"),
 
-    AIGC_TEXT_TO_IMAGE("textToImage", "AI-文生图"),
+    AIGC_BETA_COMPLETION("aigcBetaCompletionService", "AI-补全"),
 
-    AIGC_IMAGE_TO_IMAGE("imageToImage", "AI-图生图"),
+    AIGC_AUDIO_SPEECH("aigcAudioSpeechService", "AI-文本转音频"),
+
+    AIGC_AUDIO_TRANSCRIPTION("aigcAudioTranscriptionService", "AI-音频转文本"),
+
+    AIGC_AUDIO_TRANSLATION("aigcAudioTranslationService", "AI-音频翻译"),
+
+    AIGC_EMBEDDING("aigcEmbeddingService", "AI-文本向量化"),
+
+    AIGC_MULTIMODAL_EMBEDDING("aigcMultimodalEmbeddingService", "AI-图像向量化"),
+
+    AIGC_MODERATION("aigcModerationService", "AI-内容审核"),
+
+    AIGC_TEXT_TO_IMAGE("aigcTextToImageService", "AI-文生图"),
+
+    AIGC_IMAGE_TO_IMAGE("aigcImageToImageService", "AI-图生图"),
+
+    AIGC_MULTI_IMAGE_TO_IMAGE("aigcMultiImageToImageService", "AI-多图生图"),
 
     AIGC_IMAGE_EDIT("imageEdit", "图像编辑"),
 
@@ -48,13 +64,6 @@ public enum InterfaceFunctionEnum implements BaseEnum<String, String> {
 
     AIGC_VIDEO_CHARACTER_PERFORMANCE("videoCharacterPerformance", "视频-角色表演"),
 
-    AIGC_AUDIO_SPEECH("audioSpeech", "文本转音频/语音合成"),
-
-    AIGC_AUDIO_TRANSCRIPTION("audioTranscription", "音频转文本/语音识别"),
-
-    AIGC_AUDIO_TRANSLATION("audioTranslation", "音频/语音翻译"),
-
-    AIGC_EMBEDDING("embedding", "向量"),
 
     ;
 

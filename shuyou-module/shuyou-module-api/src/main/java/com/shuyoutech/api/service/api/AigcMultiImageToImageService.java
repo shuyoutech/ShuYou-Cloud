@@ -3,17 +3,18 @@ package com.shuyoutech.api.service.api;
 import com.alibaba.fastjson2.JSONObject;
 import com.shuyoutech.api.constant.AiConstants;
 import com.shuyoutech.api.model.RemoteModel;
-import com.shuyoutech.api.service.aigc.ApiModelFactory;
 import com.shuyoutech.api.service.aigc.AigcService;
+import com.shuyoutech.api.service.aigc.ApiModelFactory;
 import com.shuyoutech.api.service.aigc.provider.ModelProvider;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import static com.shuyoutech.api.enums.InterfaceFunctionEnum.AIGC_MULTI_IMAGE_TO_IMAGE;
+
 /**
- * 图片生成
+ * 多图生图-至少2张参考图片
  *
  * @author YangChao
  * @date 2025-08-26 22:23
@@ -21,19 +22,18 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AigcImageGenerationService implements ApiService {
+public class AigcMultiImageToImageService implements ApiService {
 
     @Override
     public String interfaceName() {
-        return "aigcImageGeneration";
+        return AIGC_MULTI_IMAGE_TO_IMAGE.getValue();
     }
 
     @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) {
-        JSONObject body = getBody(request);
-        RemoteModel model = aigcService.getModel(body.getString(AiConstants.MODEL));
+    public void execute(JSONObject params, HttpServletResponse response) {
+        RemoteModel model = aigcService.getModel(params.getString(AiConstants.MODEL));
         ModelProvider modelProvider = ApiModelFactory.getModelService(model.getProvider());
-        modelProvider.imageGeneration(model.getBaseUrl(), model.getApiKey(), body, response);
+        modelProvider.multiImageToImage(model.getBaseUrl(), model.getApiKey(), params, response);
     }
 
     private final AigcService aigcService;

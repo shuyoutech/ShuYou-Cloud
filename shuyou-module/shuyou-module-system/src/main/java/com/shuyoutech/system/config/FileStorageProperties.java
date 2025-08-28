@@ -32,6 +32,6 @@ public class FileStorageProperties implements Serializable {
     private String bucketName;
 
     @Schema(description = "预览前缀")
-    private String previewPrefix = "https://www.shuyoutech.com/upload";
+    private String previewPrefix = "https://www.shuyoutech.com/shuyou-bucket";
 
 }
