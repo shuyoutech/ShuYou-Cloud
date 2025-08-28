@@ -24,6 +24,7 @@
         <module>shuyou-module-notice</module>
         <module>shuyou-module-pay</module>
         <module>shuyou-module-api</module>
+        <module>shuyou-module-bbs</module>
     </modules>
 
 </project>

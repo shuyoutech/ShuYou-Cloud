@@ -25,6 +25,7 @@
         </processorPath>
         <module name="shuyou-api-model" />
         <module name="shuyou-api-service" />
+        <module name="shuyou-module-bbs" />
         <module name="shuyou-module-pay" />
         <module name="shuyou-module-api" />
         <module name="shuyou-module-member" />
@@ -51,6 +52,7 @@
       <module name="shuyou-module-aigc" options="-parameters" />
       <module name="shuyou-module-api" options="-parameters" />
       <module name="shuyou-module-auth" options="-parameters" />
+      <module name="shuyou-module-bbs" options="-parameters" />
       <module name="shuyou-module-member" options="-parameters" />
       <module name="shuyou-module-notice" options="-parameters" />
       <module name="shuyou-module-pay" options="-parameters" />

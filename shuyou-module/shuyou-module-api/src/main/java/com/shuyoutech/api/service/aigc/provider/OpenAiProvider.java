@@ -73,7 +73,6 @@ public class OpenAiProvider implements ModelProvider {
     /**
      * 图片生成
      */
-    @Override
     public void imageGeneration(String baseUrl, String apiKey, JSONObject body, HttpServletResponse response) {
         try {
             String url = baseUrl + OPENAI_IMAGES_GENERATIONS;
