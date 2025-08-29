@@ -21,6 +21,7 @@ public interface AiConstants {
     String ROLE_TOOL = "tool";
     String EVENT_STREAM_DATA = "data: ";
     String EVENT_ANSWER = "answer";
+    String EVENT_REASONING = "reasoning";
     String EVENT_END = "end";
     String EVENT_ERROR = "error";
     Integer CONTEXT_WINDOW_8K = 8192;

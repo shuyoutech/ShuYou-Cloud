@@ -38,6 +38,15 @@ public class AigcChatMessageEntity extends BaseEntity<AigcChatMessageEntity> {
     @Schema(description = "会话ID")
     private String conversationId;
 
+    @Schema(description = "供应商")
+    private String provider;
+
+    @Schema(description = "模型")
+    private String modelName;
+
+    @Schema(description = "模型功能接口")
+    private String modelFunction;
+
     @Schema(description = "是否开启多轮对话")
     private Boolean enableMemory;
 

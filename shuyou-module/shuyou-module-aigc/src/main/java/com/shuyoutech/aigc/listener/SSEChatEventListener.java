@@ -146,6 +146,7 @@ public class SSEChatEventListener extends EventSourceListener {
 
     private void dealContent(JSONObject data) {
         String content = null;
+        String reasoningContent = null;
         if (data.containsKey("choices")) {
             JSONArray choices = data.getJSONArray("choices");
             if (null == choices || choices.isEmpty()) {
@@ -156,6 +157,7 @@ public class SSEChatEventListener extends EventSourceListener {
                 return;
             }
             content = delta.getString("content");
+            reasoningContent = delta.getString("reasoning_content");
         } else if (data.containsKey("candidates")) {
             JSONArray candidates = data.getJSONArray("candidates");
             if (null == candidates || candidates.isEmpty()) {
@@ -175,19 +177,24 @@ public class SSEChatEventListener extends EventSourceListener {
             }
             if (StringUtils.isNotBlank(delta.getString("text"))) {
                 content = delta.getString("text");
-            } else if (StringUtils.isNotBlank(delta.getString("thinking"))) {
-                content = delta.getString("thinking");
             } else if (StringUtils.isNotBlank(delta.getString("partial_json"))) {
                 content = delta.getString("partial_json");
             }
+            if (StringUtils.isNotBlank(delta.getString("thinking"))) {
+                reasoningContent = delta.getString("thinking");
+            }
         }
-        if (StringUtils.isBlank(content)) {
-            return;
+
+        if (StringUtils.isNotBlank(content)) {
+            contentSb.append(content);
+            JSONObject json = new JSONObject();
+            json.put("content", content);
+            dealResponse(EVENT_ANSWER, json.toJSONString());
+        } else if (StringUtils.isNotBlank(reasoningContent)) {
+            JSONObject json = new JSONObject();
+            json.put("content", reasoningContent);
+            dealResponse(EVENT_REASONING, json.toJSONString());
         }
-        contentSb.append(content);
-        JSONObject json = new JSONObject();
-        json.put("content", content);
-        dealResponse(EVENT_ANSWER, json.toJSONString());
     }
 
     private void dealResponse(String event, String data) {
