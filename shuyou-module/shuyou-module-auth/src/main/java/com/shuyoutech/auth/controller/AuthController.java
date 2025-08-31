@@ -1,7 +1,10 @@
 package com.shuyoutech.auth.controller;
 
 import com.shuyoutech.api.model.AuthAccessToken;
-import com.shuyoutech.auth.domain.bo.*;
+import com.shuyoutech.auth.domain.bo.AuthAuthorizeBo;
+import com.shuyoutech.auth.domain.bo.AuthLoginBo;
+import com.shuyoutech.auth.domain.bo.SmsLoginBo;
+import com.shuyoutech.auth.domain.bo.SmsSendBo;
 import com.shuyoutech.auth.domain.vo.AuthLoginVo;
 import com.shuyoutech.auth.service.AuthService;
 import com.shuyoutech.common.core.model.R;
@@ -34,27 +37,27 @@ public class AuthController {
         return R.success(authService.login(req));
     }
 
-    @PostMapping("/api/member/auth/authorize")
+    @PostMapping("/api/auth/authorize")
     @Operation(summary = "社交用户授权,获取code")
     public R<String> authorize(@Validated @RequestBody AuthAuthorizeBo bo) {
         return R.success(authService.authorize(bo));
     }
 
-    @PostMapping("/api/member/auth/accessToken")
+    @PostMapping("/api/auth/accessToken")
     @Operation(summary = "根据code获取第三方访问令牌")
     public R<AuthLoginVo> accessToken(@Validated @RequestBody AuthAccessToken bo) {
         return R.success(authService.accessToken(bo));
     }
 
     @RateLimiter(key = "SmsSend", count = 1, limitType = LimitTypeEnum.IP)
-    @PostMapping("/api/member/auth/sendSms")
+    @PostMapping("/api/auth/sendSms")
     @Operation(summary = "发送手机验证码")
     public R<Boolean> sendSms(@RequestBody @Valid SmsSendBo bo) {
         authService.sendSms(bo);
         return R.success(true);
     }
 
-    @PostMapping("/api/member/auth/smsLogin")
+    @PostMapping("/api/auth/smsLogin")
     @Operation(summary = "使用手机 + 验证码登录")
     public R<AuthLoginVo> smsLogin(@Validated @RequestBody SmsLoginBo bo) {
         return R.success(authService.smsLogin(bo));

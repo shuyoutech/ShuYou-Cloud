@@ -22,4 +22,8 @@ public class AuthAuthorizeBo implements Serializable {
     @Schema(description = "社交平台的类型，参见 UserSocialTypeEnum 枚举值")
     private String socialType;
 
+    @NotEmpty(message = "回调后缀地址不能为空")
+    @Schema(description = "回调后缀")
+    private String callBackSuffix;
+
 }

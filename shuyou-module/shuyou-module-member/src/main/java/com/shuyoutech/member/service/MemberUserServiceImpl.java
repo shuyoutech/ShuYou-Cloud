@@ -152,8 +152,8 @@ public class MemberUserServiceImpl extends SuperServiceImpl<MemberUserEntity, Me
             socialUser.setSocialType(socialType);
             socialUser.setOpenid(openId);
             socialUser.setAccessToken(token.getAccessToken());
-            socialUser.setNickname(socialUser.getNickname());
-            socialUser.setAvatar(socialUser.getAvatar());
+            socialUser.setNickname(userInfo.getNickname());
+            socialUser.setAvatar(userInfo.getAvatar());
             MongoUtils.save(socialUser);
 
             memberUser = new MemberUserEntity();
@@ -179,6 +179,8 @@ public class MemberUserServiceImpl extends SuperServiceImpl<MemberUserEntity, Me
             return MongoUtils.save(memberUser);
         } else {
             Update update = new Update();
+            update.set("nickname", userInfo.getNickname());
+            update.set("avatar", userInfo.getAvatar());
             update.set("loginDate", new Date());
             update.set("loginIp", JakartaServletUtils.getClientIP(JakartaServletUtils.getRequest()));
             List<MemberUserBind> binds = memberUser.getBinds();
@@ -200,9 +202,6 @@ public class MemberUserServiceImpl extends SuperServiceImpl<MemberUserEntity, Me
         MemberUserEntity user = this.getById(userId);
         if (null == user) {
             throw new BusinessException("获取用户信息失败!");
-        }
-        if (StringUtils.isNotBlank(user.getAvatar())) {
-            user.setAvatar(remoteSystemService.generatedUrl(user.getAvatar()));
         }
         return user;
     }

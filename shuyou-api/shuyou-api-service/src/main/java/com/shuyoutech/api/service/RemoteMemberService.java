@@ -10,7 +10,7 @@ import com.shuyoutech.api.model.SocialUserInfo;
  **/
 public interface RemoteMemberService {
 
-    String authorize(String socialType);
+    String authorize(String socialType, String callBackSuffix);
 
     SocialUserInfo login(AuthAccessToken bo);
 

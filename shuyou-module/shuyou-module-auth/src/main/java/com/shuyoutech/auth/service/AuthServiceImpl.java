@@ -84,7 +84,7 @@ public class AuthServiceImpl implements AuthService {
         parameter.setExtra(CommonConstants.USER_TYPE, UserTypeEnum.MEMBER.getValue());
         StpUtil.login(memberUser.getId(), parameter);
         StpUtil.getTokenSession().set(AuthConstants.LOGIN_USER, memberUser);
-   //     RedisUtils.delete(CAPTCHA_SMS_KEY + bo.getMobile());
+       // RedisUtils.delete(CAPTCHA_SMS_KEY + bo.getMobile());
         return AuthLoginVo.builder() //
                 .userId(memberUser.getId()) //
                 .accessToken(StpUtil.getTokenValue()) //
@@ -99,7 +99,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String authorize(AuthAuthorizeBo bo) {
-        return remoteMemberService.authorize(bo.getSocialType());
+        return remoteMemberService.authorize(bo.getSocialType(), bo.getCallBackSuffix());
     }
 
     @Override

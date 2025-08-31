@@ -33,7 +33,7 @@ public class SocialClientWechatMiniProgramRequest implements SocialClientRequest
     }
 
     @Override
-    public String authorize(String state) {
+    public String authorize(String state, String callBackSuffix) {
         return "";
     }
 

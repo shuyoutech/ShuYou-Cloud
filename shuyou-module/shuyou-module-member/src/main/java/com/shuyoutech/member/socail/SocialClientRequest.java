@@ -13,10 +13,11 @@ public interface SocialClientRequest {
     /**
      * 返回带{@code state}参数的授权url，授权回调时会带上这个{@code state}
      *
-     * @param state 验证授权流程的参数，可以防止csrf
+     * @param state          验证授权流程的参数，可以防止csrf
+     * @param callBackSuffix 回调地址后缀
      * @return 返回授权地址
      */
-    String authorize(String state);
+    String authorize(String state, String callBackSuffix);
 
     /**
      * 获取access token

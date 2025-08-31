@@ -23,9 +23,9 @@ import org.springframework.stereotype.Service;
 public class RemoteMemberServiceImpl implements RemoteMemberService {
 
     @Override
-    public String authorize(String socialType) {
+    public String authorize(String socialType, String callBackSuffix) {
         SocialClientRequest socialClientRequest = socialClientRequestFactory.getAuthRequest(socialType);
-        return socialClientRequest.authorize(IdUtil.fastSimpleUUID());
+        return socialClientRequest.authorize(IdUtil.fastSimpleUUID(), callBackSuffix);
     }
 
     @Override

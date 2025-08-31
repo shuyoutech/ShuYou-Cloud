@@ -29,13 +29,13 @@ public class SocialClientWechatOpenRequest implements SocialClientRequest {
     }
 
     @Override
-    public String authorize(String state) {
+    public String authorize(String state, String callBackSuffix) {
         // 网站应用微信登录 https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Wechat_Login.html
         Map<String, Object> paramMap = MapUtil.newHashMap();
         // 微信开放平台 appId
         paramMap.put("appid", socialClient.getClientId());
         // 重定向地址 请使用urlEncode对链接进行处理
-        paramMap.put("redirect_uri", socialClient.getRedirectUri());
+        paramMap.put("redirect_uri", socialClient.getRedirectUri() + callBackSuffix);
         // 响应类型 填code
         paramMap.put("response_type", "code");
         // 应用授权作用域，拥有多个作用域用逗号（,）分隔，网页应用目前仅填写snsapi_login
