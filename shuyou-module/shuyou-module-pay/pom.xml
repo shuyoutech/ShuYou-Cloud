@@ -11,6 +11,10 @@
     </parent>
 
     <artifactId>shuyou-module-pay</artifactId>
+    <name>ShuYou Module Pay</name>
+    <description>ShuYou Module Pay</description>
+    <packaging>jar</packaging>
+    <url>https://github.com/shuyoutech/ShuYou-Cloud</url>
 
     <dependencies>
         <dependency>

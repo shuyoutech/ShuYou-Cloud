@@ -25,6 +25,8 @@
         <module>shuyou-module-pay</module>
         <module>shuyou-module-api</module>
         <module>shuyou-module-bbs</module>
+        <module>shuyou-module-crawler</module>
+        <module>shuyou-module-game</module>
     </modules>
 
 </project>

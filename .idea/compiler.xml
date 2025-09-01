@@ -24,17 +24,19 @@
           <entry name="$USER_HOME$/repository/org/projectlombok/lombok-mapstruct-binding/0.2.0/lombok-mapstruct-binding-0.2.0.jar" />
         </processorPath>
         <module name="shuyou-api-model" />
-        <module name="shuyou-api-service" />
-        <module name="shuyou-module-bbs" />
         <module name="shuyou-module-pay" />
-        <module name="shuyou-module-api" />
+        <module name="shuyou-module-crawler" />
         <module name="shuyou-module-member" />
         <module name="shuyou-common-websocket" />
         <module name="shuyou-module-aigc" />
         <module name="shuyou-module-system" />
         <module name="shuyou-common-web" />
-        <module name="shuyou-module-notice" />
         <module name="shuyou-module-auth" />
+        <module name="shuyou-api-service" />
+        <module name="shuyou-module-bbs" />
+        <module name="shuyou-module-api" />
+        <module name="shuyou-module-game" />
+        <module name="shuyou-module-notice" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="17" />
@@ -53,6 +55,8 @@
       <module name="shuyou-module-api" options="-parameters" />
       <module name="shuyou-module-auth" options="-parameters" />
       <module name="shuyou-module-bbs" options="-parameters" />
+      <module name="shuyou-module-crawler" options="-parameters" />
+      <module name="shuyou-module-game" options="-parameters" />
       <module name="shuyou-module-member" options="-parameters" />
       <module name="shuyou-module-notice" options="-parameters" />
       <module name="shuyou-module-pay" options="-parameters" />

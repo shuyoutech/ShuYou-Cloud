@@ -1,8 +1,6 @@
 package com.shuyoutech.bbs.domain.entity;
 
-import com.shuyoutech.bbs.domain.vo.GameVo;
 import com.shuyoutech.common.mongodb.model.BaseEntity;
-import io.github.linpeilie.annotations.AutoMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,7 +18,6 @@ import java.util.Date;
 @Accessors(chain = true)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@AutoMapper(target = GameVo.class)
 @Document(collection = "bbs_post")
 @Schema(description = "帖子表")
 public class BbsPostEntity extends BaseEntity<BbsPostEntity> {
