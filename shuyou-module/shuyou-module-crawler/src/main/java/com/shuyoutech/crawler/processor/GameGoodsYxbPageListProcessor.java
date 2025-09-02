@@ -43,7 +43,7 @@ public class GameGoodsYxbPageListProcessor implements PageProcessor {
     public void process(Page page) {
         String platformId = page.getRequest().getExtra("platformId");
         if (GamePlatformEnum.PLATFORM_GMM.getValue().equals(platformId)) {
-            dynamicParseGmmYxb(page);
+            dynamicParseGmmNewYxb(page);
         } else if (GamePlatformEnum.PLATFORM_5173.getValue().equals(platformId)) {
             dynamicParse5173Yxb(page);
         } else if (GamePlatformEnum.PLATFORM_DD373.getValue().equals(platformId)) {
@@ -148,6 +148,60 @@ public class GameGoodsYxbPageListProcessor implements PageProcessor {
         if (StringUtils.isNotBlank(recordId)) {
             updateCrawlerRecord(recordId, insertList.size());
         } else if (StringUtils.isNotBlank(id)) {
+            RedisUtils.listRightPushAll(GamePlatformEnum.PLATFORM_GMM.getValue() + StringConstants.HYPHEN + id, insertList);
+        }
+        if (CollectionUtils.isNotEmpty(insertList)) {
+            updateGameGoodsUnitPrice(insertList.getFirst());
+        }
+    }
+
+    private void dynamicParseGmmNewYxb(Page page) {
+        Html html = page.getHtml();
+        Request request = page.getRequest();
+        String recordId = request.getExtra("recordId");
+        List<Selectable> nodes = html.xpath("//ul[@id='goods-list-ajax']/li").nodes();
+        if (CollectionUtils.isEmpty(nodes)) {
+            updateCrawlerRecord(recordId, 0);
+            return;
+        }
+        GameEntity game = request.getExtra("game");
+        CrawlerGameEntity crawler = request.getExtra("crawler");
+        String gameArea = crawler.getGameArea();
+        String gameServer = crawler.getGameServer();
+        String gameRace = crawler.getGameRace();
+        String gameId = game.getId();
+        String id = request.getExtra("id");
+        List<GameGoodsEntity> insertList = CollectionUtils.newArrayList();
+        GameGoodsEntity goods;
+        for (Selectable node : nodes) {
+            goods = new GameGoodsEntity();
+            goods.setStatus("1");
+            goods.setPlatformId(GamePlatformEnum.PLATFORM_GMM.getValue());
+            goods.setPlatformName(GamePlatformEnum.PLATFORM_GMM.getLabel());
+            goods.setGoodsType(GameGoodsTypeEnum.GOODS_TYPE_YXB.getLabel());
+            goods.setGameId(gameId);
+            goods.setGameName(game.getGameName());
+            goods.setGameArea(gameArea);
+            goods.setGameServer(gameServer);
+            goods.setGameRace(gameRace);
+            goods.setBookId(node.xpath("//li[@class='media']/@data-bookid").toString());
+            goods.setId(genSm3Id(GamePlatformEnum.PLATFORM_GMM.getValue(), gameId, goods.getBookId()));
+            goods.setTitle(WebmagicUtils.getTextTrim(node.xpath("//h4[@class='media-heading']")));
+            goods.setSellType(WebmagicUtils.getTextTrim(node.xpath("//h4[@class='media-heading']")).contains("担保") ? "担保" : "寄售");
+            goods.setGoodsUrl("https://www.gmmsj.com" + node.xpath("//div[@class='media-body row']/a/@href").toString());
+            goods.setPrice(Double.parseDouble(WebmagicUtils.getTextTrim(node.xpath("//i[@data-bind='text:price']"))));
+            String textPriceStr = WebmagicUtils.getTextTrim(node.xpath("//p[@data-bind='text:price']"));
+            goods.setPriceHint(textPriceStr + ";" + WebmagicUtils.getTextTrim(node.xpath("//p[@data-bind='text:extra_hint2']")));
+            if (StringUtils.isNotBlank(textPriceStr) && textPriceStr.contains("1元=")) {
+                goods.setUnitPrice(Double.parseDouble(textPriceStr.replaceAll("1元=", "").replaceAll("万基纳", "")));
+            }
+            goods.setAmount(NumberUtils.round(NumberUtils.mul(goods.getUnitPrice(), goods.getPrice()), 0).doubleValue());
+            goods.setGoodsStock(Integer.parseInt(WebmagicUtils.getTextTrim(node.xpath("//p[@data-bind='html:avail_qty']"))));
+        }
+        if (StringUtils.isNotBlank(recordId)) {
+            updateCrawlerRecord(recordId, insertList.size());
+        } else if (StringUtils.isNotBlank(id)) {
+            log.info("dynamicParseGmmNewYxb ============== crawlerId:{}, count:{}", crawler.getId(), insertList.size());
             RedisUtils.listRightPushAll(GamePlatformEnum.PLATFORM_GMM.getValue() + StringConstants.HYPHEN + id, insertList);
         }
         if (CollectionUtils.isNotEmpty(insertList)) {
