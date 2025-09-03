@@ -8,8 +8,6 @@ import io.github.linpeilie.annotations.AutoMappers;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
@@ -19,10 +17,8 @@ import java.util.Date;
  * @date 2025-07-15 00:09
  **/
 @Data
-@Accessors(chain = true)
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@AutoMappers({@AutoMapper(target = SysFileVo.class), @AutoMapper(target = RemoteSysFile.class)})
+@AutoMappers({@AutoMapper(target = SysFileVo.class), @AutoMapper(target = RemoteSysFile.class), @AutoMapper(target = SysAttachmentEntity.class)})
 @Schema(description = "文件表")
 @Document(collection = "sys_file")
 public class SysFileEntity extends BaseEntity<SysFileEntity> {
@@ -60,10 +56,10 @@ public class SysFileEntity extends BaseEntity<SysFileEntity> {
     @Schema(description = "桶名称")
     private String bucketName;
 
-    @Schema(description = "oss文件key")
-    private String ossFileKey;
+    @Schema(description = "云文件key")
+    private String fileKey;
 
-    @Schema(description = "预览url")
-    private String previewUrl;
+    @Schema(description = "文件url")
+    private String fileUrl;
 
 }

@@ -4,8 +4,6 @@ import com.shuyoutech.common.mongodb.model.BaseVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 
 import java.util.Date;
 
@@ -14,8 +12,6 @@ import java.util.Date;
  * @date 2025-08-13 23:49:40
  **/
 @Data
-@Accessors(chain = true)
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
 @Schema(description = "通知记录显示类")
 public class NoticeRecordVo extends BaseVo {

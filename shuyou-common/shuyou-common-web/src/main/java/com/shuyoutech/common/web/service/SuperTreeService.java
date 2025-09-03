@@ -1,7 +1,7 @@
 package com.shuyoutech.common.web.service;
 
-import com.shuyoutech.common.mongodb.model.BaseEntity;
-import com.shuyoutech.common.mongodb.model.BaseVo;
+import com.shuyoutech.common.mongodb.model.TreeEntity;
+import com.shuyoutech.common.mongodb.model.TreeVo;
 import com.shuyoutech.common.web.model.PageQuery;
 import com.shuyoutech.common.web.model.PageResult;
 import org.springframework.data.mongodb.core.query.Query;
@@ -15,7 +15,7 @@ import java.util.function.Function;
  * @author YangChao
  * @date 2025-07-08 09:37
  **/
-public interface SuperTreeService<Entity extends BaseEntity<Entity>, VO extends BaseVo> {
+public interface SuperTreeService<Entity extends TreeEntity<Entity>, VO extends TreeVo> {
 
     Class<Entity> getEntityClass();
 
@@ -23,27 +23,27 @@ public interface SuperTreeService<Entity extends BaseEntity<Entity>, VO extends 
 
     <SaveVO> Entity save(SaveVO saveVO);
 
-    Collection<Entity> saveBatch(Collection<Entity> entityList);
+    <SaveVO> Collection<Entity> saveBatch(Collection<SaveVO> entityList);
 
     <UpdateVO> boolean patch(UpdateVO updateVO);
 
     <UpdateVO> boolean update(UpdateVO updateVO);
 
-    void updateBatch(Collection<Entity> entityList);
+    <UpdateVO> void updateBatch(Collection<UpdateVO> entityList);
 
-    void patchBatch(Collection<Entity> entityList);
+    <UpdateVO> void patchBatch(Collection<UpdateVO> entityList);
 
-    boolean deleteById(String id);
+    boolean deleteById(Long id);
 
-    boolean deleteByIds(Collection<String> ids);
+    boolean deleteByIds(Collection<Long> ids);
 
-    Entity getById(String id);
+    Entity getById(Long id);
 
-    List<Entity> getByIds(Collection<String> ids);
+    List<Entity> getByIds(Collection<Long> ids);
 
-    <K> Map<K, Entity> getByIds(Collection<String> ids, Function<Entity, K> keyMapper);
+    <K> Map<K, Entity> getByIds(Collection<Long> ids, Function<Entity, K> keyMapper);
 
-    <K, V> Map<K, V> getByIds(Collection<String> ids, Function<Entity, K> keyMapper, Function<Entity, V> valueMapper);
+    <K, V> Map<K, V> getByIds(Collection<Long> ids, Function<Entity, K> keyMapper, Function<Entity, V> valueMapper);
 
     <QueryVO> Query buildQuery(QueryVO queryVO);
 
@@ -67,6 +67,6 @@ public interface SuperTreeService<Entity extends BaseEntity<Entity>, VO extends 
 
     Entity modelToEntity(VO vo);
 
-    List<VO> buildTree(String parentId, List<VO> list);
+    List<VO> buildTree(Long parentId, List<VO> list);
 
 }

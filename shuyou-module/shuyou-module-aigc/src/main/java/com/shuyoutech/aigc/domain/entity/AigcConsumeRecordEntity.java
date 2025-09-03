@@ -4,8 +4,6 @@ import com.shuyoutech.common.mongodb.model.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -19,8 +17,6 @@ import static org.springframework.data.mongodb.core.mapping.FieldType.DECIMAL128
  * @date 2025-05-10 09:57:41
  **/
 @Data
-@Accessors(chain = true)
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Document(collection = "aigc_consume_record")
 @Schema(description = "消费记录表类")

@@ -4,8 +4,6 @@ import com.shuyoutech.common.mongodb.model.BaseVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -15,8 +13,6 @@ import java.util.Date;
  * @date 2025-07-10 12:39:57
  **/
 @Data
-@Accessors(chain = true)
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
 @Schema(description = "游戏积分活动显示类")
 public class GamePointEventVo extends BaseVo {

@@ -54,10 +54,10 @@ public class SysFileBo implements Serializable {
     @Schema(description = "桶名称")
     private String bucketName;
 
-    @Schema(description = "oss文件key")
-    private String ossFileKey;
+    @Schema(description = "云文件key")
+    private String fileKey;
 
-    @Schema(description = "预览url")
-    private String previewUrl;
+    @Schema(description = "文件url")
+    private String fileUrl;
 
 }

@@ -6,8 +6,6 @@ import com.shuyoutech.common.mongodb.model.BaseVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 
 import java.util.Date;
 
@@ -16,8 +14,6 @@ import java.util.Date;
  * @date 2025-05-12 10:30:35
  **/
 @Data
-@Accessors(chain = true)
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
 @Schema(description = "知识库显示类")
 public class AigcKnowledgeVo extends BaseVo {

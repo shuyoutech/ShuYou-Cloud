@@ -147,20 +147,25 @@ public class GameServiceImpl extends SuperServiceImpl<GameEntity, GameVo> implem
             return list;
         }
         Map<String, JSONObject> map = RedisUtils.hashEntries(BbsConstants.GAME_GOODS_UNIT_PRICE_KEY + gameId);
-        log.error("latestUnitPrice =============== redis key:{}无数据", BbsConstants.GAME_GOODS_UNIT_PRICE_KEY + gameId);
         if (MapUtils.isEmpty(map)) {
+            log.error("latestUnitPrice =============== redis key:{}无数据", BbsConstants.GAME_GOODS_UNIT_PRICE_KEY + gameId);
             return list;
         }
         String subBefore;
         Map<String, GameGoodsEntity> priceMap = MapUtils.newHashMap();
         for (String key : map.keySet()) {
             GameGoodsEntity gameGoods = JSON.parseObject(JSON.toJSONString(map.get(key)), GameGoodsEntity.class);
+            if (null == gameGoods.getUnitPrice()) {
+                gameGoods.setUnitPrice(0D);
+            }
             subBefore = StringUtils.subBefore(key, StringConstants.HYPHEN, true);
             if (!priceMap.containsKey(subBefore)) {
                 priceMap.put(subBefore, gameGoods);
                 continue;
             }
-            if (priceMap.containsKey(subBefore) && priceMap.get(subBefore).getUnitPrice() < gameGoods.getUnitPrice()) {
+            if (priceMap.containsKey(subBefore) //
+                    && priceMap.get(subBefore).getUnitPrice() != null && gameGoods.getUnitPrice() != null //
+                    && priceMap.get(subBefore).getUnitPrice() < gameGoods.getUnitPrice()) {
                 priceMap.put(subBefore, gameGoods);
             }
         }

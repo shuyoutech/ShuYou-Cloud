@@ -13,11 +13,8 @@ import java.io.Serializable;
  **/
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "shuyoutech.storage")
-public class FileStorageProperties implements Serializable {
-
-    @Schema(description = "上传目录")
-    private String uploadDir = "/usr/share/nginx/html/upload";
+@ConfigurationProperties(prefix = "shuyoutech.aliyun.oss")
+public class OssProperties implements Serializable {
 
     @Schema(description = "服务地址")
     private String endpoint;
@@ -30,8 +27,5 @@ public class FileStorageProperties implements Serializable {
 
     @Schema(description = "存储桶名称")
     private String bucketName;
-
-    @Schema(description = "预览前缀")
-    private String previewPrefix = "https://www.shuyoutech.com/shuyou-bucket";
 
 }

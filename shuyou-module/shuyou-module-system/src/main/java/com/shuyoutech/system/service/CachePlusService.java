@@ -75,7 +75,7 @@ public interface CachePlusService {
      * @param orgIds 机构IDS
      * @return 机构名称
      */
-    Map<String, String> translateOrgName(Set<String> orgIds);
+    Map<Long, String> translateOrgName(Set<Long> orgIds);
 
     /**
      * 翻译角色名称

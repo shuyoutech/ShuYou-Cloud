@@ -70,13 +70,13 @@ public class SysMenuServiceImpl extends SuperTreeServiceImpl<SysMenuEntity, SysM
     }
 
     @Override
-    public SysMenuVo detail(String id) {
+    public SysMenuVo detail(Long id) {
         SysMenuEntity entity = this.getById(id);
         return convertTo(entity);
     }
 
     @Override
-    public String saveSysMenu(SysMenuBo bo) {
+    public Long saveSysMenu(SysMenuBo bo) {
         SysMenuEntity entity = this.save(bo);
         return null == entity ? null : entity.getId();
     }
@@ -87,12 +87,12 @@ public class SysMenuServiceImpl extends SuperTreeServiceImpl<SysMenuEntity, SysM
     }
 
     @Override
-    public boolean deleteSysMenu(List<String> ids) {
+    public boolean deleteSysMenu(List<Long> ids) {
         return this.deleteByIds(ids);
     }
 
     @Override
-    public boolean statusSysMenu(String id, String status) {
+    public boolean statusSysMenu(Long id, String status) {
         SysMenuEntity entity = this.getById(id);
         if (null == entity) {
             return false;
@@ -112,10 +112,10 @@ public class SysMenuServiceImpl extends SuperTreeServiceImpl<SysMenuEntity, SysM
         List<TreeOption> list = CollectionUtil.newArrayList();
         for (SysMenuEntity menu : menuList) {
             list.add(TreeOption.builder() //
-                    .parentId(menu.getParentId()) //
+                    .parentId(String.valueOf(menu.getParentId())) //
                     .label(menu.getMenuName()) //
                     .type(menu.getMenuType()) //
-                    .value(menu.getId()) //
+                    .value(String.valueOf(menu.getId())) //
                     .sort(menu.getMenuSort()) //
                     .extra(BeanUtils.beanToMap(menu)) //
                     .build());
@@ -124,12 +124,13 @@ public class SysMenuServiceImpl extends SuperTreeServiceImpl<SysMenuEntity, SysM
         treeNodeConfig.setWeightKey("sort");
         treeNodeConfig.setIdKey("value");
         treeNodeConfig.setNameKey("label");
-        return TreeUtils.build(list, "0", treeNodeConfig, (treeOption, tree) -> {
-            tree.setId(treeOption.getValue()).setParentId(treeOption.getParentId())//
-                    .setName(treeOption.getLabel())//
-                    .setWeight(treeOption.getSort())//
-                    .putExtra("menu", treeOption.getExtra());
-        });
+        return TreeUtils.build(list, "0", treeNodeConfig, (treeOption, tree) -> //
+                tree.setId(treeOption.getValue()) //
+                        .setParentId(treeOption.getParentId())//
+                        .setName(treeOption.getLabel())//
+                        .setWeight(treeOption.getSort())//
+                        .putExtra("menu", treeOption.getExtra())//
+        );
     }
 
 }

@@ -8,10 +8,8 @@ import com.shuyoutech.common.core.constant.StringConstants;
 import com.shuyoutech.common.core.exception.BusinessException;
 import com.shuyoutech.common.core.util.*;
 import com.shuyoutech.common.mongodb.MongoUtils;
-import com.shuyoutech.common.mongodb.model.BaseEntity;
-import com.shuyoutech.common.mongodb.model.BaseVo;
-import com.shuyoutech.common.redis.constant.CacheConstants;
-import com.shuyoutech.common.redis.util.RedisUtils;
+import com.shuyoutech.common.mongodb.model.TreeEntity;
+import com.shuyoutech.common.mongodb.model.TreeVo;
 import com.shuyoutech.common.satoken.util.AuthUtils;
 import com.shuyoutech.common.web.enums.QuerySortEnum;
 import com.shuyoutech.common.web.model.PageQuery;
@@ -36,7 +34,7 @@ import static com.shuyoutech.common.core.constant.EntityConstants.*;
  * @date 2025-07-08 09:39
  **/
 @Slf4j
-public class SuperTreeServiceImpl<Entity extends BaseEntity<Entity>, VO extends BaseVo> implements SuperTreeService<Entity, VO> {
+public class SuperTreeServiceImpl<Entity extends TreeEntity<Entity>, VO extends TreeVo> implements SuperTreeService<Entity, VO> {
 
     protected Class<Entity> entityClass = getEntityClass();
     protected Class<VO> voClass = getVoClass();
@@ -66,16 +64,20 @@ public class SuperTreeServiceImpl<Entity extends BaseEntity<Entity>, VO extends 
     }
 
     @Override
-    public Collection<Entity> saveBatch(Collection<Entity> entityList) {
+    public <SaveVO> Collection<Entity> saveBatch(Collection<SaveVO> entityList) {
+        Collection<Entity> list = CollectionUtils.newArrayList();
         if (CollectionUtils.isEmpty(entityList)) {
-            return null;
+            return list;
         }
-        for (Entity entity : entityList) {
+        Entity entity;
+        for (SaveVO save : entityList) {
+            entity = MapstructUtils.convert(save, getEntityClass());
             buildTreeEntity(entity);
             buildCreate(entity);
             buildUpdate(entity);
+            list.add(entity);
         }
-        return MongoUtils.saveBatch(entityList);
+        return MongoUtils.saveBatch(list);
     }
 
     @Override
@@ -84,7 +86,7 @@ public class SuperTreeServiceImpl<Entity extends BaseEntity<Entity>, VO extends 
         if (null == entity) {
             throw new BusinessException("entity is null");
         }
-        if (StringUtils.isBlank(entity.getId())) {
+        if (null == entity.getId()) {
             throw new BusinessException("id is null");
         }
         buildUpdate(entity);
@@ -97,7 +99,7 @@ public class SuperTreeServiceImpl<Entity extends BaseEntity<Entity>, VO extends 
         if (null == entity) {
             throw new BusinessException("entity is null");
         }
-        if (StringUtils.isBlank(entity.getId())) {
+        if (null == entity.getId()) {
             throw new BusinessException("id is null");
         }
         buildUpdate(entity);
@@ -105,31 +107,39 @@ public class SuperTreeServiceImpl<Entity extends BaseEntity<Entity>, VO extends 
     }
 
     @Override
-    public void updateBatch(Collection<Entity> entityList) {
-        for (Entity entity : entityList) {
+    public <UpdateVO> void updateBatch(Collection<UpdateVO> entityList) {
+        Collection<Entity> list = CollectionUtils.newArrayList();
+        Entity entity;
+        for (UpdateVO update : entityList) {
+            entity = MapstructUtils.convert(update, getEntityClass());
             buildUpdate(entity);
+            list.add(entity);
         }
-        MongoUtils.updateBatch(entityList);
+        MongoUtils.updateBatch(list);
     }
 
     @Override
-    public void patchBatch(Collection<Entity> entityList) {
-        for (Entity entity : entityList) {
+    public <UpdateVO> void patchBatch(Collection<UpdateVO> entityList) {
+        Collection<Entity> list = CollectionUtils.newArrayList();
+        Entity entity;
+        for (UpdateVO update : entityList) {
+            entity = MapstructUtils.convert(update, getEntityClass());
             buildUpdate(entity);
+            list.add(entity);
         }
-        MongoUtils.patchBatch(entityList);
+        MongoUtils.patchBatch(list);
     }
 
     @Override
-    public boolean deleteById(String id) {
-        if (StringUtils.isBlank(id)) {
+    public boolean deleteById(Long id) {
+        if (null == id) {
             return false;
         }
         return MongoUtils.deleteById(id, entityClass) > 0;
     }
 
     @Override
-    public boolean deleteByIds(Collection<String> ids) {
+    public boolean deleteByIds(Collection<Long> ids) {
         if (CollectionUtils.isEmpty(ids)) {
             return false;
         }
@@ -137,15 +147,15 @@ public class SuperTreeServiceImpl<Entity extends BaseEntity<Entity>, VO extends 
     }
 
     @Override
-    public Entity getById(String id) {
-        if (StringUtils.isBlank(id)) {
+    public Entity getById(Long id) {
+        if (null == id) {
             return null;
         }
         return MongoUtils.getById(id, entityClass);
     }
 
     @Override
-    public List<Entity> getByIds(Collection<String> ids) {
+    public List<Entity> getByIds(Collection<Long> ids) {
         if (CollectionUtils.isEmpty(ids)) {
             return null;
         }
@@ -153,12 +163,12 @@ public class SuperTreeServiceImpl<Entity extends BaseEntity<Entity>, VO extends 
     }
 
     @Override
-    public <K> Map<K, Entity> getByIds(Collection<String> ids, Function<Entity, K> keyMapper) {
+    public <K> Map<K, Entity> getByIds(Collection<Long> ids, Function<Entity, K> keyMapper) {
         return getByIds(ids, keyMapper, Function.identity());
     }
 
     @Override
-    public <K, V> Map<K, V> getByIds(Collection<String> ids, Function<Entity, K> keyMapper, Function<Entity, V> valueMapper) {
+    public <K, V> Map<K, V> getByIds(Collection<Long> ids, Function<Entity, K> keyMapper, Function<Entity, V> valueMapper) {
         Map<K, V> map = MapUtils.newHashMap();
         if (CollectionUtils.isEmpty(ids)) {
             return map;
@@ -262,36 +272,48 @@ public class SuperTreeServiceImpl<Entity extends BaseEntity<Entity>, VO extends 
     }
 
     @Override
-    public List<VO> buildTree(String parentId, List<VO> list) {
+    public List<VO> buildTree(Long parentId, List<VO> list) {
         return list.stream().filter(f -> parentId.equals(ReflectUtils.getFieldValue(f, PARENT_ID))).peek(m -> {
             List<VO> children = buildTree(m.getId(), list);
             ReflectUtils.setFieldValue(m, CHILDREN, children);
         }).collect(Collectors.toList());
     }
 
+    private long getNextId() {
+        Query query = new Query();
+        query.with(Sort.by(Sort.Direction.DESC, NOSQL_ID));
+        Entity e = MongoUtils.selectOne(query, entityClass);
+        if (null == e) {
+            return 1;
+        }
+        return e.getId() + 1;
+    }
+
     protected void buildTreeEntity(Entity entity) {
-        Object parentObj = ReflectUtils.getFieldValue(entity, PARENT_ID);
-        String zero = String.valueOf(NumberConstants.ZERO);
-        String parentId = (null == parentObj || StringUtils.isBlank(parentObj.toString())) ? zero : StringUtils.toString(parentObj);
-        long treeId = RedisUtils.incr(CacheConstants.TREE_KEY + entityClass.getName());
-        // 父节点为0
+        long zero = NumberConstants.ZERO;
+        long parentId = null == entity.getParentId() ? zero : entity.getParentId();
+        long id = getNextId();
         String treePath;
         int treeLevel;
-        if (zero.equals(parentId)) {
-            treePath = zero + StringConstants.HYPHEN + treeId;
+        long rootId;
+        if (zero == parentId) {
+            treePath = String.valueOf(id);
             treeLevel = 1;
+            rootId = id;
         } else {
             Entity parent = MongoUtils.getById(parentId, entityClass);
             if (null == parent) {
                 throw new BusinessException(StringUtils.format("parentId:{} 无此记录", parentId));
             }
-            treePath = ReflectUtils.getFieldValue(parent, TREE_PATH) + StringConstants.HYPHEN + treeId;
-            treeLevel = Integer.parseInt(ReflectUtils.getFieldValue(parent, TREE_LEVEL).toString()) + 1;
+            treePath = parent.getTreePath() + StringConstants.HYPHEN + id;
+            treeLevel = parent.getTreeLevel() + 1;
+            rootId = parent.getRootId();
         }
-        entity.setId(String.valueOf(treeId));
-        ReflectUtils.setFieldValue(entity, PARENT_ID, parentId);
-        ReflectUtils.setFieldValue(entity, TREE_PATH, treePath);
-        ReflectUtils.setFieldValue(entity, TREE_LEVEL, treeLevel);
+        entity.setId(id);
+        entity.setRootId(rootId);
+        entity.setParentId(parentId);
+        entity.setTreeLevel(treeLevel);
+        entity.setTreePath(treePath);
     }
 
     private void buildCreate(Entity entity) {

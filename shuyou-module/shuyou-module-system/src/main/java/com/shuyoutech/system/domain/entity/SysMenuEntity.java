@@ -1,13 +1,12 @@
 package com.shuyoutech.system.domain.entity;
 
 import com.shuyoutech.common.core.enums.StatusEnum;
-import com.shuyoutech.common.mongodb.model.BaseEntity;
+import com.shuyoutech.common.mongodb.model.TreeEntity;
 import com.shuyoutech.system.domain.vo.SysMenuVo;
 import io.github.linpeilie.annotations.AutoMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -15,27 +14,17 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @date 2025-07-07 19:53
  **/
 @Data
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @AutoMapper(target = SysMenuVo.class)
 @Schema(description = "菜单表")
 @Document(collection = "sys_menu")
-public class SysMenuEntity extends BaseEntity<SysMenuEntity> {
+public class SysMenuEntity extends TreeEntity<SysMenuEntity> {
 
     /**
      * 枚举 {@link StatusEnum}
      */
     @Schema(description = "状态:0-停用,1-正常")
     private String status;
-
-    @Schema(description = "父级ID")
-    private String parentId;
-
-    @Schema(description = "树结构编码,用于快速查找,用-分割")
-    private String treePath;
-
-    @Schema(description = "树形层级")
-    private Integer treeLevel;
 
     @Schema(description = "菜单类型:1-目录,2-菜单,3-按钮,4-外链")
     private String menuType;

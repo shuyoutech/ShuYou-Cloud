@@ -13,7 +13,7 @@ import com.shuyoutech.common.web.model.PageQuery;
 import com.shuyoutech.common.web.model.PageResult;
 import com.shuyoutech.common.web.service.SuperServiceImpl;
 import com.shuyoutech.common.web.util.JakartaServletUtils;
-import com.shuyoutech.system.config.FileStorageProperties;
+import com.shuyoutech.system.config.MinioProperties;
 import com.shuyoutech.system.domain.bo.SysFileBo;
 import com.shuyoutech.system.domain.entity.SysFileEntity;
 import com.shuyoutech.system.domain.vo.SysFileVo;
@@ -46,17 +46,17 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class SysFileServiceImpl extends SuperServiceImpl<SysFileEntity, SysFileVo> implements SysFileService {
 
-    private MinioClient minioClient;
+    protected static MinioClient minioClient;
     private String bucketName = null;
     String previewPrefix = null;
 
     @PostConstruct
     public void init() {
-        String accessKey = fileStorageProperties.getAccessKey();
-        String secretAccessKey = fileStorageProperties.getSecretKey();
-        String endpoint = fileStorageProperties.getEndpoint();
-        bucketName = fileStorageProperties.getBucketName();
-        previewPrefix = fileStorageProperties.getPreviewPrefix();
+        String accessKey = minioProperties.getAccessKey();
+        String secretAccessKey = minioProperties.getSecretKey();
+        String endpoint = minioProperties.getEndpoint();
+        bucketName = minioProperties.getBucketName();
+        previewPrefix = minioProperties.getPreviewPrefix();
         minioClient = MinioClient.builder().endpoint(endpoint).credentials(accessKey, secretAccessKey).build();
     }
 
@@ -107,8 +107,8 @@ public class SysFileServiceImpl extends SuperServiceImpl<SysFileEntity, SysFileV
         long fileSize = file.getSize();
         Date date = new Date();
         String fileName = StringUtils.format("{}.{}", IdUtil.getSnowflakeNextIdStr(), fileType);
-        String ossFileKey = StringUtils.format("{}/{}", DateUtils.format(date, DateConstants.PURE_DATE_FORMAT), fileName);
-        String filePath = StringUtils.format("{}/{}", fileStorageProperties.getUploadDir(), ossFileKey);
+        String fileKey = StringUtils.format("{}/{}", DateUtils.format(date, DateConstants.PURE_DATE_FORMAT), fileName);
+        String filePath = StringUtils.format("{}/{}", minioProperties.getUploadDir(), fileKey);
         try {
             SysFileEntity sysFile = new SysFileEntity();
             sysFile.setId(IdUtil.simpleUUID());
@@ -117,7 +117,7 @@ public class SysFileServiceImpl extends SuperServiceImpl<SysFileEntity, SysFileV
             sysFile.setCreateUserName(AuthUtils.getLoginUserName());
             sysFile.setFileName(fileName);
             sysFile.setOriginalFileName(originalFilename);
-            sysFile.setOssFileKey(ossFileKey);
+            sysFile.setFileKey(fileKey);
             sysFile.setFileSize(fileSize);
             sysFile.setFileType(fileType);
             sysFile.setMimeType(file.getContentType());
@@ -129,13 +129,13 @@ public class SysFileServiceImpl extends SuperServiceImpl<SysFileEntity, SysFileV
 
             UploadObjectArgs uploadObjectArgs = UploadObjectArgs.builder() //
                     .bucket(bucketName) //
-                    .object(ossFileKey) //
+                    .object(fileKey) //
                     .filename(filePath) //
                     .contentType(file.getContentType()) //
                     .build();
             minioClient.uploadObject(uploadObjectArgs);
 
-            sysFile.setPreviewUrl(StringUtils.format("{}/{}", fileStorageProperties.getPreviewPrefix(), ossFileKey));
+            sysFile.setFileUrl(StringUtils.format("{}/{}", minioProperties.getPreviewPrefix(), fileKey));
             MongoUtils.save(sysFile);
             return MapstructUtils.convert(sysFile, SysFileVo.class);
         } catch (Exception e) {
@@ -155,8 +155,8 @@ public class SysFileServiceImpl extends SuperServiceImpl<SysFileEntity, SysFileV
         long fileSize = data.length;
         Date date = new Date();
         String fileName = StringUtils.format("{}.{}", IdUtil.getSnowflakeNextIdStr(), fileType);
-        String ossFileKey = StringUtils.format("{}/{}", DateUtils.format(date, DateConstants.PURE_DATE_FORMAT), fileName);
-        String filePath = StringUtils.format("{}/{}", fileStorageProperties.getUploadDir(), ossFileKey);
+        String fileKey = StringUtils.format("{}/{}", DateUtils.format(date, DateConstants.PURE_DATE_FORMAT), fileName);
+        String filePath = StringUtils.format("{}/{}", minioProperties.getUploadDir(), fileKey);
         try {
             SysFileEntity sysFile = new SysFileEntity();
             sysFile.setId(IdUtil.simpleUUID());
@@ -165,7 +165,7 @@ public class SysFileServiceImpl extends SuperServiceImpl<SysFileEntity, SysFileV
             sysFile.setCreateUserId(AuthUtils.getLoginUserId());
             sysFile.setFileName(fileName);
             sysFile.setOriginalFileName(originalFileName);
-            sysFile.setOssFileKey(ossFileKey);
+            sysFile.setFileKey(fileKey);
             sysFile.setFileSize(fileSize);
             sysFile.setFileType(fileType);
             sysFile.setFilePath(filePath);
@@ -177,13 +177,13 @@ public class SysFileServiceImpl extends SuperServiceImpl<SysFileEntity, SysFileV
 
             PutObjectArgs putObjectArgs = PutObjectArgs.builder() //
                     .bucket(bucketName) //
-                    .object(ossFileKey) //
+                    .object(fileKey) //
                     .stream(IoUtil.toStream(data), fileSize, -1) //
                     .contentType(sysFile.getMimeType()) //
                     .build();
             minioClient.putObject(putObjectArgs);
 
-            sysFile.setPreviewUrl(StringUtils.format("{}/{}", fileStorageProperties.getPreviewPrefix(), ossFileKey));
+            sysFile.setFileUrl(StringUtils.format("{}/{}", minioProperties.getPreviewPrefix(), fileKey));
             MongoUtils.save(sysFile);
             return MapstructUtils.convert(sysFile, SysFileVo.class);
         } catch (Exception e) {
@@ -201,7 +201,7 @@ public class SysFileServiceImpl extends SuperServiceImpl<SysFileEntity, SysFileV
             if (null == sysFile) {
                 return;
             }
-            minioClient.removeObject(RemoveObjectArgs.builder().bucket(bucketName).object(sysFile.getOssFileKey()).build());
+            minioClient.removeObject(RemoveObjectArgs.builder().bucket(bucketName).object(sysFile.getFileKey()).build());
         } catch (Exception e) {
             log.error("deleteFileById ==================== exception:{}", e.getMessage());
         } finally {
@@ -217,13 +217,13 @@ public class SysFileServiceImpl extends SuperServiceImpl<SysFileEntity, SysFileV
                 JakartaServletUtils.write(response, 500, "文件数据不存在");
                 return;
             }
-            String ossFileKey = sysFile.getOssFileKey();
+            String fileKey = sysFile.getFileKey();
             String originalFileName = sysFile.getOriginalFileName();
             String encodeFileName = FileUtils.encodeFileName(request, originalFileName);
             FileUtils.setAttachmentResponseHeader(response, encodeFileName);
             response.setCharacterEncoding("UTF-8");
             response.setHeader("Content-Length", String.valueOf(sysFile.getFileSize()));
-            GetObjectResponse ossObject = minioClient.getObject(GetObjectArgs.builder().bucket(bucketName).object(ossFileKey).build());
+            GetObjectResponse ossObject = minioClient.getObject(GetObjectArgs.builder().bucket(bucketName).object(fileKey).build());
             InputStream inputStream = IoUtil.toStream(ossObject.readAllBytes());
             response.setHeader("Content-Type", sysFile.getMimeType());
             IoUtil.copy(inputStream, response.getOutputStream());
@@ -239,9 +239,9 @@ public class SysFileServiceImpl extends SuperServiceImpl<SysFileEntity, SysFileV
         if (null == sysFile) {
             throw new BusinessException("该文件ID没有对应记录");
         }
-        return sysFile.getPreviewUrl();
+        return sysFile.getFileUrl();
     }
 
-    private final FileStorageProperties fileStorageProperties;
+    private final MinioProperties minioProperties;
 
 }

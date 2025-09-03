@@ -2,7 +2,6 @@ package com.shuyoutech.aigc.domain.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.List;
  * @date 2025-05-10 09:57:41
  **/
 @Data
-@Accessors(chain = true)
 @Schema(description = "Embedding模型请求类")
 public class EmbeddingFileReq implements Serializable {
 

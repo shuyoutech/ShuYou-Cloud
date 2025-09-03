@@ -1,8 +1,8 @@
 package com.shuyoutech.aigc.domain.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 
@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @date 2025-05-10 09:57:41
  **/
 @Data
-@Accessors(chain = true)
+@Builder
 @Schema(description = "Embedding模型类")
 public class EmbeddingText implements Serializable {
 

@@ -49,7 +49,7 @@ public class AigcEmbeddingProvider {
         Embedding embedding = response.content();
         String id = embeddingStore.add(embedding, segment);
         // log.info("-------------- Text文本向量解析结束，KnowledgeId={}, DocId={}, tokenUsage:{}", req.getKnowledgeId(), req.getDocId(), tokenUsage.toString());
-        return new EmbeddingText().setVectorId(id).setText(segment.text()).setKnowledgeId(req.getKnowledgeId());
+        return EmbeddingText.builder().vectorId(id).text(segment.text()).knowledgeId(req.getKnowledgeId()).build();
     }
 
     public List<EmbeddingText> embeddingDoc(EmbeddingDocReq req) {
@@ -79,7 +79,7 @@ public class AigcEmbeddingProvider {
                 return null;
             }
             for (int i = 0; i < ids.size(); i++) {
-                list.add(new EmbeddingText().setVectorId(ids.get(i)).setText(segments.get(i).text()).setKnowledgeId(req.getKnowledgeId()).setDocId(req.getDocId()));
+                list.add(EmbeddingText.builder().vectorId(ids.get(i)).text(segments.get(i).text()).knowledgeId(req.getKnowledgeId()).docId(req.getDocId()).build());
             }
             // log.info("-------------- Doc文档向量解析结束，KnowledgeId:{}, DocId:{}, tokenUsage:{}", req.getKnowledgeId(), req.getDocId(), tokenUsage.toString());
         } catch (Exception e) {

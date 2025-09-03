@@ -58,7 +58,7 @@ public interface CacheService {
      * @param orgId 机构ID
      * @return 机构名称
      */
-    String getOrgName(String orgId);
+    String getOrgName(Long orgId);
 
     /**
      * 根据角色ID查询角色名称

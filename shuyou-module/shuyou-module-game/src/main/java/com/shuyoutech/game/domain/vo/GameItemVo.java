@@ -5,8 +5,6 @@ import com.shuyoutech.game.domain.entity.GameItemMaterial;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -16,8 +14,6 @@ import java.util.List;
  * @date 2025-02-12 16:24:49
  **/
 @Data
-@Accessors(chain = true)
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
 @Schema(description = "游戏物品显示类")
 public class GameItemVo extends BaseVo {

@@ -4,8 +4,6 @@ import com.shuyoutech.common.mongodb.model.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -13,8 +11,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @date 2025-07-07 00:04
  **/
 @Data
-@Accessors(chain = true)
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "应用表")
 @Document(collection = "sys_app")

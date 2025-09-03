@@ -24,15 +24,15 @@ public interface SysOrgService extends SuperTreeService<SysOrgEntity, SysOrgVo> 
 
     PageResult<SysOrgVo> page(PageQuery<SysOrgBo> pageQuery);
 
-    SysOrgVo detail(String id);
+    SysOrgVo detail(Long id);
 
-    String saveSysOrg(SysOrgBo bo);
+    Long saveSysOrg(SysOrgBo bo);
 
     boolean updateSysOrg(SysOrgBo bo);
 
-    boolean deleteSysOrg(List<String> ids);
+    boolean deleteSysOrg(List<Long> ids);
 
-    boolean statusSysOrg(String id, String status);
+    boolean statusSysOrg(Long id, String status);
 
     List<Tree<String>> tree(SysOrgBo bo);
 

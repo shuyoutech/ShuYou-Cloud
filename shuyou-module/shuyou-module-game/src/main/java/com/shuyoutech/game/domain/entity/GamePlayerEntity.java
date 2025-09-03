@@ -6,8 +6,6 @@ import io.github.linpeilie.annotations.AutoMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
@@ -17,8 +15,6 @@ import java.util.List;
  * @date 2025-07-10 12:32:24
  **/
 @Data
-@Accessors(chain = true)
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @AutoMapper(target = GamePlayerVo.class)
 @Document(collection = "game_player")

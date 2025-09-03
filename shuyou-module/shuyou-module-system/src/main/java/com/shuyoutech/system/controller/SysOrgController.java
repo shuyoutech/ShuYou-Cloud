@@ -40,13 +40,13 @@ public class SysOrgController {
 
     @PostMapping(path = "detail/{id}")
     @Operation(description = "查询机构详情")
-    public R<SysOrgVo> detail(@PathVariable String id) {
+    public R<SysOrgVo> detail(@PathVariable Long id) {
         return R.success(sysOrgService.detail(id));
     }
 
     @PostMapping(path = "save")
     @Operation(description = "新增机构")
-    public R<String> save(@Validated({SaveGroup.class}) @RequestBody SysOrgBo bo) {
+    public R<Long> save(@Validated({SaveGroup.class}) @RequestBody SysOrgBo bo) {
         return R.success(sysOrgService.saveSysOrg(bo));
     }
 
@@ -58,7 +58,7 @@ public class SysOrgController {
 
     @PostMapping(path = "delete")
     @Operation(description = "删除机构")
-    public R<Boolean> delete(@RequestBody List<String> ids) {
+    public R<Boolean> delete(@RequestBody List<Long> ids) {
         return R.success(sysOrgService.deleteSysOrg(ids));
     }
 

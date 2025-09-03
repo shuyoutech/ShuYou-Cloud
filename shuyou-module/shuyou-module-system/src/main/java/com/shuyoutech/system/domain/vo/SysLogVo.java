@@ -4,8 +4,6 @@ import com.shuyoutech.common.mongodb.model.BaseVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 
 import java.util.Date;
 
@@ -14,8 +12,6 @@ import java.util.Date;
  * @date 2025-05-07 14:14
  **/
 @Data
-@Accessors(chain = true)
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
 @Schema(description = "日志详情类")
 public class SysLogVo extends BaseVo {
@@ -45,7 +41,7 @@ public class SysLogVo extends BaseVo {
     private String userName;
 
     @Schema(description = "请求用户机构ID")
-    private String orgId;
+    private Long orgId;
 
     @Schema(description = "请求用户机构名称")
     private String orgName;

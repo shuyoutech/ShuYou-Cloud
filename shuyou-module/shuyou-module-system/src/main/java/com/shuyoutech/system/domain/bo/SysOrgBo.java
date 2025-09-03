@@ -7,7 +7,6 @@ import com.shuyoutech.system.domain.entity.SysOrgEntity;
 import com.shuyoutech.system.enums.OrgTypeEnum;
 import io.github.linpeilie.annotations.AutoMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -22,12 +21,9 @@ import java.io.Serializable;
 @Schema(description = "机构类")
 public class SysOrgBo implements Serializable {
 
-    @NotBlank(message = "id不能为空", groups = {UpdateGroup.class, StatusGroup.class})
+    @NotNull(message = "id不能为空", groups = {UpdateGroup.class, StatusGroup.class})
     @Schema(description = "主键")
-    private String id;
-
-    @Schema(description = "租户ID")
-    private String tenantId;
+    private Long id;
 
     /**
      * 枚举 {@link StatusEnum}
@@ -37,13 +33,7 @@ public class SysOrgBo implements Serializable {
     private String status;
 
     @Schema(description = "父级ID")
-    private String parentId;
-
-    @Schema(description = "树结构编码,用于快速查找,用-分割")
-    private String treePath;
-
-    @Schema(description = "树形层级")
-    private Integer treeLevel;
+    private Long parentId;
 
     /**
      * 枚举 {@link OrgTypeEnum}

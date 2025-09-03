@@ -24,15 +24,15 @@ public interface SysMenuService extends SuperTreeService<SysMenuEntity, SysMenuV
 
     PageResult<SysMenuVo> page(PageQuery<SysMenuBo> pageQuery);
 
-    SysMenuVo detail(String id);
+    SysMenuVo detail(Long id);
 
-    String saveSysMenu(SysMenuBo bo);
+    Long saveSysMenu(SysMenuBo bo);
 
     boolean updateSysMenu(SysMenuBo bo);
 
-    boolean deleteSysMenu(List<String> ids);
+    boolean deleteSysMenu(List<Long> ids);
 
-    boolean statusSysMenu(String id, String status);
+    boolean statusSysMenu(Long id, String status);
 
     List<Tree<String>> tree(SysMenuBo bo);
 

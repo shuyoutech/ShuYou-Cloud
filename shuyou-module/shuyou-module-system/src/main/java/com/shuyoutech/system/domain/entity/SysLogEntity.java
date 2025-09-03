@@ -6,7 +6,6 @@ import io.github.linpeilie.annotations.AutoMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
@@ -16,7 +15,6 @@ import java.util.Date;
  * @date 2025-07-07 00:04
  **/
 @Data
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @AutoMapper(target = SysLogVo.class)
 @Schema(description = "日志表")
@@ -48,7 +46,7 @@ public class SysLogEntity extends BaseEntity<SysLogEntity> {
     private String userName;
 
     @Schema(description = "请求用户机构ID")
-    private String orgId;
+    private Long orgId;
 
     @Schema(description = "请求用户机构名称")
     private String orgName;

@@ -5,7 +5,7 @@ import com.shuyoutech.common.core.model.group.UpdateGroup;
 import com.shuyoutech.system.domain.entity.SysDictEntity;
 import io.github.linpeilie.annotations.AutoMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -19,15 +19,15 @@ import java.io.Serializable;
 @Schema(description = "字典类")
 public class SysDictBo implements Serializable {
 
-    @NotBlank(message = "id不能为空", groups = {UpdateGroup.class, StatusGroup.class})
+    @NotNull(message = "id不能为空", groups = {UpdateGroup.class, StatusGroup.class})
     @Schema(description = "主键")
-    private String id;
+    private Long id;
 
     @Schema(description = "父级ID")
-    private String parentId;
+    private Long parentId;
 
-    @Schema(description = "树结构编码,用于快速查找,用-分割")
-    private String treePath;
+    @Schema(description = "字典编码")
+    private String dictCode;
 
     @Schema(description = "字典标签")
     private String dictLabel;

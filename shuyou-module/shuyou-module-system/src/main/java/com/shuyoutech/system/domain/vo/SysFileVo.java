@@ -7,8 +7,6 @@ import io.github.linpeilie.annotations.AutoMappers;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 
 import java.util.Date;
 
@@ -17,8 +15,6 @@ import java.util.Date;
  * @date 2025-07-07 20:06
  **/
 @Data
-@Accessors(chain = true)
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
 @AutoMappers({@AutoMapper(target = RemoteSysFile.class)})
 @Schema(description = "文件Result类")
@@ -60,10 +56,10 @@ public class SysFileVo extends BaseVo {
     @Schema(description = "桶名称")
     private String bucketName;
 
-    @Schema(description = "oss文件key")
-    private String ossFileKey;
+    @Schema(description = "云文件key")
+    private String fileKey;
 
-    @Schema(description = "预览url")
-    private String previewUrl;
+    @Schema(description = "文件url")
+    private String fileUrl;
 
 }

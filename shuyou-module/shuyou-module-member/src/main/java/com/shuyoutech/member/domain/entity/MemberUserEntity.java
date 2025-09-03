@@ -10,8 +10,6 @@ import io.github.linpeilie.annotations.AutoMappers;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
@@ -22,8 +20,6 @@ import java.util.List;
  * @date 2025-08-01 15:16:55
  **/
 @Data
-@Accessors(chain = true)
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @AutoMappers({@AutoMapper(target = RemoteMemberUser.class), @AutoMapper(target = MemberUserVo.class)})
 @Document(collection = "member_user")

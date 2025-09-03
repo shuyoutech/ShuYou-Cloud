@@ -4,8 +4,6 @@ import com.shuyoutech.common.mongodb.model.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
@@ -15,8 +13,6 @@ import java.util.Date;
  * @date 2025-08-13 21:55:39
  **/
 @Data
-@Accessors(chain = true)
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Document(collection = "crawler_record")
 @Schema(description = "爬虫记录表类")

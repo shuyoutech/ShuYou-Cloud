@@ -68,7 +68,7 @@ public class SysOrgServiceImpl extends SuperTreeServiceImpl<SysOrgEntity, SysOrg
         if (StringUtils.isNotBlank(bo.getStatus())) {
             query.addCriteria(Criteria.where("status").is(bo.getStatus()));
         }
-        if (StringUtils.isNotBlank(bo.getParentId())) {
+        if (null != bo.getParentId()) {
             query.addCriteria(Criteria.where("parentId").is(bo.getParentId()));
         }
         if (StringUtils.isNotBlank(bo.getOrgType())) {
@@ -99,13 +99,13 @@ public class SysOrgServiceImpl extends SuperTreeServiceImpl<SysOrgEntity, SysOrg
     }
 
     @Override
-    public SysOrgVo detail(String id) {
+    public SysOrgVo detail(Long id) {
         SysOrgEntity entity = this.getById(id);
         return convertTo(entity);
     }
 
     @Override
-    public String saveSysOrg(SysOrgBo bo) {
+    public Long saveSysOrg(SysOrgBo bo) {
         SysOrgEntity entity = this.save(bo);
         return null == entity ? null : entity.getId();
     }
@@ -116,12 +116,12 @@ public class SysOrgServiceImpl extends SuperTreeServiceImpl<SysOrgEntity, SysOrg
     }
 
     @Override
-    public boolean deleteSysOrg(List<String> ids) {
+    public boolean deleteSysOrg(List<Long> ids) {
         return this.deleteByIds(ids);
     }
 
     @Override
-    public boolean statusSysOrg(String id, String status) {
+    public boolean statusSysOrg(Long id, String status) {
         SysOrgEntity entity = this.getById(id);
         if (null == entity) {
             return false;
@@ -141,10 +141,10 @@ public class SysOrgServiceImpl extends SuperTreeServiceImpl<SysOrgEntity, SysOrg
         List<TreeOption> list = CollectionUtil.newArrayList();
         for (SysOrgVo org : orgList) {
             list.add(TreeOption.builder() //
-                    .parentId(org.getParentId()) //
+                    .parentId(String.valueOf(org.getParentId())) //
                     .label(org.getOrgName()) //
                     .type(org.getOrgType()) //
-                    .value(org.getId()) //
+                    .value(String.valueOf(org.getId())) //
                     .sort(org.getOrgSort()) //
                     .extra(BeanUtils.beanToMap(org)) //
                     .build());
@@ -153,12 +153,12 @@ public class SysOrgServiceImpl extends SuperTreeServiceImpl<SysOrgEntity, SysOrg
         treeNodeConfig.setWeightKey("sort");
         treeNodeConfig.setIdKey("value");
         treeNodeConfig.setNameKey("label");
-        return TreeUtils.build(list, "0", treeNodeConfig, (treeOption, tree) -> {
-            tree.setId(treeOption.getValue()).setParentId(treeOption.getParentId())//
-                    .setName(treeOption.getLabel())//
-                    .setWeight(treeOption.getSort())//
-                    .putExtra("org", treeOption.getExtra());
-        });
+        return TreeUtils.build(list, "0", treeNodeConfig, (treeOption, tree) -> //
+                tree.setId(treeOption.getValue())//
+                        .setParentId(treeOption.getParentId())//
+                        .setName(treeOption.getLabel())//
+                        .setWeight(treeOption.getSort())//
+                        .putExtra("org", treeOption.getExtra()));
     }
 
     private final CachePlusService cachePlusService;

@@ -6,8 +6,6 @@ import io.github.linpeilie.annotations.AutoMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -15,8 +13,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @date 2025-07-10 10:02:24
  **/
 @Data
-@Accessors(chain = true)
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @AutoMapper(target = GameTradingPlatformVo.class)
 @Document(collection = "game_trading_platform")

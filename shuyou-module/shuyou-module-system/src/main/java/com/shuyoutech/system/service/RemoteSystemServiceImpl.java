@@ -121,9 +121,20 @@ public class RemoteSystemServiceImpl implements RemoteSystemService {
         return MapstructUtils.convert(sysFile, RemoteSysFile.class);
     }
 
+    @Override
+    public void attachment(String targetType, String targetId, String fileId) {
+
+    }
+
+    @Override
+    public void attachment(String targetType, String targetId, List<String> fileIds) {
+
+    }
+
     private final CacheService cacheService;
     private final SysUserService sysUserService;
     private final CachePlusService cachePlusService;
     private final SysFileService sysFileService;
+    private final SysAttachmentService sysAttachmentService;
 
 }

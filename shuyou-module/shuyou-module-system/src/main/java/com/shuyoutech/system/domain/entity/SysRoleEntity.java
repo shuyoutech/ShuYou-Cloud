@@ -8,7 +8,6 @@ import io.github.linpeilie.annotations.AutoMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
@@ -19,7 +18,6 @@ import java.util.Set;
  * @date 2025-07-07 00:04
  **/
 @Data
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @AutoMapper(target = SysRoleVo.class)
 @Schema(description = "角色表")
@@ -54,7 +52,7 @@ public class SysRoleEntity extends BaseEntity<SysRoleEntity> {
     private String dataScope;
 
     @Schema(description = "菜单组数据权限")
-    private Set<String> menuIds;
+    private Set<Long> menuIds;
 
     @Schema(description = "机构组数据权限")
     private Set<String> orgIds;

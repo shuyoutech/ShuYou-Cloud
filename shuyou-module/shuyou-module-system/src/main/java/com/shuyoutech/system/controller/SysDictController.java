@@ -1,5 +1,6 @@
 package com.shuyoutech.system.controller;
 
+import cn.hutool.core.lang.tree.Tree;
 import com.shuyoutech.common.core.model.R;
 import com.shuyoutech.common.core.model.group.SaveGroup;
 import com.shuyoutech.common.core.model.group.UpdateGroup;
@@ -38,13 +39,13 @@ public class SysDictController {
 
     @PostMapping(path = "detail/{id}")
     @Operation(description = "查询字典详情")
-    public R<SysDictVo> detail(@PathVariable String id) {
+    public R<SysDictVo> detail(@PathVariable Long id) {
         return R.success(sysDictService.detail(id));
     }
 
     @PostMapping(path = "save")
     @Operation(description = "新增字典")
-    public R<String> save(@Validated({SaveGroup.class}) @RequestBody SysDictBo bo) {
+    public R<Long> save(@Validated({SaveGroup.class}) @RequestBody SysDictBo bo) {
         return R.success(sysDictService.saveSysDict(bo));
     }
 
@@ -56,7 +57,7 @@ public class SysDictController {
 
     @PostMapping(path = "delete")
     @Operation(description = "删除字典")
-    public R<Boolean> delete(@RequestBody List<String> ids) {
+    public R<Boolean> delete(@RequestBody List<Long> ids) {
         return R.success(sysDictService.deleteSysDict(ids));
     }
 
@@ -64,6 +65,12 @@ public class SysDictController {
     @Operation(description = "检测唯一性")
     public R<Boolean> unique(@Validated @RequestBody ParamUnique param) {
         return R.success(sysDictService.checkUnique(param));
+    }
+
+    @PostMapping("tree")
+    @Operation(description = "获取字典树列表")
+    public R<List<Tree<String>>> tree(@RequestBody SysDictBo bo) {
+        return R.success(sysDictService.tree(bo));
     }
 
     private final SysDictService sysDictService;

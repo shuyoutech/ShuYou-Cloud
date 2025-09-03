@@ -40,13 +40,13 @@ public class SysMenuController {
 
     @PostMapping(path = "detail/{id}")
     @Operation(description = "查询菜单详情")
-    public R<SysMenuVo> detail(@PathVariable String id) {
+    public R<SysMenuVo> detail(@PathVariable Long id) {
         return R.success(sysMenuService.detail(id));
     }
 
     @PostMapping(path = "save")
     @Operation(description = "新增菜单")
-    public R<String> save(@Validated({SaveGroup.class}) @RequestBody SysMenuBo bo) {
+    public R<Long> save(@Validated({SaveGroup.class}) @RequestBody SysMenuBo bo) {
         return R.success(sysMenuService.saveSysMenu(bo));
     }
 
@@ -58,7 +58,7 @@ public class SysMenuController {
 
     @PostMapping(path = "delete")
     @Operation(description = "删除菜单")
-    public R<Boolean> delete(@RequestBody List<String> ids) {
+    public R<Boolean> delete(@RequestBody List<Long> ids) {
         return R.success(sysMenuService.deleteSysMenu(ids));
     }
 

@@ -68,9 +68,9 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserEntity, SysUserV
         }
         Map<String, String> statusMap = cachePlusService.translateByDictCode(DictTypeEnum.STATUS_TYPE.getValue());
         Map<String, String> sexMap = cachePlusService.translateByDictCode(DictTypeEnum.SEX_TYPE.getValue());
-        Set<String> orgIds = CollectionUtils.newHashSet();
+        Set<Long> orgIds = CollectionUtils.newHashSet();
         CollectionUtils.addAll(orgIds, StreamUtils.toSet(list, SysUserEntity::getOrgId));
-        Map<String, String> orgMap = cachePlusService.translateOrgName(orgIds);
+        Map<Long, String> orgMap = cachePlusService.translateOrgName(orgIds);
         Set<String> roleIds = list.stream().filter(f -> CollectionUtils.isNotEmpty(f.getRoleIds())).flatMap(f -> f.getRoleIds().stream()).collect(Collectors.toSet());
         Set<String> postIds = list.stream().filter(f -> CollectionUtils.isNotEmpty(f.getPostIds())).flatMap(f -> f.getPostIds().stream()).collect(Collectors.toSet());
         Map<String, String> roleMap = cachePlusService.translateRoleName(roleIds);
@@ -122,7 +122,7 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserEntity, SysUserV
         if (StringUtils.isNotBlank(bo.getNeRoleId())) {
             query.addCriteria(Criteria.where("roleIds").ne(bo.getNeRoleId()));
         }
-        if (StringUtils.isNotBlank(bo.getOrgId())) {
+        if (null != bo.getOrgId()) {
             query.addCriteria(Criteria.where("orgId").is(bo.getOrgId()));
         }
         if (CollectionUtils.isNotEmpty(bo.getOrgIds())) {
@@ -439,9 +439,9 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserEntity, SysUserV
         }
         String userId = AuthUtils.getLoginUserId();
         Update update = new Update();
-        update.set("avatar", sysFile.getId());
+        update.set("avatar", sysFile.getFileUrl());
         MongoUtils.patch(userId, update, SysUserEntity.class);
-        return sysFile.getPreviewUrl();
+        return sysFile.getFileUrl();
     }
 
     @Override
@@ -455,7 +455,7 @@ public class SysUserServiceImpl extends SuperServiceImpl<SysUserEntity, SysUserV
         if (CollectionUtils.isEmpty(roles)) {
             return result;
         }
-        Set<String> menuIds = CollectionUtils.newHashSet();
+        Set<Long> menuIds = CollectionUtils.newHashSet();
         roles.forEach(role -> {
             if (CollectionUtils.isNotEmpty(role.getMenuIds())) {
                 menuIds.addAll(role.getMenuIds());

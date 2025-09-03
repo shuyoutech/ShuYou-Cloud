@@ -2,28 +2,21 @@ package com.shuyoutech.system.domain.vo;
 
 import com.shuyoutech.common.core.enums.StatusEnum;
 import com.shuyoutech.common.core.model.group.StatusGroup;
-import com.shuyoutech.common.mongodb.model.BaseVo;
+import com.shuyoutech.common.mongodb.model.TreeVo;
 import com.shuyoutech.system.enums.OrgTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 
 /**
  * @author YangChao
  * @date 2025-07-07 09:17:49
  **/
 @Data
-@Accessors(chain = true)
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
 @Schema(description = "机构显示类")
-public class SysOrgVo extends BaseVo {
-
-    @Schema(description = "租户ID")
-    private String tenantId;
+public class SysOrgVo extends TreeVo {
 
     /**
      * 枚举 {@link StatusEnum}
@@ -34,15 +27,6 @@ public class SysOrgVo extends BaseVo {
 
     @Schema(description = "状态名称")
     private String statusName;
-
-    @Schema(description = "父级ID")
-    private String parentId;
-
-    @Schema(description = "树结构编码,用于快速查找,用-分割")
-    private String treePath;
-
-    @Schema(description = "树形层级")
-    private Integer treeLevel;
 
     /**
      * 枚举 {@link OrgTypeEnum}

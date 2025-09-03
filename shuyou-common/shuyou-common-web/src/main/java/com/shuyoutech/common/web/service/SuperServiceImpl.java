@@ -52,24 +52,25 @@ public class SuperServiceImpl<Entity extends BaseEntity<Entity>, VO extends Base
     @Override
     public <SaveVO> Entity save(SaveVO saveVO) {
         Entity entity = MapstructUtils.convert(saveVO, getEntityClass());
-        if (null == entity) {
-            throw new BusinessException("entity is null");
-        }
         buildCreate(entity);
         buildUpdate(entity);
         return MongoUtils.save(entity);
     }
 
     @Override
-    public Collection<Entity> saveBatch(Collection<Entity> entityList) {
+    public <SaveVO> Collection<Entity> saveBatch(Collection<SaveVO> entityList) {
+        Collection<Entity> list = CollectionUtils.newArrayList();
         if (CollectionUtils.isEmpty(entityList)) {
-            return null;
+            return list;
         }
-        for (Entity entity : entityList) {
+        Entity entity;
+        for (SaveVO save : entityList) {
+            entity = MapstructUtils.convert(save, getEntityClass());
             buildCreate(entity);
             buildUpdate(entity);
+            list.add(entity);
         }
-        return MongoUtils.saveBatch(entityList);
+        return MongoUtils.saveBatch(list);
     }
 
     @Override
@@ -99,17 +100,25 @@ public class SuperServiceImpl<Entity extends BaseEntity<Entity>, VO extends Base
     }
 
     @Override
-    public void updateBatch(Collection<Entity> entityList) {
-        for (Entity entity : entityList) {
+    public <UpdateVO> void updateBatch(Collection<UpdateVO> entityList) {
+        Collection<Entity> list = CollectionUtils.newArrayList();
+        Entity entity;
+        for (UpdateVO update : entityList) {
+            entity = MapstructUtils.convert(update, getEntityClass());
             buildUpdate(entity);
+            list.add(entity);
         }
-        MongoUtils.updateBatch(entityList);
+        MongoUtils.updateBatch(list);
     }
 
     @Override
-    public void patchBatch(Collection<Entity> entityList) {
-        for (Entity entity : entityList) {
+    public <UpdateVO> void patchBatch(Collection<UpdateVO> entityList) {
+        Collection<Entity> list = CollectionUtils.newArrayList();
+        Entity entity;
+        for (UpdateVO update : entityList) {
+            entity = MapstructUtils.convert(update, getEntityClass());
             buildUpdate(entity);
+            list.add(entity);
         }
         MongoUtils.patchBatch(entityList);
     }

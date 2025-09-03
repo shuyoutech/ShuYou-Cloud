@@ -2,7 +2,6 @@ package com.shuyoutech.aigc.domain.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 
@@ -11,7 +10,6 @@ import java.io.Serializable;
  * @date 2025-05-18 17:45
  **/
 @Data
-@Accessors(chain = true)
 public class AppChatMessageData implements Serializable {
 
     @Schema(description = "应用ID")

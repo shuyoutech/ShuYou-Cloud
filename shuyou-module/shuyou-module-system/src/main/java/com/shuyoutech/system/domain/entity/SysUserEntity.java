@@ -11,8 +11,6 @@ import io.github.linpeilie.annotations.AutoMappers;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
@@ -23,16 +21,11 @@ import java.util.Set;
  * @date 2025-06-11 09:55
  **/
 @Data
-@Accessors(chain = true)
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @AutoMappers({@AutoMapper(target = SysUserVo.class), @AutoMapper(target = LoginUser.class), @AutoMapper(target = ProfileVo.class)})
 @Schema(description = "用户表")
 @Document(collection = "sys_user")
 public class SysUserEntity extends BaseEntity<SysUserEntity> {
-
-    @Schema(description = "租户ID")
-    private String tenantId;
 
     @Schema(description = "创建时间")
     private Date createTime;
@@ -62,7 +55,7 @@ public class SysUserEntity extends BaseEntity<SysUserEntity> {
     private String password;
 
     @Schema(description = "机构ID")
-    private String orgId;
+    private Long orgId;
 
     @Schema(description = "姓名")
     private String realName;

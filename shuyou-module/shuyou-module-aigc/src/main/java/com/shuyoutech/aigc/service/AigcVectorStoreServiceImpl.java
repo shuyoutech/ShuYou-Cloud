@@ -158,7 +158,7 @@ public class AigcVectorStoreServiceImpl extends SuperServiceImpl<AigcVectorStore
 
                 Connection connection = source.getConnection();
                 return !connection.isClosed();
-            } else if (VectorStoreTypeEnum.MILVUS.name().equalsIgnoreCase(vectorDb.getType())) {
+            } else if (VectorStoreTypeEnum.MILVUS.getValue().equalsIgnoreCase(vectorDb.getType())) {
                 ConnectParam.Builder connectBuilder = ConnectParam.newBuilder() //
                         .withHost(vectorDb.getHost()) //
                         .withPort(vectorDb.getPort()) //
@@ -167,7 +167,7 @@ public class AigcVectorStoreServiceImpl extends SuperServiceImpl<AigcVectorStore
                 MilvusServiceClient client = new MilvusServiceClient(connectBuilder.build());
                 R<CheckHealthResponse> checkHealthResponse = client.checkHealth();
                 return null != checkHealthResponse && checkHealthResponse.getStatus() == R.Status.Success.getCode();
-            } else if (VectorStoreTypeEnum.ELASTICSEARCH.name().equalsIgnoreCase(vectorDb.getType())) {
+            } else if (VectorStoreTypeEnum.ELASTICSEARCH.getValue().equalsIgnoreCase(vectorDb.getType())) {
                 final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
                 RestClientBuilder builder = RestClient.builder(new HttpHost(vectorDb.getHost(), vectorDb.getPort()));
                 credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(vectorDb.getUsername(), vectorDb.getPassword()));

@@ -21,7 +21,7 @@ public class ProfileVo implements Serializable {
     private String username;
 
     @Schema(description = "机构ID")
-    private String orgId;
+    private Long orgId;
 
     @Schema(description = "机构名称")
     private String orgName;

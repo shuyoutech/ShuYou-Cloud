@@ -1,38 +1,25 @@
 package com.shuyoutech.system.domain.vo;
 
 import com.shuyoutech.common.core.enums.StatusEnum;
-import com.shuyoutech.common.mongodb.model.BaseVo;
+import com.shuyoutech.common.mongodb.model.TreeVo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 
 /**
  * @author YangChao
  * @date 2025-05-07 14:00
  **/
 @Data
-@Accessors(chain = true)
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
 @Schema(description = "菜单详情类")
-public class SysMenuVo extends BaseVo {
+public class SysMenuVo extends TreeVo {
 
     /**
      * 枚举 {@link StatusEnum}
      */
     @Schema(description = "状态:0-停用,1-正常")
     private String status;
-
-    @Schema(description = "父级ID")
-    private String parentId;
-
-    @Schema(description = "树结构编码,用于快速查找,用-分割")
-    private String treePath;
-
-    @Schema(description = "树形层级")
-    private Integer treeLevel;
 
     @Schema(description = "菜单类型:1-目录,2-菜单,3-按钮,4-外链")
     private String menuType;

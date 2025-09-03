@@ -7,8 +7,6 @@ import com.shuyoutech.member.domain.entity.MemberUserBind;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 
 import java.util.Date;
 import java.util.List;
@@ -18,8 +16,6 @@ import java.util.List;
  * @date 2025-08-01 15:16:55
  **/
 @Data
-@Accessors(chain = true)
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
 @Schema(description = "会员用户显示类")
 public class MemberUserVo extends BaseVo {

@@ -1,11 +1,14 @@
 package com.shuyoutech.system.service;
 
-import com.shuyoutech.common.core.util.MapstructUtils;
-import com.shuyoutech.common.core.util.StringUtils;
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.lang.tree.Tree;
+import cn.hutool.core.lang.tree.TreeNodeConfig;
+import com.shuyoutech.common.core.util.*;
 import com.shuyoutech.common.web.model.PageQuery;
 import com.shuyoutech.common.web.model.PageResult;
 import com.shuyoutech.common.web.model.ParamUnique;
-import com.shuyoutech.common.web.service.SuperServiceImpl;
+import com.shuyoutech.common.web.model.TreeOption;
+import com.shuyoutech.common.web.service.SuperTreeServiceImpl;
 import com.shuyoutech.system.domain.bo.SysDictBo;
 import com.shuyoutech.system.domain.entity.SysDictEntity;
 import com.shuyoutech.system.domain.vo.SysDictVo;
@@ -25,7 +28,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SysDictServiceImpl extends SuperServiceImpl<SysDictEntity, SysDictVo> implements SysDictService {
+public class SysDictServiceImpl extends SuperTreeServiceImpl<SysDictEntity, SysDictVo> implements SysDictService {
 
     @Override
     public List<SysDictVo> convertTo(List<SysDictEntity> list) {
@@ -61,13 +64,13 @@ public class SysDictServiceImpl extends SuperServiceImpl<SysDictEntity, SysDictV
     }
 
     @Override
-    public SysDictVo detail(String id) {
+    public SysDictVo detail(Long id) {
         SysDictEntity entity = this.getById(id);
         return convertTo(entity);
     }
 
     @Override
-    public String saveSysDict(SysDictBo bo) {
+    public Long saveSysDict(SysDictBo bo) {
         SysDictEntity entity = this.save(bo);
         return null == entity ? null : entity.getId();
     }
@@ -78,8 +81,38 @@ public class SysDictServiceImpl extends SuperServiceImpl<SysDictEntity, SysDictV
     }
 
     @Override
-    public boolean deleteSysDict(List<String> ids) {
+    public boolean deleteSysDict(List<Long> ids) {
         return this.deleteByIds(ids);
+    }
+
+    @Override
+    public List<Tree<String>> tree(SysDictBo bo) {
+        Query query = this.buildQuery(bo);
+        List<SysDictEntity> dictList = this.selectList(query);
+        if (CollectionUtils.isEmpty(dictList)) {
+            return CollectionUtils.newArrayList();
+        }
+        List<TreeOption> list = CollectionUtil.newArrayList();
+        for (SysDictEntity dict : dictList) {
+            list.add(TreeOption.builder() //
+                    .parentId(String.valueOf(dict.getParentId())) //
+                    .label(dict.getDictLabel()) //
+                    .value(String.valueOf(dict.getId())) //
+                    .sort(dict.getDictSort()) //
+                    .extra(BeanUtils.beanToMap(dict)) //
+                    .build());
+        }
+        TreeNodeConfig treeNodeConfig = new TreeNodeConfig();
+        treeNodeConfig.setWeightKey("sort");
+        treeNodeConfig.setIdKey("value");
+        treeNodeConfig.setNameKey("label");
+        return TreeUtils.build(list, "0", treeNodeConfig, (treeOption, tree) -> //
+                tree.setId(treeOption.getValue()) //
+                        .setParentId(treeOption.getParentId())//
+                        .setName(treeOption.getLabel())//
+                        .setWeight(treeOption.getSort())//
+                        .putExtra("dict", treeOption.getExtra())//
+        );
     }
 
 }

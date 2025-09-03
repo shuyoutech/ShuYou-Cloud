@@ -61,7 +61,7 @@ public class AiEmbeddingServiceImpl implements AiEmbeddingService {
         doc.setSliceNum(0);
         MongoUtils.save(doc);
 
-        EmbeddingText embeddingText = aigcEmbeddingProvider.embeddingText(new EmbeddingDocReq().setKnowledgeId(req.getKnowledgeId()).setDocId(doc.getId()).setMessage(req.getDocContent()));
+        EmbeddingText embeddingText = aigcEmbeddingProvider.embeddingText(EmbeddingDocReq.builder().knowledgeId(req.getKnowledgeId()).docId(doc.getId()).message(req.getDocContent()).build());
         if (null == embeddingText) {
             throw new BusinessException("Text文本向量解析失败");
         }
@@ -125,7 +125,7 @@ public class AiEmbeddingServiceImpl implements AiEmbeddingService {
                     // 遍历行
                     for (CsvRow csvRow : rows) {
                         //getRawList返回一个List列表，列表的每一项为CSV中的一个单元格（既逗号分隔部分）
-                        EmbeddingText embeddingText = aigcEmbeddingProvider.embeddingText(new EmbeddingDocReq().setKnowledgeId(knowledgeId).setDocId(doc.getId()).setMessage(csvRow.get(0) + " " + csvRow.get(1)));
+                        EmbeddingText embeddingText = aigcEmbeddingProvider.embeddingText(EmbeddingDocReq.builder().knowledgeId(knowledgeId).docId(doc.getId()).message(csvRow.get(0) + " " + csvRow.get(1)).build());
                         if (null == embeddingText) {
                             continue;
                         }
@@ -149,7 +149,7 @@ public class AiEmbeddingServiceImpl implements AiEmbeddingService {
                     FileUtils.del(filePath);
                 }
             } else {
-                List<EmbeddingText> embeddingTexts = aigcEmbeddingProvider.embeddingDoc(new EmbeddingDocReq().setKnowledgeId(knowledgeId).setDocId(doc.getId()).setFileUrl(file.getPreviewUrl()));
+                List<EmbeddingText> embeddingTexts = aigcEmbeddingProvider.embeddingDoc(EmbeddingDocReq.builder().knowledgeId(knowledgeId).docId(doc.getId()).fileUrl(file.getPreviewUrl()).build());
                 if (CollectionUtils.isEmpty(embeddingTexts)) {
                     return;
                 }

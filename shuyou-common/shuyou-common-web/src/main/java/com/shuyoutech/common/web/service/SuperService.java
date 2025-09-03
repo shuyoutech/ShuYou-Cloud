@@ -23,15 +23,15 @@ public interface SuperService<Entity extends BaseEntity<Entity>, VO extends Base
 
     <SaveVO> Entity save(SaveVO saveVO);
 
-    Collection<Entity> saveBatch(Collection<Entity> entityList);
+    <SaveVO> Collection<Entity> saveBatch(Collection<SaveVO> entityList);
 
     <UpdateVO> boolean patch(UpdateVO updateVO);
 
     <UpdateVO> boolean update(UpdateVO updateVO);
 
-    void updateBatch(Collection<Entity> entityList);
+    <UpdateVO> void updateBatch(Collection<UpdateVO> entityList);
 
-    void patchBatch(Collection<Entity> entityList);
+    <UpdateVO> void patchBatch(Collection<UpdateVO> entityList);
 
     boolean deleteById(String id);
 

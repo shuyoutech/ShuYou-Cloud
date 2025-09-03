@@ -10,8 +10,6 @@ import io.github.linpeilie.annotations.AutoMappers;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -19,8 +17,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @date 2025-07-07 00:04
  **/
 @Data
-@Accessors(chain = true)
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @AutoMappers({@AutoMapper(target = RemoteSysSocialClient.class), @AutoMapper(target = SocialClientVo.class)})
 @Schema(description = "社交客户端表")

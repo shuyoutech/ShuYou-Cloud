@@ -101,7 +101,7 @@ public class CacheServiceImpl implements CacheService {
         if (CollectionUtil.isEmpty(roles)) {
             return permsSet;
         }
-        Set<String> menuIds = new HashSet<>();
+        Set<Long> menuIds = new HashSet<>();
         roles.forEach(role -> menuIds.addAll(role.getMenuIds()));
         List<SysMenuEntity> menus = MongoUtils.getByIds(menuIds, SysMenuEntity.class);
         if (CollectionUtil.isEmpty(menus)) {
@@ -120,7 +120,7 @@ public class CacheServiceImpl implements CacheService {
 
     @Override
     @Cacheable(cacheNames = CACHE_ORG_KEY, key = "#orgId")
-    public String getOrgName(String orgId) {
+    public String getOrgName(Long orgId) {
         SysOrgEntity org = MongoUtils.getById(orgId, SysOrgEntity.class);
         return null == org ? null : org.getOrgName();
     }

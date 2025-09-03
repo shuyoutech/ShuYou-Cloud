@@ -6,8 +6,6 @@ import com.shuyoutech.system.enums.DataScopeTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 
 import java.util.Date;
 import java.util.Set;
@@ -17,8 +15,6 @@ import java.util.Set;
  * @date 2025-07-07 20:06
  **/
 @Data
-@Accessors(chain = true)
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
 @Schema(description = "角色详情类")
 public class SysRoleVo extends BaseVo {

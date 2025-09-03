@@ -43,7 +43,7 @@ public class SysUserBo implements Serializable {
     private String password;
 
     @Schema(description = "机构ID")
-    private String orgId;
+    private Long orgId;
 
     @Schema(description = "姓名")
     private String realName;

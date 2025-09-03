@@ -127,8 +127,8 @@ public class CachePlusServiceImpl implements CachePlusService {
     }
 
     @Override
-    public Map<String, String> translateOrgName(Set<String> orgIds) {
-        Map<String, String> result = MapUtils.newHashMap();
+    public Map<Long, String> translateOrgName(Set<Long> orgIds) {
+        Map<Long, String> result = MapUtils.newHashMap();
         if (CollectionUtils.isEmpty(orgIds)) {
             return result;
         }
@@ -136,7 +136,7 @@ public class CachePlusServiceImpl implements CachePlusService {
             List<SysOrgEntity> orgList = MongoUtils.getByIds(orgIds, SysOrgEntity.class);
             return StreamUtils.toMap(orgList, SysOrgEntity::getId, SysOrgEntity::getOrgName);
         }
-        String orgId = CollectionUtils.get(orgIds, 0);
+        Long orgId = CollectionUtils.get(orgIds, 0);
         String orgName = cacheService.getOrgName(orgId);
         result.put(orgId, orgName);
         return result;

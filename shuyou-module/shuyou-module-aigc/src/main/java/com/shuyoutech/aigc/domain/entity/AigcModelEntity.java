@@ -10,8 +10,6 @@ import io.github.linpeilie.annotations.AutoMappers;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
@@ -22,8 +20,6 @@ import java.util.List;
  * @date 2025-05-10 09:57:41
  **/
 @Data
-@Accessors(chain = true)
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @AutoMappers({@AutoMapper(target = AigcModelVo.class), @AutoMapper(target = RemoteModel.class)})
 @Document(collection = "aigc_model")

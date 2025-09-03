@@ -6,8 +6,6 @@ import com.shuyoutech.game.domain.entity.GameAreaServer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 
 import java.util.List;
 
@@ -16,8 +14,6 @@ import java.util.List;
  * @date 2025-07-07 20:06
  **/
 @Data
-@Accessors(chain = true)
-@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
 @Schema(description = "游戏VO类")
 public class GameVo extends BaseVo {
